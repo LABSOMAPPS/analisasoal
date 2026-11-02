@@ -3155,8 +3155,8 @@
       }
 
       // 2. Jika berjalan di GitHub Pages / Server Eksternal dengan URL Web App API
-      const customUrl = localStorage.getItem('IMDA_APPS_SCRIPT_URL') || (typeof CONFIG_APPS_SCRIPT_URL !== 'undefined' ? CONFIG_APPS_SCRIPT_URL : '');
-      if (customUrl && customUrl.startsWith('https://script.google.com/')) {
+      const customUrl = getApiUrl();
+      if (customUrl) {
         if (statusText) statusText.textContent = 'Memuat Data Spreadsheet...';
         if (statusBadge) {
           statusBadge.className = 'flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-800/80 text-emerald-200 border border-emerald-700/60 shadow-xs cursor-pointer';
@@ -3165,7 +3165,7 @@
 
         const fetchUrl = customUrl + (customUrl.includes('?') ? '&' : '?') + 'action=getData&_t=' + Date.now();
         fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
-          .then(res => res.json())
+          .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
           .then(data => handleSyncSuccess(data))
           .catch(err => {
             console.warn('Fetch API error, mencoba JSONP fallback:', err);
@@ -6115,43 +6115,48 @@
           .saveInputRow(payload);
       } else {
         // 2. Mode GitHub Pages / Server Eksternal via REST API Web App
-        const customUrl = localStorage.getItem('IMDA_APPS_SCRIPT_URL');
-        if (customUrl && customUrl.startsWith('https://script.google.com/')) {
-          // Kirim POST ke Apps Script Web App
-          fetch(customUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'saveInputRow', data: payload })
-          }).then(() => {
+        const customUrl = getApiUrl();
+        if (customUrl) {
+          const okMsg = isSalah
+            ? `Analisa tersimpan ke Google Sheets! (${totalSalahInput} salah dikonversi ke ${totalBenarSent} benar).`
+            : `Analisa Fan [${fan}] Rombel [${rombel}] berhasil disimpan ke Google Sheets!`;
+          const afterOk = (res) => {
             resetBtns();
             updateLocalAppDataWithInput(payload);
-            const successMsg = isSalah 
-              ? `Analisa terkirim ke Google Sheets! (${totalSalahInput} salah dikonversi ke ${totalBenarSent} benar).`
-              : `Analisa Fan [${fan}] Rombel [${rombel}] berhasil dikirim ke Google Sheets!`;
-            showToast(successMsg, 'success');
+            showToast((res && res.message) ? res.message : okMsg, 'success');
             returnToStartOfInput();
-            setTimeout(syncFromSpreadsheet, 1200);
-          }).catch(err => {
-            // Fallback via GET action=saveRow jika browser memblokir POST
-            const getSaveUrl = customUrl + (customUrl.includes('?') ? '&' : '?') + 
-              'action=saveRow&data=' + encodeURIComponent(JSON.stringify(payload));
-            fetch(getSaveUrl, { method: 'GET', redirect: 'follow' })
-              .then(res => res.json())
-              .then(res => {
+            setTimeout(() => syncFromSpreadsheet(false), 800);
+          };
+          const offlineFallback = () => {
+            resetBtns();
+            updateLocalAppDataWithInput(payload);
+            showToast('Gagal terhubung ke Google Sheets. Data tersimpan sementara di browser.', 'error');
+            returnToStartOfInput();
+            try { initDashboard(); renderRekapKelas(); renderRekapFan(); renderSeluruhKelas(); } catch (e) {}
+          };
+
+          // a) GET action=saveRow: respons bisa dibaca sehingga pesan error dari server (mis. nilai > N) tampil
+          const getSaveUrl = customUrl + (customUrl.includes('?') ? '&' : '?') +
+            'action=saveRow&data=' + encodeURIComponent(JSON.stringify(payload)) + '&_t=' + Date.now();
+          fetch(getSaveUrl, { method: 'GET', redirect: 'follow' })
+            .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+            .then(res => {
+              if (res && res.success) {
+                afterOk(res);
+              } else {
                 resetBtns();
-                updateLocalAppDataWithInput(payload);
-                showToast(res.message || 'Data berhasil disimpan ke Google Sheets!', 'success');
-                returnToStartOfInput();
-                setTimeout(syncFromSpreadsheet, 1200);
-              })
-              .catch(e => {
-                resetBtns();
-                updateLocalAppDataWithInput(payload);
-                showToast('Tersimpan di browser lokal (Offline). Hubungkan koneksi internet untuk sinkron live ke Google Sheets.', 'info');
-                returnToStartOfInput();
-              });
-          });
+                showToast('Gagal menyimpan: ' + ((res && res.error) || 'Terjadi kesalahan di server.'), 'error');
+              }
+            })
+            .catch(() => {
+              // b) Cadangan: POST tanpa preflight (text/plain). Respons tidak bisa dibaca (no-cors).
+              fetch(customUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'saveInputRow', data: payload })
+              }).then(() => afterOk(null)).catch(offlineFallback);
+            });
         } else {
           // 3. Fallback Offline Browser
           resetBtns();
@@ -6369,6 +6374,93 @@
         if (tabKey === 'audit') initAudit();
       };
     });
+
+    // ==========================================
+    // KONEKSI API GOOGLE APPS SCRIPT (GITHUB PAGES)
+    // ==========================================
+    function getApiUrl() {
+      let u = '';
+      try { u = localStorage.getItem('IMDA_APPS_SCRIPT_URL') || ''; } catch (e) {}
+      if (!u && typeof CONFIG_APPS_SCRIPT_URL !== 'undefined') u = CONFIG_APPS_SCRIPT_URL || '';
+      u = String(u).trim();
+      return u.startsWith('https://script.google.com/') ? u : '';
+    }
+
+    function setApiTestStatus(msg, type) {
+      const el = document.getElementById('api-test-status');
+      if (!el) return;
+      const styles = {
+        ok: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
+        err: 'bg-red-50 text-red-800 border border-red-200',
+        info: 'bg-sky-50 text-sky-800 border border-sky-200'
+      };
+      el.className = 'p-2.5 rounded-lg text-xs font-semibold ' + (styles[type] || styles.info);
+      el.textContent = msg;
+    }
+
+    function openApiConfigModal() {
+      const modal = document.getElementById('modal-api-config');
+      if (!modal) return;
+      const input = document.getElementById('input-apps-script-url');
+      if (input) input.value = getApiUrl();
+      const st = document.getElementById('api-test-status');
+      if (st) st.className = 'hidden';
+      modal.classList.remove('hidden');
+      if (input) setTimeout(() => input.focus(), 50);
+    }
+
+    function closeApiConfigModal() {
+      const modal = document.getElementById('modal-api-config');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function readApiUrlFromModal() {
+      const input = document.getElementById('input-apps-script-url');
+      const url = input ? input.value.trim() : '';
+      if (!url) { setApiTestStatus('URL belum diisi.', 'err'); return null; }
+      if (!url.startsWith('https://script.google.com/')) {
+        setApiTestStatus('URL harus diawali https://script.google.com/ (gunakan URL Web App hasil Deploy).', 'err');
+        return null;
+      }
+      if (/\/dev(\?|$)/.test(url)) {
+        setApiTestStatus('URL berakhiran /dev hanya untuk pengujian pemilik. Gunakan URL deployment yang berakhiran /exec.', 'err');
+        return null;
+      }
+      return url;
+    }
+
+    function testApiConnection() {
+      const url = readApiUrlFromModal();
+      if (!url) return;
+      setApiTestStatus('Menguji koneksi...', 'info');
+      const testUrl = url + (url.includes('?') ? '&' : '?') + 'action=getData&_t=' + Date.now();
+      fetch(testUrl, { method: 'GET', redirect: 'follow' })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success) {
+            setApiTestStatus('✅ Terhubung! ' + (data.total_fan || 0) + ' fan dan ' + (data.total_rombel || 0) + ' rombel terbaca dari Spreadsheet.', 'ok');
+          } else {
+            setApiTestStatus('Terhubung, tetapi Script mengembalikan error: ' + ((data && data.error) || 'format tidak dikenali'), 'err');
+          }
+        })
+        .catch(() => {
+          setApiTestStatus('Gagal terhubung. Pastikan Deploy sebagai Web App dengan akses "Anyone" (Siapa saja), dan Anda memakai URL /exec versi terbaru.', 'err');
+        });
+    }
+
+    function saveApiUrlConfig() {
+      const url = readApiUrlFromModal();
+      if (!url) return;
+      try { localStorage.setItem('IMDA_APPS_SCRIPT_URL', url); } catch (e) {}
+      const btn = document.getElementById('btn-config-api-url');
+      if (btn) {
+        btn.className = 'flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 hover:text-white transition shadow-sm border border-emerald-600/50 cursor-pointer';
+        btn.innerHTML = '<span>🌐</span> <span class="hidden sm:inline">Koneksi API</span>';
+      }
+      closeApiConfigModal();
+      showToast('URL API tersimpan. Memuat data dari Spreadsheet...', 'success');
+      syncFromSpreadsheet(false);
+    }
 
     // INITIALIZATION
     function startIMDAApplication() {
@@ -6590,7 +6682,7 @@
       <div class="p-5 space-y-4 text-xs">
         <div class="space-y-1.5">
           <label for="input-apps-script-url" class="block font-bold text-slate-700">URL Web App Google Apps Script (Deployment URL):</label>
-          <input type="url" id="input-apps-script-url" placeholder="https://script.google.com/macros/s/AKfycbx5zQRs3gRT3t1482Cp-FufnspCMIB97DKToVyWTbacG1nom28vBbLGmEr4RVeRRnavUg/exec" class="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs text-slate-900 focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+          <input type="url" id="input-apps-script-url" placeholder="https://script.google.com/macros/s/XXXXXXXX/exec" class="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs text-slate-900 focus:ring-2 focus:ring-emerald-500 bg-slate-50">
           <p class="text-[11px] text-slate-500">URL ini didapat dari menu <strong>Deploy ➔ New deployment ➔ Web App (Who has access: Anyone)</strong> di Google Spreadsheet Anda.</p>
         </div>
 
@@ -6600,7 +6692,7 @@
           </div>
           <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-600">
             <li>Buka Spreadsheet IMDA Anda ➔ <strong>Ekstensi ➔ Apps Script</strong>.</li>
-            <li>Salin seluruh kode dari file <code>Code.gs</code> ke editor script.</li>
+            <li>Salin seluruh kode dari file <code>Code.gs</code> ke editor script (script harus dibuat dari menu Ekstensi di Spreadsheet, bukan project terpisah).</li>
             <li>Klik tombol biru <strong>Deploy ➔ New deployment</strong>.</li>
             <li>Pilih tipe <strong>Web app</strong>, atur <em>Who has access: <strong>Anyone (Siapa saja)</strong></em>, lalu klik <strong>Deploy</strong>.</li>
             <li>Salin URL Web App yang berakhiran <code>/exec</code> dan tempelkan pada kolom di atas!</li>
