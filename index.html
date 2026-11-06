@@ -1642,6 +1642,131 @@
     function jsq(s) {
       return String(s == null ? '' : s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/</g, '\\x3C');
     }
+
+    // ==========================================
+    // MASTER DATA (Model Fan, Nama Fan, Rombel)
+    // Sumber kebenaran = Spreadsheet (sheet MASTER_FAN / MASTER_ROMBEL / MASTER_MODEL),
+    // sehingga tampil sama di semua perangkat. localStorage hanya cadangan offline.
+    // ==========================================
+    let MASTER_FANS = [];
+    let MASTER_ROMBELS = [];
+    let masterReady = false;      // true setelah master data berhasil dicocokkan dengan Spreadsheet
+    let masterPushTimer = null;
+    const MASTER_CACHE_KEY = 'IMDA_MASTER_CACHE';
+    const MASTER_DIRTY_KEY = 'IMDA_MASTER_DIRTY';
+
+    (function loadMasterCache() {
+      try {
+        const c = JSON.parse(localStorage.getItem(MASTER_CACHE_KEY) || 'null');
+        if (c && Array.isArray(c.fans)) MASTER_FANS = c.fans;
+        if (c && Array.isArray(c.rombels)) MASTER_ROMBELS = c.rombels;
+      } catch (e) {}
+    })();
+
+    function masterPayload() {
+      return {
+        fans: MASTER_FANS.map(f => ({ name: f.name, classes: (f.classes || []).map(Number).sort(), defaultModel: f.defaultModel || 'FAN 1' })),
+        rombels: MASTER_ROMBELS.map(r => ({ rombel: r.rombel, kelas: Number(r.kelas), n: Number(r.n) || 0 })),
+        models: (typeof FAN_MODELS !== 'undefined') ? FAN_MODELS : {}
+      };
+    }
+    function persistMasterLocal() {
+      try { localStorage.setItem(MASTER_CACHE_KEY, JSON.stringify({ fans: MASTER_FANS, rombels: MASTER_ROMBELS })); } catch (e) {}
+    }
+    function markMasterDirty(v) {
+      try { if (v) localStorage.setItem(MASTER_DIRTY_KEY, '1'); else localStorage.removeItem(MASTER_DIRTY_KEY); } catch (e) {}
+    }
+    function isMasterDirty() {
+      try { return localStorage.getItem(MASTER_DIRTY_KEY) === '1'; } catch (e) { return false; }
+    }
+    function saveMasterFans() { persistMasterLocal(); pushMasterToSheet(); }
+    function saveMasterRombels() { persistMasterLocal(); pushMasterToSheet(); }
+
+    // Dipanggil setiap ada perubahan master (tunda 0,7 dtk agar beberapa perubahan jadi satu kiriman)
+    function pushMasterToSheet() {
+      markMasterDirty(true);
+      if (!masterReady) return;
+      clearTimeout(masterPushTimer);
+      masterPushTimer = setTimeout(doPushMaster, 700);
+    }
+
+    function doPushMaster() {
+      const payload = masterPayload();
+      const isGas = (typeof google !== 'undefined' && google.script && google.script.run);
+      const url = getApiUrl();
+      const done = (res) => {
+        if (res && res.success) { markMasterDirty(false); showToast(res.message || 'Master data tersimpan ke Spreadsheet.', 'success'); }
+        else { showToast('Master data belum tersimpan ke Spreadsheet: ' + ((res && res.error) || 'kesalahan server'), 'error'); }
+      };
+      if (isGas) {
+        google.script.run.withSuccessHandler(done)
+          .withFailureHandler(err => showToast('Master data belum tersimpan ke Spreadsheet: ' + err, 'error'))
+          .saveMasterData(payload);
+        return;
+      }
+      if (!url) {
+        showToast('Master data hanya tersimpan di browser ini. Hubungkan Spreadsheet agar sama di semua perangkat.', 'warning');
+        return;
+      }
+      const viaPost = () => {
+        // POST tanpa preflight: respons tidak terbaca, jadi hasilnya diverifikasi saat Refresh Data berikutnya
+        fetch(url, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveMaster', data: payload, token: getApiToken() })
+        }).then(() => showToast('Master data dikirim, belum terverifikasi. Klik Refresh Data untuk memastikan.', 'warning'))
+          .catch(() => showToast('Gagal mengirim master data ke Spreadsheet. Perubahan tetap aman di browser ini.', 'error'));
+      };
+      const getUrl = url + (url.includes('?') ? '&' : '?') + 'action=saveMaster&data=' + encodeURIComponent(JSON.stringify(payload)) +
+        '&token=' + encodeURIComponent(getApiToken()) + '&_t=' + Date.now();
+      if (getUrl.length > 6000) { viaPost(); return; }
+      fetch(getUrl, { method: 'GET', redirect: 'follow' })
+        .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(done)
+        .catch(() => viaPost());
+    }
+
+    // Cocokkan master data perangkat ini dengan Spreadsheet. Mengembalikan 'adopted' | 'seed' | null
+    function adoptMasterFromServer(serverData) {
+      const m = serverData && serverData.master;
+      if (m && m.exists) {
+        const serverNorm = JSON.stringify({ fans: m.fans || [], rombels: m.rombels || [], models: m.models || {} });
+        if (isMasterDirty() && JSON.stringify(masterPayload()) !== serverNorm) {
+          // Ada perubahan di perangkat ini yang belum terkirim: kirim dulu, jangan ditimpa
+          masterReady = true;
+          doPushMaster();
+          return 'pending-local';
+        }
+        MASTER_FANS = m.fans || [];
+        MASTER_ROMBELS = m.rombels || [];
+        if (m.models && Object.keys(m.models).length > 0) {
+          const merged = {};
+          ['FAN 1', 'FAN 2', 'FAN 3'].forEach(k => { merged[k] = JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS[k])); });
+          Object.keys(m.models).forEach(k => { merged[k] = m.models[k]; });
+          FAN_MODELS = merged;
+          try { localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS)); } catch (e) {}
+        }
+        persistMasterLocal();
+        markMasterDirty(false);
+        masterReady = true;
+        return 'adopted';
+      }
+      return 'seed'; // Spreadsheet belum punya master data: perangkat ini yang mengisi pertama kali
+    }
+
+    function forcePushMaster() {
+      if (!confirm('Timpa master data di Spreadsheet dengan data dari perangkat ini?')) return;
+      masterReady = true;
+      markMasterDirty(true);
+      doPushMaster();
+    }
+    function forcePullMaster() {
+      if (!confirm('Buang perubahan master yang belum terkirim di perangkat ini dan ambil dari Spreadsheet?')) return;
+      markMasterDirty(false);
+      syncFromSpreadsheet(true);
+    }
+    window.forcePushMaster = forcePushMaster;
+    window.forcePullMaster = forcePullMaster;
     function setupFanAliases(dataObj) {
       if (!dataObj || !dataObj.fans) return;
       if (dataObj.fans['Mushthalah Hadits'] && !dataObj.fans['Mustholah Hadis']) {
@@ -3198,7 +3323,11 @@
     function handleSyncSuccess(serverData) {
       if (serverData && serverData.success) {
         APP_DATA = serverData;
-        try { syncMasterDataWithSpreadsheet(serverData); } catch(e) {}
+        let masterMode = null;
+        try { masterMode = adoptMasterFromServer(serverData); } catch (e) { console.warn('adoptMaster:', e); }
+        try { syncMasterDataWithSpreadsheet(serverData); } catch(e) { console.warn('syncMaster:', e); }
+        if (masterMode === 'seed') { masterReady = true; try { doPushMaster(); } catch (e) {} }
+        try { if (typeof updateModelDropdownOptions === 'function') updateModelDropdownOptions(); } catch (e) {}
         setupFanAliases(APP_DATA);
         const isGas = (typeof google !== 'undefined' && google.script && google.script.run);
         const statusEl = document.getElementById('sync-status-text');
@@ -3322,7 +3451,7 @@
     }
 
     // Sinkronkan Master Data dengan Data yang masuk dari Spreadsheet
-    function syncMasterDataWithSpreadsheet(dataObj) {
+    function syncMasterDataWithSpreadsheet(dataObj, silent) {
       if (!dataObj) return;
       let changed = false;
 
@@ -3375,7 +3504,7 @@
         }
       }
 
-      if (changed) {
+      if (changed && !silent) {
         saveMasterFans();
         saveMasterRombels();
       }
@@ -4174,6 +4303,7 @@
       try {
         localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS));
       } catch (e) {}
+      try { pushMasterToSheet(); } catch (e) {}
     }
 
     function getModelTotal(modelObj) {
@@ -6594,6 +6724,8 @@
 
     // INITIALIZATION
     function startIMDAApplication() {
+      // Isi awal master (dari cache / data bawaan) tanpa menandai perubahan; nanti dicocokkan dengan Spreadsheet
+      try { syncMasterDataWithSpreadsheet(APP_DATA, true); } catch (e) { console.warn('master awal:', e); }
       try { initModalBackdropClosers(); } catch(e) {}
       try { initMasterData(); } catch(e) { console.error("initMasterData:", e); }
       try { initSidebar(); } catch(e) { console.error("initSidebar:", e); }
@@ -7746,6 +7878,15 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
           <label for="input-api-token" class="block font-bold text-slate-700">Token Simpan (opsional, sama dengan <code>API_TOKEN</code> di Apps Script):</label>
           <input type="password" id="input-api-token" autocomplete="off" placeholder="Kosongkan jika Apps Script belum memakai token" class="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
           <p class="text-[11px] text-slate-500">Tanpa token yang benar, Apps Script menolak semua permintaan simpan. Membaca data tetap terbuka.</p>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="block font-bold text-slate-700">Master Data (Model Fan, Nama Fan, Rombel):</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="forcePushMaster()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300">☁️ Kirim dari perangkat ini ke Spreadsheet</button>
+            <button type="button" onclick="forcePullMaster()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300">⬇️ Ambil dari Spreadsheet</button>
+          </div>
+          <p class="text-[11px] text-slate-500">Biasanya otomatis. Pakai tombol ini hanya untuk memaksa menyamakan.</p>
         </div>
 
         <div class="p-3 bg-emerald-50/70 rounded-xl border border-emerald-200 text-slate-700 space-y-1.5">
