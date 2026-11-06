@@ -119,7 +119,7 @@
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <span class="text-xs uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-emerald-800/80 text-emerald-200 border border-emerald-700/50">Tingkat: Tsanawiyah</span>
+              <span class="text-xs uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-emerald-800/80 text-emerald-200 border border-emerald-700/50">MMU Tsanawiyah</span>
               <span class="text-xs text-emerald-300/80 hidden sm:inline">&bull; Madrasah Mifyahul Ulum Pondok Pesantren Sidogiri</span>
             </div>
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
@@ -192,6 +192,14 @@
         <button data-tab="master-data" class="nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/90 transition text-xs sm:text-sm font-medium text-left cursor-pointer">
           <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 0c0 1.5 1.5 2.5 3.5 2.5h9c2 0 3.5-1 3.5-2.5M4 12c0 1.5 1.5 2.5 3.5 2.5h9c2 0 3.5-1 3.5-2.5"></path></svg>
           <span class="font-bold text-emerald-300 truncate">Menu Data (Master)</span>
+        </button>
+        <!-- TAB BARU: MENU SOAL (BANK NASKAH & NARASI) -->
+        <button data-tab="soal" class="nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/90 transition text-xs sm:text-sm font-medium text-left cursor-pointer">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <div class="flex items-center justify-between w-full">
+            <span class="font-bold text-amber-300 truncate">Menu Soal (Bank Naskah)</span>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 rounded font-mono font-bold">Baru</span>
+          </div>
         </button>
         <button data-tab="rekap-kelas" class="nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/90 transition text-xs sm:text-sm font-medium text-left">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -379,7 +387,7 @@
           <div class="space-y-1">
             <div class="flex items-center gap-2">
               <span class="px-2.5 py-0.5 rounded-md bg-amber-400 text-emerald-950 text-xs font-black tracking-wide uppercase">MENU INPUT NILAI</span>
-              <span class="text-xs text-emerald-200 font-medium">Laboratorium Soal Madrasah Tsanawiyah Sidogiri</span>
+              <span class="text-xs text-emerald-200 font-medium">Laboratorium Soal-soal Madrasah MMU Tsanawiyah Pondok Pesantren Sidogiri</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
               <span>Analisa Butir Soal & Koreksi Ujian IMDA 2</span>
@@ -1005,12 +1013,95 @@
       </div>
     </section>
 
+    <!-- ========================================== -->
+    <!-- TAB BARU: MENU SOAL (BANK NASKAH & NARASI) -->
+    <!-- ========================================== -->
+    <section id="view-soal" class="tab-content hidden space-y-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1.5">
+              <span>📚</span> <span>Bank Naskah Soal & Narasi IMDA 2</span>
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">Kelola Naskah & Narasi Butir Soal</h2>
+            <p class="text-xs text-slate-500">Unggah dan lengkapi teks butir soal per Tingkat Kelas & Mata Pelajaran (Fan) agar otomatis tampil pada telaah 3 butir soal terendah di Rekap Fan.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="salinTemplateNaskahSoal()" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1.5 transition cursor-pointer">
+              <span>📋</span> <span>Salin Template</span>
+            </button>
+            <button type="button" onclick="openModalUploadNaskahSoal()" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+              <span>📥</span> <span>Unggah / Paste Naskah Soal</span>
+            </button>
+            <button type="button" onclick="simpanSemuaNarasiSoal()" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+              <span>💾</span> <span>Simpan Semua</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Kelas & Fan -->
+        <div class="bg-slate-50/90 p-4 rounded-xl border border-slate-200 space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+            <!-- Filter Tingkat Kelas -->
+            <div class="md:col-span-4 space-y-1">
+              <label class="text-xs font-bold text-slate-700 block">1. Pilih Tingkat Kelas:</label>
+              <div class="flex gap-1.5" id="soal-kelas-pills">
+                <button type="button" onclick="setSoalFilterKelas('1')" id="btn-soal-k1" class="soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-emerald-700 text-white border-emerald-600 shadow-2xs cursor-pointer">Kelas 1</button>
+                <button type="button" onclick="setSoalFilterKelas('2')" id="btn-soal-k2" class="soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer">Kelas 2</button>
+                <button type="button" onclick="setSoalFilterKelas('3')" id="btn-soal-k3" class="soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer">Kelas 3</button>
+              </div>
+            </div>
+
+            <!-- Filter Mata Pelajaran / Fan -->
+            <div class="md:col-span-5 space-y-1">
+              <label for="select-soal-fan" class="text-xs font-bold text-slate-700 block">2. Pilih Mata Pelajaran (Fan):</label>
+              <select id="select-soal-fan" onchange="onSoalFanChange(this.value)" class="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg p-2 font-bold focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                <!-- Populated dynamically via JS -->
+              </select>
+            </div>
+
+            <!-- Quick Status Badge -->
+            <div class="md:col-span-3 flex md:flex-col justify-between md:justify-center items-end md:items-start bg-white p-2.5 rounded-lg border border-slate-200 text-xs shadow-2xs">
+              <span class="text-slate-500 text-[11px] font-semibold">Status Narasi Soal:</span>
+              <span id="soal-status-badge" class="font-bold text-emerald-700 font-mono text-xs">Memuat data...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Banner Model Fan -->
+        <div id="soal-model-banner" class="bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 p-3.5 rounded-xl border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Question Cards List Container -->
+        <div id="soal-cards-container" class="space-y-4">
+          <!-- Populated via JS renderDaftarSoalPerFan() -->
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div class="text-slate-500">
+            💡 Teks narasi yang disimpan otomatis tersinkron ke kartu <strong>Rekap Analisis 3 Butir Soal Terendah</strong> di menu Rekap Fan.
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="resetNarasiFanIni()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-700 hover:bg-rose-50 border border-rose-200 transition cursor-pointer">
+              🗑️ Kosongkan Narasi Fan Ini
+            </button>
+            <button type="button" onclick="simpanSemuaNarasiSoal()" class="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition cursor-pointer">
+              💾 Simpan Seluruh Naskah Soal
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <section id="view-rekap-kelas" class="tab-content hidden space-y-4">
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <!-- Controls Bar -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">MMU Tsanawiyah</div>
             <h2 class="text-lg font-bold text-slate-900">Rekapitulasi Hasil IMDA 2 Per Kelas</h2>
             <p class="text-xs text-slate-500">Pilih jenjang kelas di bawah ini untuk melihat analisis ketercapaian per butir soal</p>
           </div>
@@ -1072,7 +1163,7 @@
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">MMU Tsanawiyah</div>
             <h2 class="text-lg font-bold text-slate-900">Rekapitulasi Fan (Detail Performa Soal)</h2>
             <p class="text-xs text-slate-500">Evaluasi daya serap butir soal per mata pelajaran berdasarkan data spreadsheet</p>
           </div>
@@ -1132,7 +1223,7 @@
         <!-- Top Header & Kelas Selector -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">MMU Tsanawiyah</div>
             <h2 class="text-lg font-bold text-slate-900">Analisis Performa Seluruh Rombel Paralel</h2>
             <p class="text-xs text-slate-500" id="sk-subtitle">Perbandingan hasil ujian antarkelas paralel</p>
           </div>
@@ -1217,7 +1308,7 @@
 
         <!-- FORM TITLE BANNER (Printable) -->
         <div class="text-center py-3 border-b-2 border-slate-800 space-y-1">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Pondok Pesantren Sidogiri - Madrasah Tsanawiyah</div>
+          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Pondok Pesantren Sidogiri - MMU Tsanawiyah</div>
           <h1 class="text-base sm:text-xl font-extrabold text-slate-900 tracking-wide uppercase">FORM ANALISA IMDA 2 TSANAWIYAH 1447 - 1448 H.</h1>
           <div class="flex items-center justify-center gap-6 text-xs sm:text-sm font-bold text-slate-700">
             <span id="form-info-kelas">KELAS : 1-B</span>
@@ -1662,7 +1753,7 @@
       // 1. DYNAMIC WELCOME BANNER
       const bannerBadge = document.getElementById('dash-banner-badge');
       if (bannerBadge) {
-        bannerBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Hierarki: Tingkat Tsanawiyah &bull; Kelas ${activeK.join(', ')} Aktif`;
+        bannerBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Hierarki: MMU Tsanawiyah &bull; Kelas ${activeK.join(', ')} Aktif`;
       }
 
       const bannerDesc = document.getElementById('dash-banner-desc');
@@ -2287,6 +2378,7 @@
                       <p class="text-[11px] text-slate-500 leading-relaxed italic bg-slate-50 p-2 rounded-lg border border-slate-100">
                         ${note}
                       </p>
+                      ${renderSoalNarrativeSnippet(selectedK === 'all' ? '1' : selectedK, fanName, q)}
                     </div>
                   </div>
                 `;
@@ -3106,6 +3198,15 @@
         try { renderSeluruhKelas(); } catch(e) { console.error('renderSeluruhKelas:', e); }
         try { updateFormKelasDropdown(); } catch(e) { console.error('updateFormKelasDropdown:', e); }
         try { initAudit(); } catch(e) { console.error('initAudit:', e); }
+      try { initMenuSoal(); } catch(e) { console.error('initMenuSoal:', e); }
+        // Sinkronkan Bank Soal dari Spreadsheet jika tersedia
+        if (serverData.bankSoal && typeof serverData.bankSoal === 'object') {
+          try {
+            Object.keys(serverData.bankSoal).forEach(k => {
+              localStorage.setItem(`IMDA_SOAL_NARRATIVE_${k}`, JSON.stringify(serverData.bankSoal[k]));
+            });
+          } catch(e) { console.warn('Sync bankSoal error:', e); }
+        }
         if (typeof renderMasterData === 'function') {
           try { renderMasterData(); } catch(e) {}
         }
@@ -6330,6 +6431,7 @@
       if (tabKey === 'rekap-kelas') renderRekapKelas();
       if (tabKey === 'rekap-fan') renderRekapFan();
       if (tabKey === 'seluruh-kelas') renderSeluruhKelas();
+      if (tabKey === 'soal') renderDaftarSoalPerFan();
       if (tabKey === 'audit') initAudit();
     }
     window.switchTab = switchTab;
@@ -6373,6 +6475,7 @@
         if (tabKey === 'rekap-kelas') renderRekapKelas();
         if (tabKey === 'rekap-fan') renderRekapFan();
         if (tabKey === 'seluruh-kelas') renderSeluruhKelas();
+        if (tabKey === 'soal') renderDaftarSoalPerFan();
         if (tabKey === 'audit') initAudit();
       };
     });
@@ -6487,6 +6590,786 @@
     } else {
       startIMDAApplication();
     }
+
+    // =========================================================================
+    // MODUL: BANK NASKAH & NARASI SOAL IMDA 2 (FILTER KELAS & FAN)
+    // =========================================================================
+    
+    // Default seed narasi realistis untuk Hadits Nabawy Kelas 1 (khususnya 3 butir terendah: ES 4, ML 6, ES 5)
+    const DEFAULT_HADITS_NARRATIVES = {
+      "22": {
+        q_num: 22,
+        shortLabel: "ES 4",
+        typeNo: 4,
+        typeName: "Esay / Uraian",
+        materi: "Kaidah Keshahihan Sanad & Sifat Keadilan Perawi",
+        soal: "Sebutkan 5 (lima) syarat hadits shahih menurut rumusan Imam Ibnu Shalah dalam kitab 'Ulumul Hadits, dan jelaskan perbedaan mendasar antara ke-dhabith-an hafal (dhabith shadr) dengan ke-dhabith-an tulisan (dhabith kitab)!",
+        kunci: "Lima syarat hadits shahih: 1. Sanad bersambung (ittishal as-sanad), 2. Perawi berakhlak adil ('adalah ar-rawi), 3. Hafalan/tulisan sangat kuat/dhabith (tamm adh-dhabth), 4. Tidak bertentangan dengan riwayat perawi lebih tsiqah (selamat dari syudzudz), 5. Tidak memiliki cacat tersembunyi (selamat dari 'illat qadihah). Dhabith shadr: kekuatan hafalan dari mendengar sampai menyampaikan. Dhabith kitab: ketepatan menjaga catatan dari perubahan."
+      },
+      "18": {
+        q_num: 18,
+        shortLabel: "ML 6",
+        typeNo: 6,
+        typeName: "Melengkapi",
+        materi: "Musthalah Hadits (Kuantitas Perawi dalam Sanad)",
+        soal: "Hadits yang diriwayatkan oleh sejumlah besar perawi pada setiap tingkatan sanad, yang menurut kebiasaan akal mustahil mereka bersepakat untuk berdusta, dinamakan hadits ......",
+        kunci: "Hadits Mutawatir (الحديث المتواتر)"
+      },
+      "23": {
+        q_num: 23,
+        shortLabel: "ES 5",
+        typeNo: 5,
+        typeName: "Esay / Uraian",
+        materi: "Hadits Arbain ke-1 (Urgensi Niat & Asbabul Wurud)",
+        soal: "Jelaskan makna hadits 'Innamal a'maalu bin-niyyaat' (إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ) serta sebutkan asbabul wurud disabdakannya hadits tersebut oleh Rasulullah SAW terkait peristiwa seorang sahabat yang berhijrah!",
+        kunci: "Makna: Sah dan tidaknya amal serta besar kecilnya pahala sangat bergantung pada ketulusan niat. Asbabul wurud: Kisah Muhajir Ummi Qais (seorang sahabat yang ikut hijrah ke Madinah bukan murni karena Allah dan Rasul-Nya, melainkan demi menikahi wanita yang dicintainya bernama Ummi Qais)."
+      }
+    };
+
+    function getSoalStorageKey(kelas, fan) {
+      const k = String(kelas || '1');
+      const f = String(fan || 'Hadits Nabawy').trim().replace(/\s+/g, '_');
+      return `IMDA_SOAL_NARRATIVE_${k}_${f}`;
+    }
+
+    function loadSoalNarratives(kelas, fan) {
+      const key = getSoalStorageKey(kelas, fan);
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (e) {
+        console.warn('Gagal membaca narasi soal dari localStorage:', e);
+      }
+      
+      // Jika belum ada data dan kelas 1 Hadits Nabawy, kembalikan seeded data Hadits Nabawy
+      const fClean = String(fan || '').trim().toLowerCase();
+      if (String(kelas) === '1' && (fClean.includes('hadits') || fClean.includes('hadis'))) {
+        return JSON.parse(JSON.stringify(DEFAULT_HADITS_NARRATIVES));
+      }
+      return {};
+    }
+
+    function saveSoalNarratives(kelas, fan, dataObj) {
+      const key = getSoalStorageKey(kelas, fan);
+      try {
+        localStorage.setItem(key, JSON.stringify(dataObj || {}));
+      } catch (e) {
+        console.error('Gagal menyimpan narasi soal ke localStorage:', e);
+      }
+
+      // Opsional: Simpan juga ke Google Spreadsheet terpusat (Apps Script / REST API)
+      const uniqueItems = [];
+      const seen = new Set();
+      Object.values(dataObj || {}).forEach(item => {
+        if (item && item.q_num && !seen.has(item.q_num)) {
+          seen.add(item.q_num);
+          uniqueItems.push(item);
+        }
+      });
+
+      const payload = {
+        kelas: kelas,
+        fan: fan,
+        items: uniqueItems
+      };
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        try {
+          google.script.run
+            .withSuccessHandler(res => console.log('Sync Bank Soal ke Spreadsheet:', res))
+            .withFailureHandler(err => console.warn('Sync Bank Soal tertunda:', err))
+            .saveBankSoal(payload);
+        } catch (err) {}
+      } else {
+        const customUrl = getApiUrl();
+        if (customUrl) {
+          const saveUrl = customUrl + (customUrl.includes('?') ? '&' : '?') +
+            'action=saveBankSoal&data=' + encodeURIComponent(JSON.stringify(payload)) + '&_t=' + Date.now();
+          fetch(saveUrl, { method: 'GET', redirect: 'follow' })
+            .catch(() => {
+              fetch(customUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'saveBankSoal', data: payload })
+              }).catch(() => {});
+            });
+        }
+      }
+      return true;
+    }
+
+    function getSoalNarrative(kelas, fan, q) {
+      const dict = loadSoalNarratives(kelas, fan);
+      if (!dict) return null;
+      if (dict[q.q_num]) return dict[q.q_num];
+      if (dict[q.shortLabel]) return dict[q.shortLabel];
+      if (dict[`#${q.shortLabel}`]) return dict[`#${q.shortLabel}`];
+      const foundKey = Object.keys(dict).find(k => k.toLowerCase() === String(q.shortLabel).toLowerCase());
+      if (foundKey) return dict[foundKey];
+      return null;
+    }
+
+    function renderSoalNarrativeSnippet(kelas, fanName, q) {
+      const narrative = getSoalNarrative(kelas, fanName, q);
+      if (narrative && narrative.soal && narrative.soal.trim().length > 0) {
+        return `
+          <div class="mt-2.5 bg-gradient-to-br from-amber-50/90 to-orange-50/70 rounded-xl p-3 border border-amber-200/90 text-xs space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between text-[11px] font-bold text-amber-900 border-b border-amber-200/70 pb-1.5">
+              <span class="flex items-center gap-1.5">
+                <span>📝</span>
+                <span class="uppercase tracking-wider">Narasi Butir Soal:</span>
+              </span>
+              ${narrative.materi ? `<span class="bg-amber-200/80 text-amber-950 px-2 py-0.5 rounded text-[10px] font-semibold truncate max-w-[150px] sm:max-w-xs" title="${narrative.materi}">📖 ${narrative.materi}</span>` : ''}
+            </div>
+            <p class="text-slate-800 font-medium leading-relaxed italic text-xs bg-white/95 p-2.5 rounded-lg border border-amber-100 whitespace-pre-line font-sans select-text">
+              "${narrative.soal}"
+            </p>
+            ${narrative.kunci ? `
+            <div class="text-[11px] text-slate-700 flex items-start gap-1 pt-0.5 bg-amber-100/50 px-2 py-1 rounded border border-amber-200/60">
+              <strong class="text-amber-900 whitespace-nowrap">Kunci:</strong>
+              <span class="text-slate-800">${narrative.kunci}</span>
+            </div>` : ''}
+            <div class="pt-1 flex items-center justify-between text-[10px]">
+              <span class="text-slate-400 font-medium">Tersambung otomatis dari Menu Soal</span>
+              <button type="button" onclick="bukaInputNarasiSoalSpesifik('${kelas}', '${fanName}', ${q.q_num})" class="text-amber-700 hover:text-amber-900 font-bold hover:underline flex items-center gap-1 cursor-pointer">
+                <span>✏️ Edit Naskah Soal</span> <span>↗</span>
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="mt-2.5 bg-slate-50/90 rounded-xl p-2.5 border border-dashed border-slate-300 text-center">
+            <button type="button" onclick="bukaInputNarasiSoalSpesifik('${kelas}', '${fanName}', ${q.q_num})" class="w-full text-xs text-amber-700 hover:text-amber-900 font-semibold flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg hover:bg-amber-100/60 transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-[10px]">+</span>
+              <span>Belum ada naskah narasi &bull; <u>Klik untuk input naskah soal</u> ↗</span>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Navigasi instan dari Rekap Fan ke butir soal tertentu di Menu Soal
+    function bukaInputNarasiSoalSpesifik(kelas, fan, qNum) {
+      state.soalFilter = state.soalFilter || {};
+      state.soalFilter.kelas = String(kelas || '1');
+      state.soalFilter.fan = fan || 'Hadits Nabawy';
+      
+      switchTab('soal');
+      
+      setTimeout(() => {
+        const card = document.getElementById(`soal-card-${qNum}`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('ring-4', 'ring-amber-400', 'bg-amber-50/50');
+          setTimeout(() => {
+            card.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50/50');
+          }, 3500);
+          const ta = card.querySelector('textarea');
+          if (ta) ta.focus();
+        }
+      }, 200);
+    }
+
+    function initMenuSoal() {
+      state.soalFilter = state.soalFilter || {
+        kelas: '1',
+        fan: 'Hadits Nabawy'
+      };
+      updateSoalFanDropdown();
+    }
+
+    function setSoalFilterKelas(k) {
+      state.soalFilter = state.soalFilter || {};
+      state.soalFilter.kelas = String(k);
+      
+      document.querySelectorAll('.soal-k-btn').forEach(btn => {
+        btn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer';
+      });
+      const activeBtn = document.getElementById(`btn-soal-k${k}`);
+      if (activeBtn) {
+        activeBtn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-emerald-700 text-white border-emerald-600 shadow-2xs cursor-pointer';
+      }
+      
+      updateSoalFanDropdown();
+      renderDaftarSoalPerFan();
+    }
+
+    function onSoalFanChange(fanVal) {
+      state.soalFilter = state.soalFilter || {};
+      state.soalFilter.fan = fanVal;
+      renderDaftarSoalPerFan();
+    }
+
+    function updateSoalFanDropdown() {
+      const select = document.getElementById('select-soal-fan');
+      if (!select || !APP_DATA.fans) return;
+      
+      const allFans = Object.keys(APP_DATA.fans);
+      const currKelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      
+      select.innerHTML = allFans.map(f => {
+        const isSelected = (state.soalFilter && state.soalFilter.fan === f) ? 'selected' : '';
+        const model = getModelForFan(f);
+        return `<option value="${f}" ${isSelected}>${f} (${model})</option>`;
+      }).join('');
+      
+      if (!state.soalFilter.fan || !APP_DATA.fans[state.soalFilter.fan]) {
+        state.soalFilter.fan = allFans.includes('Hadits Nabawy') ? 'Hadits Nabawy' : (allFans[0] || 'Fikih');
+        select.value = state.soalFilter.fan;
+      } else {
+        select.value = state.soalFilter.fan;
+      }
+    }
+
+    function renderDaftarSoalPerFan() {
+      state.soalFilter = state.soalFilter || { kelas: '1', fan: 'Hadits Nabawy' };
+      const kelas = state.soalFilter.kelas || '1';
+      const fanName = state.soalFilter.fan || 'Hadits Nabawy';
+      
+      document.querySelectorAll('.soal-k-btn').forEach(btn => {
+        btn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer';
+      });
+      const activeBtn = document.getElementById(`btn-soal-k${kelas}`);
+      if (activeBtn) {
+        activeBtn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-emerald-700 text-white border-emerald-600 shadow-2xs cursor-pointer';
+      }
+      
+      updateSoalFanDropdown();
+      const selectFan = document.getElementById('select-soal-fan');
+      if (selectFan) selectFan.value = fanName;
+      
+      const modelKey = getModelForFan(fanName);
+      const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
+        ? FAN_MODELS[modelKey]
+        : DEFAULT_FAN_MODELS['FAN 1'];
+      const types = currModel.types || [{ name: 'Pilihan Ganda', count: 28 }];
+      const totalQ = getModelTotal(currModel);
+      
+      const narratives = loadSoalNarratives(kelas, fanName);
+      let filledCount = 0;
+      
+      const questionsByType = [];
+      let qGlobal = 0;
+      
+      types.forEach((t, tIdx) => {
+        const count = parseInt(t.count, 10) || 0;
+        const qList = [];
+        for (let i = 0; i < count; i++) {
+          const qNum = qGlobal + 1;
+          const meta = getQuestionLabelMeta(qGlobal, modelKey);
+          const saved = narratives[qNum] || narratives[meta.shortLabel] || narratives[`#${meta.shortLabel}`] || {};
+          if (saved && saved.soal && saved.soal.trim().length > 0) {
+            filledCount++;
+          }
+          qList.push({
+            qGlobalIdx: qGlobal,
+            q_num: qNum,
+            meta: meta,
+            saved: saved
+          });
+          qGlobal++;
+        }
+        questionsByType.push({
+          typeIdx: tIdx,
+          typeName: t.name,
+          count: count,
+          questions: qList
+        });
+      });
+      
+      const badgeEl = document.getElementById('soal-status-badge');
+      if (badgeEl) {
+        badgeEl.textContent = `${filledCount} dari ${totalQ} Butir Terisi Narasi`;
+        badgeEl.className = filledCount > 0 
+          ? 'font-bold text-emerald-700 font-mono text-xs' 
+          : 'font-bold text-amber-600 font-mono text-xs';
+      }
+      
+      const bannerEl = document.getElementById('soal-model-banner');
+      if (bannerEl) {
+        bannerEl.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-2xs">📚</span>
+            <div>
+              <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                <span>${fanName}</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">${modelKey}</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold">Kelas ${kelas} Tsanawiyah</span>
+              </div>
+              <div class="text-[11px] text-slate-600">Model Ujian: <strong>${currModel.name || modelKey}</strong> &bull; Total <strong>${totalQ} Butir Soal</strong> (${types.map(t => `${t.name}: ${t.count}`).join(', ')})</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <span class="px-2.5 py-1 rounded-lg bg-white border border-emerald-200 text-emerald-800 font-bold font-mono text-xs shadow-2xs">
+              ${filledCount === totalQ ? '✅ Naskah Lengkap 100%' : `⏳ Progress: ${Math.round((filledCount/totalQ)*100)}%`}
+            </span>
+          </div>
+        `;
+      }
+      
+      const container = document.getElementById('soal-cards-container');
+      if (!container) return;
+      
+      const typeIcons = ['📘', '📗', '📙', '📓'];
+      
+      container.innerHTML = questionsByType.map((group, gIdx) => {
+        const icon = typeIcons[gIdx % typeIcons.length];
+        return `
+          <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/90 space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="text-base">${icon}</span>
+                <h3 class="text-sm font-extrabold text-slate-800">${group.typeName} (${group.count} Butir)</h3>
+              </div>
+              <span class="text-xs text-slate-500 font-mono font-semibold">${group.questions[0].meta.shortLabel} s/d ${group.questions[group.questions.length - 1].meta.shortLabel}</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-3.5">
+              ${group.questions.map(item => {
+                const qNum = item.q_num;
+                const meta = item.meta;
+                const saved = item.saved || {};
+                const hasData = saved.soal && saved.soal.trim().length > 0;
+                
+                return `
+                  <div id="soal-card-${qNum}" class="bg-white rounded-xl p-4 border ${hasData ? 'border-emerald-200 shadow-2xs' : 'border-slate-200 shadow-2xs'} space-y-3 transition duration-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                      <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg ${hasData ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'} flex items-center justify-center font-bold text-xs font-mono">
+                          #${meta.typeNo}
+                        </span>
+                        <div>
+                          <div class="text-xs font-extrabold text-slate-900 flex items-center gap-2">
+                            <span>${meta.fullLabel}</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">${meta.shortLabel}</span>
+                            ${hasData ? '<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">✓ Terisi</span>' : '<span class="text-[10px] font-semibold text-slate-400 bg-slate-50 px-2 py-0.5 rounded">Kosong</span>'}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <button type="button" onclick="simpanSatuButirSoal(${qNum})" class="px-3 py-1 rounded-md text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 transition cursor-pointer flex items-center gap-1">
+                          <span>💾</span> <span>Simpan Butir Ini</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                      <div class="md:col-span-5 space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700">Pokok Bahasan / Kompetensi Dasar:</label>
+                        <input type="text" id="soal-materi-${qNum}" class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 font-medium" placeholder="Misal: Kaidah Keshahihan Sanad & Sifat Rowi" value="${escapeHtml(saved.materi || '')}">
+                      </div>
+
+                      <div class="md:col-span-7 space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700">Kunci Jawaban / Rubrik Penilaian:</label>
+                        <input type="text" id="soal-kunci-${qNum}" class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 font-medium" placeholder="Misal: Hadits Mutawatir / 5 Syarat Shahih..." value="${escapeHtml(saved.kunci || '')}">
+                      </div>
+
+                      <div class="md:col-span-12 space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700 flex items-center justify-between">
+                          <span>Naskah / Teks Soal Lengkap:</span>
+                          <span class="text-[10px] text-slate-400 font-normal">Mendukung tulisan Arab, Pegon, dan Latin</span>
+                        </label>
+                        <textarea id="soal-teks-${qNum}" rows="2" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-amber-500 focus:border-amber-500 font-medium leading-relaxed font-sans" placeholder="Tuliskan teks naskah soal nomor ${meta.typeNo} di sini...">${escapeHtml(saved.soal || '')}</textarea>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function simpanSatuButirSoal(qNum) {
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const modelKey = getModelForFan(fanName);
+      const meta = getQuestionLabelMeta(qNum - 1, modelKey);
+      
+      const materiEl = document.getElementById(`soal-materi-${qNum}`);
+      const kunciEl = document.getElementById(`soal-kunci-${qNum}`);
+      const teksEl = document.getElementById(`soal-teks-${qNum}`);
+      
+      const materi = materiEl ? materiEl.value.trim() : '';
+      const kunci = kunciEl ? kunciEl.value.trim() : '';
+      const soal = teksEl ? teksEl.value.trim() : '';
+      
+      const narratives = loadSoalNarratives(kelas, fanName);
+      
+      narratives[qNum] = {
+        q_num: qNum,
+        shortLabel: meta.shortLabel,
+        typeNo: meta.typeNo,
+        typeName: meta.typeName,
+        materi: materi,
+        kunci: kunci,
+        soal: soal
+      };
+      narratives[meta.shortLabel] = narratives[qNum];
+      
+      saveSoalNarratives(kelas, fanName, narratives);
+      showToast(`Naskah soal ${meta.shortLabel} (${meta.fullLabel}) berhasil disimpan!`, 'success');
+      
+      const card = document.getElementById(`soal-card-${qNum}`);
+      if (card) {
+        card.classList.add('border-emerald-300', 'bg-emerald-50/20');
+        setTimeout(() => card.classList.remove('bg-emerald-50/20'), 1500);
+      }
+      
+      const totalQ = getModelTotal((typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey]) ? FAN_MODELS[modelKey] : DEFAULT_FAN_MODELS['FAN 1']);
+      let filled = 0;
+      for (let i = 1; i <= totalQ; i++) {
+        if (narratives[i] && narratives[i].soal && narratives[i].soal.trim().length > 0) filled++;
+      }
+      const badgeEl = document.getElementById('soal-status-badge');
+      if (badgeEl) badgeEl.textContent = `${filled} dari ${totalQ} Butir Terisi Narasi`;
+    }
+
+    function simpanSemuaNarasiSoal() {
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const modelKey = getModelForFan(fanName);
+      const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
+        ? FAN_MODELS[modelKey]
+        : DEFAULT_FAN_MODELS['FAN 1'];
+      const totalQ = getModelTotal(currModel);
+      
+      const narratives = loadSoalNarratives(kelas, fanName);
+      let countFilled = 0;
+      
+      for (let qNum = 1; qNum <= totalQ; qNum++) {
+        const meta = getQuestionLabelMeta(qNum - 1, modelKey);
+        const materiEl = document.getElementById(`soal-materi-${qNum}`);
+        const kunciEl = document.getElementById(`soal-kunci-${qNum}`);
+        const teksEl = document.getElementById(`soal-teks-${qNum}`);
+        
+        if (teksEl) {
+          const materi = materiEl ? materiEl.value.trim() : '';
+          const kunci = kunciEl ? kunciEl.value.trim() : '';
+          const soal = teksEl ? teksEl.value.trim() : '';
+          
+          if (soal || materi || kunci) {
+            narratives[qNum] = {
+              q_num: qNum,
+              shortLabel: meta.shortLabel,
+              typeNo: meta.typeNo,
+              typeName: meta.typeName,
+              materi: materi,
+              kunci: kunci,
+              soal: soal
+            };
+            narratives[meta.shortLabel] = narratives[qNum];
+            if (soal) countFilled++;
+          }
+        }
+      }
+      
+      saveSoalNarratives(kelas, fanName, narratives);
+      showToast(`Seluruh naskah soal ${fanName} Kelas ${kelas} (${countFilled} butir terisi) berhasil disimpan!`, 'success');
+      renderDaftarSoalPerFan();
+    }
+
+    function resetNarasiFanIni() {
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      
+      if (!confirm(`Apakah Anda yakin ingin mengosongkan seluruh narasi soal ${fanName} untuk Kelas ${kelas}?`)) {
+        return;
+      }
+      
+      const key = getSoalStorageKey(kelas, fanName);
+      try {
+        localStorage.removeItem(key);
+      } catch (e) {}
+      
+      showToast(`Seluruh narasi soal ${fanName} Kelas ${kelas} telah dikosongkan.`, 'info');
+      renderDaftarSoalPerFan();
+    }
+
+    function salinTemplateNaskahSoal() {
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const modelKey = getModelForFan(fanName);
+      const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
+        ? FAN_MODELS[modelKey]
+        : DEFAULT_FAN_MODELS['FAN 1'];
+      const types = currModel.types || [{ name: 'Pilihan Ganda', count: 28 }];
+      
+      let lines = [
+        `# TEMPLATE NASKAH SOAL IMDA 2`,
+        `# Fan: ${fanName} | Kelas: ${kelas} | Model: ${modelKey}`,
+        `# Format: NOMOR_LABEL: Teks Soal | Materi: [Pokok Bahasan] | Kunci: [Kunci Jawaban]`,
+        ``
+      ];
+      
+      let qGlobal = 0;
+      types.forEach(t => {
+        lines.push(`## ${t.name}`);
+        const count = parseInt(t.count, 10) || 0;
+        for (let i = 0; i < count; i++) {
+          const meta = getQuestionLabelMeta(qGlobal, modelKey);
+          lines.push(`${meta.shortLabel}: Tuliskan naskah soal ${meta.shortLabel} di sini... | Materi: Pokok bahasan ${meta.shortLabel} | Kunci: Kunci jawaban`);
+          qGlobal++;
+        }
+        lines.push(``);
+      });
+      
+      const fullText = lines.join('\n');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullText).then(() => {
+          showToast('Format template naskah soal berhasil disalin ke clipboard!', 'success');
+        }).catch(() => {
+          prompt('Salin teks template di bawah ini:', fullText);
+        });
+      } else {
+        prompt('Salin teks template di bawah ini:', fullText);
+      }
+    }
+
+    // MODAL UNGGAH NASKAH SOAL
+    function openModalUploadNaskahSoal() {
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const subEl = document.getElementById('modal-upload-subtitle');
+      if (subEl) subEl.textContent = `Mata Pelajaran: ${fanName} &bull; Kelas ${kelas} Tsanawiyah`;
+      
+      const modal = document.getElementById('modal-upload-naskah-soal');
+      if (modal) modal.classList.remove('hidden');
+      
+      switchModalUploadTab('paste');
+      
+      const fileInput = document.getElementById('modal-file-input');
+      if (fileInput) {
+        fileInput.onchange = handleFileUploadSoal;
+      }
+    }
+
+    function closeModalUploadNaskahSoal() {
+      const modal = document.getElementById('modal-upload-naskah-soal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchModalUploadTab(tab) {
+      const pasteTab = document.getElementById('modal-tab-paste');
+      const fileTab = document.getElementById('modal-tab-file');
+      const btnPaste = document.getElementById('modal-tab-btn-paste');
+      const btnFile = document.getElementById('modal-tab-btn-file');
+      
+      if (tab === 'paste') {
+        if (pasteTab) pasteTab.classList.remove('hidden');
+        if (fileTab) fileTab.classList.add('hidden');
+        if (btnPaste) btnPaste.className = 'py-2 px-4 border-b-2 border-emerald-600 text-emerald-700 cursor-pointer font-bold';
+        if (btnFile) btnFile.className = 'py-2 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer font-bold';
+      } else {
+        if (pasteTab) pasteTab.classList.add('hidden');
+        if (fileTab) fileTab.classList.remove('hidden');
+        if (btnPaste) btnPaste.className = 'py-2 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer font-bold';
+        if (btnFile) btnFile.className = 'py-2 px-4 border-b-2 border-emerald-600 text-emerald-700 cursor-pointer font-bold';
+      }
+    }
+
+    function isiContohNaskahUpload() {
+      const ta = document.getElementById('modal-upload-textarea');
+      if (!ta) return;
+      ta.value = `ES 4: Sebutkan 5 (lima) syarat hadits shahih menurut kaidah Ibnu Shalah dan jelaskan perbedaan dhabit shadr dengan dhabit kitab! | Materi: Kaidah Keshahihan Sanad | Kunci: Sanad bersambung, rawi adil, dhabit, tidak syadz, tidak berillat
+ML 6: Hadits yang diriwayatkan oleh orang banyak yang menurut adat mustahil mereka bersepakat berdusta dinamakan hadits ...... | Materi: Musthalah Hadits | Kunci: Hadits Mutawatir
+ES 5: Jelaskan makna hadits "Innamal a'maalu bin-niyyaat" serta sebutkan asbabul wurud disabdakannya hadits tersebut oleh Rasulullah SAW! | Materi: Asbabul Wurud Hadits | Kunci: Muhajir Ummi Qais
+PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Perawi Hadits | Kunci: Abu Hurairah RA`;
+      previewUploadSoal();
+    }
+
+    function parseTextNaskahSoal(rawText, modelKey) {
+      const results = {};
+      const lines = rawText.split('\n');
+      const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
+        ? FAN_MODELS[modelKey]
+        : DEFAULT_FAN_MODELS['FAN 1'];
+      const totalQ = getModelTotal(currModel);
+      
+      const labelToGlobal = {};
+      for (let q = 0; q < totalQ; q++) {
+        const meta = getQuestionLabelMeta(q, modelKey);
+        labelToGlobal[meta.shortLabel.toUpperCase()] = q + 1;
+        labelToGlobal[`#${meta.shortLabel.toUpperCase()}`] = q + 1;
+        labelToGlobal[String(q + 1)] = q + 1;
+      }
+      
+      let autoIndex = 1;
+      lines.forEach(rawLine => {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#') || line.startsWith('//')) return;
+        
+        let label = '';
+        let rest = line;
+        
+        const matchLabel = line.match(/^([A-Za-z]{2}\s*\d+|#?\d+)[\:\.\-\)]\s*(.*)$/);
+        if (matchLabel) {
+          label = matchLabel[1].toUpperCase().replace(/\s+/g, ' ');
+          rest = matchLabel[2].trim();
+        } else {
+          label = String(autoIndex);
+          autoIndex++;
+        }
+        
+        const parts = rest.split('|');
+        let soalTeks = parts[0].trim();
+        let materi = '';
+        let kunci = '';
+        
+        for (let p = 1; p < parts.length; p++) {
+          const seg = parts[p].trim();
+          if (seg.toLowerCase().startsWith('materi:')) {
+            materi = seg.substring(7).trim();
+          } else if (seg.toLowerCase().startsWith('kunci:')) {
+            kunci = seg.substring(6).trim();
+          } else if (!materi) {
+            materi = seg;
+          } else if (!kunci) {
+            kunci = seg;
+          }
+        }
+        
+        let qNum = labelToGlobal[label.replace(/\s+/g, ' ')];
+        if (!qNum) {
+          const numOnly = label.match(/\d+/);
+          if (numOnly) {
+            const parsedNum = parseInt(numOnly[0], 10);
+            if (parsedNum <= totalQ) qNum = parsedNum;
+          }
+        }
+        if (!qNum) qNum = autoIndex;
+        
+        if (qNum <= totalQ) {
+          const meta = getQuestionLabelMeta(qNum - 1, modelKey);
+          results[qNum] = {
+            q_num: qNum,
+            shortLabel: meta.shortLabel,
+            typeNo: meta.typeNo,
+            typeName: meta.typeName,
+            materi: materi,
+            kunci: kunci,
+            soal: soalTeks
+          };
+          results[meta.shortLabel] = results[qNum];
+        }
+      });
+      
+      return results;
+    }
+
+    function previewUploadSoal() {
+      const ta = document.getElementById('modal-upload-textarea');
+      if (!ta) return;
+      const text = ta.value.trim();
+      if (!text) {
+        showToast('Silakan tempel teks naskah soal terlebih dahulu.', 'warning');
+        return;
+      }
+      
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const modelKey = getModelForFan(fanName);
+      const parsed = parseTextNaskahSoal(text, modelKey);
+      
+      const count = Object.values(parsed).filter(item => item && item.soal).length / 2;
+      const actualCount = Math.round(count);
+      
+      const previewCont = document.getElementById('modal-preview-container');
+      const countEl = document.getElementById('modal-preview-count');
+      const listEl = document.getElementById('modal-preview-list');
+      
+      if (previewCont) previewCont.classList.remove('hidden');
+      if (countEl) countEl.textContent = `${actualCount} butir berhasil dikenali`;
+      
+      if (listEl) {
+        const uniqueItems = [];
+        const seen = new Set();
+        Object.values(parsed).forEach(item => {
+          if (!seen.has(item.q_num)) {
+            seen.add(item.q_num);
+            uniqueItems.push(item);
+          }
+        });
+        uniqueItems.sort((a, b) => a.q_num - b.q_num);
+        
+        listEl.innerHTML = uniqueItems.map(item => `
+          <div class="border-b border-slate-200 pb-1 flex items-start gap-2">
+            <span class="font-bold text-amber-700 whitespace-nowrap">[${item.shortLabel}]</span>
+            <div class="flex-1">
+              <span class="text-slate-800">${escapeHtml(item.soal.substring(0, 90))}${item.soal.length > 90 ? '...' : ''}</span>
+              ${item.materi ? `<span class="text-emerald-700 block text-[10px]">📖 Materi: ${escapeHtml(item.materi)}</span>` : ''}
+              ${item.kunci ? `<span class="text-slate-500 block text-[10px]">🔑 Kunci: ${escapeHtml(item.kunci)}</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function handleFileUploadSoal(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const content = evt.target.result;
+        const ta = document.getElementById('modal-upload-textarea');
+        if (ta) {
+          ta.value = content;
+          switchModalUploadTab('paste');
+          previewUploadSoal();
+          showToast(`File "${file.name}" berhasil dibaca!`, 'info');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function prosesSimpanUploadSoal() {
+      const ta = document.getElementById('modal-upload-textarea');
+      if (!ta) return;
+      const text = ta.value.trim();
+      if (!text) {
+        showToast('Teks naskah soal masih kosong.', 'warning');
+        return;
+      }
+      
+      const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
+      const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
+      const modelKey = getModelForFan(fanName);
+      
+      const parsed = parseTextNaskahSoal(text, modelKey);
+      const narratives = loadSoalNarratives(kelas, fanName);
+      
+      let applied = 0;
+      Object.keys(parsed).forEach(k => {
+        narratives[k] = parsed[k];
+        if (parsed[k] && parsed[k].soal) applied++;
+      });
+      
+      saveSoalNarratives(kelas, fanName, narratives);
+      closeModalUploadNaskahSoal();
+      showToast(`Berhasil menyimpan naskah soal untuk ${fanName} Kelas ${kelas}!`, 'success');
+      
+      renderDaftarSoalPerFan();
+      
+      if (state.currentTab === 'rekap-fan') {
+        renderRekapFan();
+      }
+    }
+
   </script>
 
   <!-- MODAL: KELOLA & TAMBAH MATA PELAJARAN (FAN) -->
@@ -6712,6 +7595,84 @@
           <button type="button" onclick="closeApiConfigModal()" class="px-3.5 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition cursor-pointer">Batal</button>
           <button type="button" onclick="saveApiUrlConfig()" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-bold transition shadow-sm cursor-pointer">Simpan & Hubungkan</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: UNGGAH / PASTE NASKAH SOAL (MENU SOAL) -->
+  <!-- ========================================================================= -->
+  <div id="modal-upload-naskah-soal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Header Modal -->
+      <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-900 flex items-center justify-center font-bold text-sm">
+            📥
+          </div>
+          <div>
+            <h3 class="text-sm font-bold">Unggah / Paste Naskah Soal Sekaligus</h3>
+            <p class="text-[11px] text-slate-300" id="modal-upload-subtitle">Fan: Hadits Nabawy &bull; Kelas 1</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModalUploadNaskahSoal()" class="text-slate-400 hover:text-white text-lg font-bold p-1 cursor-pointer">&times;</button>
+      </div>
+
+      <!-- Body Modal -->
+      <div class="p-5 overflow-y-auto space-y-4 custom-scrollbar text-xs">
+        <div class="flex border-b border-slate-200 text-xs font-bold">
+          <button id="modal-tab-btn-paste" type="button" onclick="switchModalUploadTab('paste')" class="py-2 px-4 border-b-2 border-emerald-600 text-emerald-700 cursor-pointer font-bold">Paste Naskah Teks</button>
+          <button id="modal-tab-btn-file" type="button" onclick="switchModalUploadTab('file')" class="py-2 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 cursor-pointer font-bold">Upload File (CSV / JSON)</button>
+        </div>
+
+        <!-- Tab 1: Paste Text -->
+        <div id="modal-tab-paste" class="space-y-3">
+          <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+            <strong>Format Fleksibel:</strong> Anda dapat menempelkan daftar soal berurutan (misal: <code>1. Teks soal...</code>) atau per butir tipe (misal: <code>ES 4: Sebutkan 5 syarat hadits shahih... | Materi: Syarat Sah Hadits | Kunci: Sanad dll.</code>). Sistem otomatis mengenali nomor butir.
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tempelkan (Paste) Teks Naskah Soal di Bawah Ini:</label>
+            <textarea id="modal-upload-textarea" rows="8" class="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs focus:ring-amber-500 focus:border-amber-500" placeholder="Contoh format:
+ES 4: Sebutkan 5 syarat hadits shahih menurut kaidah Ibnu Shalah! | Materi: Syarat Sah Hadits | Kunci: Sanad bersambung, adil, dhabit, tidak syadz, tidak berillat
+ML 6: Hadits yang diriwayatkan oleh orang banyak... dinamakan hadits... | Materi: Musthalah Hadits | Kunci: Hadits Mutawatir
+ES 5: Jelaskan asbabul wurud hadits innamal a'maalu bin-niyyaat! | Materi: Asbabul Wurud | Kunci: Niat hijrah karena wanita"></textarea>
+          </div>
+          <div class="flex justify-between items-center pt-1">
+            <button type="button" onclick="isiContohNaskahUpload()" class="text-xs text-amber-700 hover:underline font-semibold cursor-pointer">
+              💡 Masukkan Teks Contoh Soal
+            </button>
+            <button type="button" onclick="previewUploadSoal()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-white text-xs font-semibold hover:bg-slate-900 transition cursor-pointer">
+              🔍 Cek / Preview Hasil Baca
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Upload File -->
+        <div id="modal-tab-file" class="space-y-3 hidden">
+          <div class="p-6 border-2 border-dashed border-slate-300 rounded-xl text-center space-y-2 bg-slate-50">
+            <svg class="w-8 h-8 mx-auto text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <div class="text-xs text-slate-600 font-semibold">Pilih file CSV atau JSON naskah soal</div>
+            <input type="file" id="modal-file-input" accept=".csv,.json,.txt" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+          </div>
+        </div>
+
+        <!-- Preview Container -->
+        <div id="modal-preview-container" class="hidden space-y-2 border-t border-slate-200 pt-3">
+          <div class="font-bold text-slate-800 flex items-center justify-between text-xs">
+            <span>Hasil Baca Naskah:</span>
+            <span id="modal-preview-count" class="text-emerald-700 font-mono">0 butir terbaca</span>
+          </div>
+          <div id="modal-preview-list" class="max-h-40 overflow-y-auto border border-slate-200 rounded-lg p-2 space-y-1.5 bg-slate-50 text-[11px] font-mono">
+            <!-- Populated via preview -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Modal -->
+      <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 text-xs">
+        <button type="button" onclick="closeModalUploadNaskahSoal()" class="px-3.5 py-2 rounded-lg font-bold text-slate-600 hover:bg-slate-200 transition cursor-pointer">Batal</button>
+        <button type="button" onclick="prosesSimpanUploadSoal()" class="px-4 py-2 rounded-lg font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-xs transition cursor-pointer">Terapkan ke Bank Soal</button>
       </div>
     </div>
   </div>
