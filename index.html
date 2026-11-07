@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Labsoma PPS &bull; Sistem Informasi &amp; Analisis IMDA 2 Tsanawiyah Sidogiri</title>
+  <title>Labsoma PPS &bull; Sistem Informasi &amp; Analisis Butir Soal Sidogiri</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
@@ -176,9 +176,11 @@
           </button>
 
           <!-- Center Subtitle (Desktop) -->
-          <div class="hidden lg:flex items-center ml-2 space-x-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Labsoma PPS &bull; MMU Tsanawiyah Sidogiri</span>
+          <div class="hidden lg:flex items-center ml-2 gap-1.5" id="ctx-bar">
+            <span class="hidden 2xl:inline text-xs font-bold text-slate-500 dark:text-slate-400 mr-1">Labsoma PPS &bull; MMU Sidogiri</span>
+            <select onchange="onCtxTingkatChange(this.value)" title="Tingkat" aria-label="Tingkat" class="ctx-tingkat-sel max-w-[150px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+            <select onchange="onCtxTahapChange(this.value)" title="Tahap Ujian" aria-label="Tahap Ujian" class="ctx-tahap-sel max-w-[130px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+            <button type="button" onclick="openAkademikModal()" title="Atur Tingkat, Kelas &amp; Tahap Ujian" aria-label="Atur Tingkat, Kelas dan Tahap Ujian" class="w-8 h-8 shrink-0 rounded-lg bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-600 dark:text-slate-200 flex items-center justify-center cursor-pointer border border-slate-300 dark:border-[#1a3d52]">⚙️</button>
           </div>
         </div>
 
@@ -300,7 +302,7 @@
       <!-- Sidebar Footer (Labsoma PPS Style) -->
       <div class="p-3.5 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-[#071924] text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between mt-auto">
         <div>
-          <div class="font-extrabold text-slate-700 dark:text-slate-200 text-xs">SI-IMDA 2 &bull; Tsanawiyah</div>
+          <div class="font-extrabold text-slate-700 dark:text-slate-200 text-xs">SI-<span data-ctx="tahapUpper">IMDA 2</span> &bull; <span data-ctx="tingkat">Tsanawiyah</span></div>
           <div class="text-[10px] text-slate-400 dark:text-slate-500">Pondok Pesantren Sidogiri</div>
         </div>
         <span class="px-2 py-0.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/70 text-cyan-700 dark:text-cyan-400 text-[10px] border border-cyan-200 dark:border-cyan-800/60 font-mono font-bold">v2.5</span>
@@ -310,26 +312,39 @@
 
     <!-- MAIN VIEW CONTAINER -->
     <main id="main-content-container" class="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 transition-all duration-300">
+      <div id="ctx-bar-mobile" class="no-print lg:hidden flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1a3d52] bg-white dark:bg-[#0f2634] p-2.5">
+        <span class="text-[11px] font-bold text-slate-500">Tingkat &amp; Ujian:</span>
+        <select onchange="onCtxTingkatChange(this.value)" title="Tingkat" aria-label="Tingkat" class="ctx-tingkat-sel flex-1 min-w-[140px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+        <select onchange="onCtxTahapChange(this.value)" title="Tahap Ujian" aria-label="Tahap Ujian" class="ctx-tahap-sel flex-1 min-w-[120px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+        <button type="button" onclick="openAkademikModal()" title="Atur Tingkat, Kelas &amp; Tahap Ujian" aria-label="Atur Tingkat, Kelas dan Tahap Ujian" class="w-8 h-8 shrink-0 rounded-lg bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-600 dark:text-slate-200 flex items-center justify-center cursor-pointer border border-slate-300 dark:border-[#1a3d52]">⚙️</button>
+      </div>
 
     <!-- ========================================== -->
     <!-- TAB 1: DASHBOARD & STATISTIK GLOBAL -->
     <!-- ========================================== -->
     <section id="view-dashboard" class="tab-content space-y-6">
+      <div id="ctx-empty-banner" class="hidden rounded-2xl border border-amber-300 bg-amber-50 text-amber-900 p-4 text-xs flex items-start gap-3">
+        <span class="text-lg">📭</span>
+        <div>
+          <div class="font-extrabold text-sm">Belum ada data untuk <span data-ctx="tahapTingkat"></span></div>
+          <p class="mt-1">Mulai dengan menambahkan Fan dan Rombel di <button type="button" class="font-bold underline cursor-pointer" onclick="document.querySelector('#main-nav-tabs [data-tab=master-data]').click()">Menu Data (Master)</button>, lalu isi nilai lewat <b>Input Nilai &amp; Koreksi</b>. Data tingkat atau tahap ujian lain tidak terpengaruh.</p>
+        </div>
+      </div>
       <!-- Welcome Banner (Labsoma PPS Ocean-Teal Gradient Theme) -->
       <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0d687a] via-[#095261] to-[#063842] text-white p-6 sm:p-8 shadow-lg border border-cyan-500/30">
         <div class="relative z-10 max-w-3xl">
           <div id="dash-banner-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-200 text-xs font-semibold mb-3 border border-cyan-400/30">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            Hierarki: Tingkat Tsanawiyah &bull; Kelas Aktif
+            <span data-ctx="tahap">Imda 2</span> &bull; Tingkat <span data-ctx="tingkat">Tsanawiyah</span> &bull; Kelas Aktif
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Analisis Butir Soal &amp; Daya Serap IMDA 2
+            Analisis Butir Soal &amp; Daya Serap <span data-ctx="tahap">IMDA 2</span>
           </h2>
           <p id="dash-banner-desc" class="mt-2 text-sm sm:text-base text-cyan-100/90 leading-relaxed">
-            Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat Tsanawiyah</strong>. Data saat ini bersumber langsung dari spreadsheet master.
+            Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat <span data-ctx="tingkat">Tsanawiyah</span></strong> (<strong data-ctx="tahap">Imda 2</strong>). Data saat ini bersumber langsung dari spreadsheet master.
           </p>
           <div id="dash-banner-pills" class="mt-4 flex flex-wrap gap-2 text-xs">
-            <span class="px-2.5 py-1 rounded-md bg-[#08404c]/80 border border-cyan-500/40 text-cyan-100"><strong>MMU</strong> Tsanawiyah</span>
+            <span class="px-2.5 py-1 rounded-md bg-[#08404c]/80 border border-cyan-500/40 text-cyan-100"><strong>MMU</strong> <span data-ctx="tingkat">Tsanawiyah</span></span>
             <span class="px-2.5 py-1 rounded-md bg-cyan-900/80 border border-cyan-600/50 text-cyan-200"><strong>Kelas Aktif:</strong> Memuat Data...</span>
           </div>
         </div>
@@ -383,7 +398,7 @@
               <span>Distribusi Kesukaran Soal</span>
               <span class="text-xs font-normal text-slate-500">Butir Soal Terinput</span>
             </h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Proporsi klasifikasi mutu soal IMDA 2 Kelas 1</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Proporsi klasifikasi mutu soal <span data-ctx="tahap">IMDA 2</span> Kelas 1</p>
           </div>
           <div class="relative h-60 my-2">
             <canvas id="chart-diff-donut"></canvas>
@@ -458,10 +473,10 @@
           <div class="space-y-1">
             <div class="flex items-center gap-2">
               <span class="px-2.5 py-0.5 rounded-md bg-amber-400 text-sky-950 text-xs font-black tracking-wide uppercase">MENU INPUT NILAI</span>
-              <span class="text-xs text-sky-200 font-medium">Laboratorium Soal Madrasah Tsanawiyah Sidogiri</span>
+              <span class="text-xs text-sky-200 font-medium">Laboratorium Soal Madrasah <span data-ctx="tingkat">Tsanawiyah</span> Sidogiri</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-              <span>Analisa Butir Soal & Koreksi Ujian IMDA 2</span>
+              <span>Analisa Butir Soal & Koreksi Ujian <span data-ctx="tahap">IMDA 2</span></span>
             </h2>
             <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-2xl">
               Pengaturan model fan, kelas rombel, jumlah santri hadir, dan skor jawaban per butir soal. Data langsung tersinkronisasi dua arah dengan Google Sheets (Sheet <code>INPUT_DATA</code>).
@@ -469,10 +484,10 @@
           </div>
           <div class="flex flex-wrap items-center gap-2 text-xs">
             <span class="px-3 py-1.5 rounded-lg bg-slate-900/70 border border-sky-600/40 text-sky-200 flex items-center gap-1.5 font-medium">
-              <span class="w-2 h-2 rounded-full bg-sky-400"></span> Tingkat: <strong>Tsanawiyah</strong>
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span> Tingkat: <strong data-ctx="tingkat">Tsanawiyah</strong>
             </span>
             <span class="px-3 py-1.5 rounded-lg bg-slate-900/70 border border-sky-600/40 text-sky-200 flex items-center gap-1.5 font-medium">
-              <span class="w-2 h-2 rounded-full bg-amber-400"></span> Ujian: <strong>IMDA 2</strong>
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span> Ujian: <strong data-ctx="tahap">IMDA 2</strong>
             </span>
             <!-- Interactive Mode Switcher in Header Banner -->
             <div class="inline-flex rounded-xl bg-slate-900/90 p-1 border border-sky-600/60 shadow-inner items-center gap-1">
@@ -937,7 +952,7 @@
               <span class="text-xs text-sky-200 font-medium">Pusat Basis Data & Referensi Input Nilai</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
-              <span>Pusat Manajemen Data & Referensi SI-IMDA 2</span>
+              <span>Pusat Manajemen Data & Referensi SI-<span data-ctx="tahapUpper">IMDA 2</span> &bull; <span data-ctx="tingkat">Tsanawiyah</span></span>
             </h2>
             <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-2xl">
               Seluruh data acuan model fan, nama fan (mapel), kelas, rombel paralel, dan arsip data spreadsheet terpusat di sini. Menu Input Nilai mengambil data resmi dari menu ini.
@@ -1097,7 +1112,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52]">
           <div>
             <div class="text-xs font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1.5">
-              <span>📚</span> <span>Bank Naskah Soal & Narasi IMDA 2</span>
+              <span>📚</span> <span>Bank Naskah Soal & Narasi <span data-ctx="tahapTingkat">IMDA 2 Tsanawiyah</span></span>
             </div>
             <h2 class="text-lg font-bold text-slate-900 dark:text-white">Kelola Naskah & Narasi Butir Soal</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">Penyimpanan naskah butir soal terhubung langsung ke Google Spreadsheet (Sheet <strong>BANK_SOAL</strong> dengan kolom: <code>| Tipe Soal | Nomor Soal | Soal | Kunci Jawaban |</code>) dan otomatis tampil pada telaah 3 butir soal terendah di Rekap Fan.</p>
@@ -1176,8 +1191,8 @@
         <!-- Controls Bar -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52]">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Rekapitulasi Hasil IMDA 2 Per Kelas</h2>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: <span data-ctx="tingkat">Tsanawiyah</span></div>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Rekapitulasi Hasil <span data-ctx="tahap">IMDA 2</span> Per Kelas</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">Pilih jenjang kelas di bawah ini untuk melihat analisis ketercapaian per butir soal</p>
           </div>
 
@@ -1238,7 +1253,7 @@
       <div class="bg-white dark:bg-[#0f2634] p-5 rounded-xl border border-slate-200/90 dark:border-[#1a3d52] shadow-sm transition-colors space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52]">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: <span data-ctx="tingkat">Tsanawiyah</span></div>
             <h2 class="text-lg font-bold text-slate-900 dark:text-white">Rekapitulasi Fan (Detail Performa Soal)</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">Evaluasi daya serap butir soal per mata pelajaran berdasarkan data spreadsheet</p>
           </div>
@@ -1306,7 +1321,7 @@
         <!-- Top Header & Kelas Selector -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52]">
           <div>
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: Tsanawiyah</div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: <span data-ctx="tingkat">Tsanawiyah</span></div>
             <h2 class="text-lg font-bold text-slate-900 dark:text-white">Analisis Performa Seluruh Rombel Paralel</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400" id="sk-subtitle">Perbandingan hasil ujian antarkelas paralel</p>
           </div>
@@ -1391,8 +1406,8 @@
 
         <!-- FORM TITLE BANNER (Printable) -->
         <div class="text-center py-3 border-b-2 border-slate-800 space-y-1">
-          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase">Pondok Pesantren Sidogiri - Madrasah Tsanawiyah</div>
-          <h1 class="text-base sm:text-xl font-extrabold text-slate-900 tracking-wide uppercase">FORM ANALISA IMDA 2 TSANAWIYAH 1447 - 1448 H.</h1>
+          <div class="text-xs font-semibold tracking-wider text-slate-500 uppercase" data-ctx="madrasahLine">Pondok Pesantren Sidogiri - Madrasah Tsanawiyah</div>
+          <h1 class="text-base sm:text-xl font-extrabold text-slate-900 tracking-wide uppercase" data-ctx="formTitle">FORM ANALISA IMDA 2 TSANAWIYAH 1447 - 1448 H.</h1>
           <div class="flex items-center justify-center gap-6 text-xs sm:text-sm font-bold text-slate-700">
             <span id="form-info-kelas">KELAS : 1-B</span>
             <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
@@ -1589,7 +1604,7 @@
 
         <!-- Rombel Summary Table -->
         <div class="space-y-2 pt-4 border-t border-slate-200">
-          <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Rekapitulasi Kapasitas Rombel Kelas 1 (Tingkat Tsanawiyah)</h4>
+          <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Rekapitulasi Kapasitas Rombel Kelas 1 (Tingkat <span data-ctx="tingkat">Tsanawiyah</span>)</h4>
           <div class="overflow-x-auto border border-slate-200 dark:border-[#1a3d52] rounded-lg custom-scrollbar">
             <table class="w-full text-left text-xs border-collapse">
               <thead class="bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 font-semibold border-b border-slate-200 dark:border-[#1a3d52] dark:border-[#1a3d52]">
@@ -1622,7 +1637,7 @@
     <div class="bg-white dark:bg-[#0f2634] rounded-2xl max-w-4xl w-full border border-slate-200 dark:border-[#1a3d52] max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 flex flex-col">
       <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50 dark:bg-[#0b1d28] rounded-t-2xl border-b border-slate-100 dark:border-[#1a3d52]">
         <div>
-          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-sky-100 text-sky-800 uppercase tracking-wider" id="modal-fan-badge">Tingkat Tsanawiyah &bull; Kelas 1</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-sky-100 text-sky-800 uppercase tracking-wider" id="modal-fan-badge">Tingkat <span data-ctx="tingkat">Tsanawiyah</span> &bull; Kelas 1</span>
           <h3 class="text-lg font-extrabold text-slate-900 mt-1" id="modal-fan-title">Detail Analisis Fan</h3>
         </div>
         <button id="modal-fan-close" onclick="closeFanDetailModal()" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition cursor-pointer" title="Tutup Modal (X)">
@@ -1717,10 +1732,11 @@
       <div class="p-4 space-y-3 max-h-80 overflow-y-auto custom-scrollbar">
         <div class="p-3 rounded-xl bg-cyan-50/70 dark:bg-[#133042] border border-cyan-200/80 dark:border-cyan-800/40 space-y-1">
           <div class="flex items-center justify-between font-bold text-cyan-900 dark:text-cyan-200">
-            <span>⚡ Ujian IMDA 2 Tsanawiyah</span>
+            <span>⚡ Ujian <span data-ctx="tahapTingkat">IMDA 2 Tsanawiyah</span></span>
             <span class="text-[10px] bg-cyan-200 dark:bg-cyan-800 text-cyan-900 dark:text-cyan-100 px-1.5 py-0.5 rounded">Agenda</span>
           </div>
-          <p class="text-[11px] text-slate-600 dark:text-slate-300">Ujian IMDA 2 semester gasal Tsanawiyah Sidogiri dijadwalkan pada Kamis, 31 Desember 2026 / 22 Rajab 1448 H.</p>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300" data-ctx-only="default">Ujian IMDA 2 semester gasal Tsanawiyah Sidogiri dijadwalkan pada Kamis, 31 Desember 2026 / 22 Rajab 1448 H.</p>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300 hidden" data-ctx-only="other">Pastikan nilai ujian <strong data-ctx="tahapTingkat"></strong> sudah diinput dan disinkronkan ke Spreadsheet.</p>
         </div>
         <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0e2736] border border-slate-200 dark:border-slate-800 space-y-1">
           <div class="flex items-center justify-between font-bold text-slate-800 dark:text-slate-200">
@@ -1750,7 +1766,7 @@
   <footer class="no-print bg-white dark:bg-[#06131c] border-t border-slate-200/80 dark:border-[#163547] py-4 mt-auto transition-colors">
     <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
       <div>
-        <span class="font-bold text-slate-700">Sistem Informasi & Analisis IMDA 2</span> &bull; MMU Tsanawiyah 1447 - 1448 H.
+        <span class="font-bold text-slate-700">Sistem Informasi & Analisis <span data-ctx="tahap">IMDA 2</span></span> &bull; MMU <span data-ctx="tingkat">Tsanawiyah</span> <span data-ctx="tahunAjaran">1447 - 1448 H.</span>
       </div>
       <div class="flex items-center gap-4">
         <span>Madrasah Miftahul Ulum Pondok Pesantren Sidogiri</span>
@@ -1787,6 +1803,321 @@
     }
 
     // ==========================================
+    // KONTEKS: TINGKAT & TAHAP UJIAN
+    // Semua data (nilai, master, naskah soal) dipisah per Tingkat + Tahap Ujian.
+    // ==========================================
+    const TINGKAT_LIST = ['Idadiyah Program Khusus', 'Ibtidaiyah', 'Tsanawiyah', 'Aliyah', 'Idadiyah Reguler'];
+    const TAHAP_LIST = ['Semester Ganjil', 'Semester Genap', 'Imda 1', 'Imda 2', 'Imda 3', 'Imni'];
+    const DEFAULT_CTX = { tingkat: 'Tsanawiyah', tahap: 'Imda 2' };   // data lama dianggap konteks ini
+    const DEFAULT_TAHUN_AJARAN = '1447 - 1448 H.';
+    const CTX_KEY = 'IMDA_CTX';
+    const ACADEMIC_CACHE_KEY = 'IMDA_ACADEMIC_CONFIG';
+    const ACADEMIC_DIRTY_KEY = 'IMDA_ACADEMIC_DIRTY';
+
+    // Bawaan: semua tahap tersedia di semua kelas (Imni hanya di kelas akhir). Silakan dipangkas lewat menu Atur.
+    function defaultAcademicConfig() {
+      return {
+        exists: false,
+        tahunAjaran: DEFAULT_TAHUN_AJARAN,
+        tingkat: TINGKAT_LIST.map(n => ({
+          nama: n,
+          kelas: [1, 2, 3].map(k => ({ no: k, tahap: TAHAP_LIST.filter(t => t !== 'Imni' || k === 3) }))
+        }))
+      };
+    }
+    function normalizeAcademic(cfg) {
+      const out = { exists: !!(cfg && cfg.exists), tahunAjaran: String((cfg && cfg.tahunAjaran) || DEFAULT_TAHUN_AJARAN), tingkat: [] };
+      const def = defaultAcademicConfig();
+      TINGKAT_LIST.forEach(n => {
+        const src = cfg && Array.isArray(cfg.tingkat) ? cfg.tingkat.find(t => t && t.nama === n) : null;
+        let kelas = [];
+        if (src && Array.isArray(src.kelas)) {
+          src.kelas.forEach(k => {
+            const no = parseInt(k && k.no, 10);
+            if (!(no >= 1 && no <= 3) || kelas.some(x => x.no === no)) return;
+            kelas.push({ no, tahap: (Array.isArray(k.tahap) ? k.tahap : []).filter((t, i, a) => TAHAP_LIST.includes(t) && a.indexOf(t) === i) });
+          });
+        }
+        kelas = kelas.filter(k => k.tahap.length > 0).sort((a, b) => a.no - b.no);
+        if (kelas.length === 0) kelas = def.tingkat.find(t => t.nama === n).kelas;
+        const finalNo = Math.max.apply(null, kelas.map(k => k.no));
+        kelas.forEach(k => {
+          if (k.no !== finalNo) k.tahap = k.tahap.filter(t => t !== 'Imni');   // Imni hanya kelas akhir
+          k.tahap = TAHAP_LIST.filter(t => k.tahap.includes(t));
+        });
+        out.tingkat.push({ nama: n, kelas });
+      });
+      return out;
+    }
+    function loadAcademicCache() {
+      try {
+        const c = JSON.parse(localStorage.getItem(ACADEMIC_CACHE_KEY) || 'null');
+        if (c && Array.isArray(c.tingkat)) return normalizeAcademic(c);
+      } catch (e) {}
+      return defaultAcademicConfig();
+    }
+    let ACADEMIC = loadAcademicCache();
+
+    function loadCtx() {
+      try {
+        const c = JSON.parse(localStorage.getItem(CTX_KEY) || 'null');
+        if (c && TINGKAT_LIST.includes(c.tingkat) && c.tahap) return { tingkat: c.tingkat, tahap: String(c.tahap) };
+      } catch (e) {}
+      return { tingkat: DEFAULT_CTX.tingkat, tahap: DEFAULT_CTX.tahap };
+    }
+    let CTX = loadCtx();
+    function saveCtx() { try { localStorage.setItem(CTX_KEY, JSON.stringify(CTX)); } catch (e) {} }
+    function ctxIsDefault(c) { c = c || CTX; return c.tingkat === DEFAULT_CTX.tingkat && c.tahap === DEFAULT_CTX.tahap; }
+    function slugify(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+    function getKelasConfig(tingkat) {
+      const t = ACADEMIC.tingkat.find(i => i.nama === (tingkat || CTX.tingkat));
+      return t ? t.kelas : [];
+    }
+    function getTahapForTingkat(tingkat) {
+      const set = new Set();
+      getKelasConfig(tingkat).forEach(k => k.tahap.forEach(h => set.add(h)));
+      return TAHAP_LIST.filter(h => set.has(h));
+    }
+    // 'ok' | 'no-kelas' | 'no-tahap'
+    function kelasTahapStatus(kelasNo) {
+      const kc = getKelasConfig().find(x => x.no === kelasNo);
+      if (!kc) return 'no-kelas';
+      return kc.tahap.includes(CTX.tahap) ? 'ok' : 'no-tahap';
+    }
+    // Pastikan CTX valid terhadap konfigurasi; true jika CTX berubah
+    function ensureValidCtx() {
+      const before = CTX.tingkat + '|' + CTX.tahap;
+      if (!TINGKAT_LIST.includes(CTX.tingkat)) CTX.tingkat = DEFAULT_CTX.tingkat;
+      const hs = getTahapForTingkat(CTX.tingkat);
+      if (hs.length && !hs.includes(CTX.tahap)) CTX.tahap = hs.includes(DEFAULT_CTX.tahap) ? DEFAULT_CTX.tahap : hs[0];
+      saveCtx();
+      return before !== (CTX.tingkat + '|' + CTX.tahap);
+    }
+    function emptyAppData() {
+      return {
+        success: true, tingkat: CTX.tingkat, tahap: CTX.tahap, contexts: [], active_kelas: [], active_rombel: [],
+        total_santri: 0, total_rombel: 0, total_fan: 0, fans: {}, hasil: [], input: [], anomalies: [], warnings: [],
+        bankSoal: {}, master: null, last_updated: null
+      };
+    }
+    // Data bawaan di file ini hanya untuk konteks bawaan; konteks lain mulai dari kosong sampai sinkron selesai
+    if (!ctxIsDefault()) { APP_DATA = emptyAppData(); window.APP_DATA = APP_DATA; }
+
+    const CTX_FORMATTERS = {
+      tingkat: c => c.tingkat,
+      tahap: c => c.tahap,
+      tahapUpper: c => c.tahap.toUpperCase(),
+      tahapTingkat: c => c.tahap + ' ' + c.tingkat,
+      tahunAjaran: () => ACADEMIC.tahunAjaran || '',
+      madrasahLine: c => 'Pondok Pesantren Sidogiri - Madrasah ' + c.tingkat,
+      formTitle: c => ('FORM ANALISA ' + c.tahap.toUpperCase() + ' ' + c.tingkat.toUpperCase() + ' ' + (ACADEMIC.tahunAjaran || '')).trim()
+    };
+    function applyContextLabels() {
+      document.querySelectorAll('[data-ctx]').forEach(el => {
+        const f = CTX_FORMATTERS[el.dataset.ctx];
+        if (f) el.textContent = f(CTX);
+      });
+      document.querySelectorAll('[data-ctx-only]').forEach(el => {
+        const visible = (el.dataset.ctxOnly === 'default') === ctxIsDefault();
+        el.classList.toggle('hidden', !visible);
+      });
+      document.title = 'Labsoma PPS \u2022 Sistem Informasi & Analisis ' + CTX.tahap + ' ' + CTX.tingkat + ' Sidogiri';
+    }
+    function renderContextSelectors() {
+      const stEls = document.querySelectorAll('.ctx-tingkat-sel');
+      const shEls = document.querySelectorAll('.ctx-tahap-sel');
+      const tingkatHtml = TINGKAT_LIST.map(t => `<option value="${escapeHtml(t)}"${t === CTX.tingkat ? ' selected' : ''}>${escapeHtml(t)}</option>`).join('');
+      const withData = new Set(((APP_DATA && APP_DATA.contexts) || []).filter(c => c.tingkat === CTX.tingkat).map(c => c.tahap));
+      let opts = getTahapForTingkat(CTX.tingkat);
+      if (!opts.includes(CTX.tahap)) opts = opts.concat([CTX.tahap]);
+      const tahapHtml = opts.map(h => `<option value="${escapeHtml(h)}"${h === CTX.tahap ? ' selected' : ''}>${escapeHtml(h)}${withData.has(h) ? ' \u25CF' : ''}</option>`).join('');
+      stEls.forEach(el => { el.innerHTML = tingkatHtml; });
+      shEls.forEach(el => { el.innerHTML = tahapHtml; });
+    }
+    function setContext(tingkat, tahap) {
+      if (tingkat === CTX.tingkat && tahap === CTX.tahap) return;
+      CTX = { tingkat, tahap };
+      ensureValidCtx();
+      reloadMasterScope();
+      APP_DATA = emptyAppData();
+      window.APP_DATA = APP_DATA;
+      renderContextSelectors();
+      applyContextLabels();
+      try { syncMasterDataWithSpreadsheet(APP_DATA, true); } catch (e) {}
+      refreshAllViews();
+      syncFromSpreadsheet(false);
+    }
+    function onCtxTingkatChange(tingkat) {
+      const hs = getTahapForTingkat(tingkat);
+      const tahap = hs.includes(CTX.tahap) ? CTX.tahap : (hs.includes(DEFAULT_CTX.tahap) ? DEFAULT_CTX.tahap : (hs[0] || DEFAULT_CTX.tahap));
+      setContext(tingkat, tahap);
+    }
+    function onCtxTahapChange(tahap) { setContext(CTX.tingkat, tahap); }
+
+    // Semua tampilan dirender ulang dari APP_DATA saat ini
+    function refreshAllViews() {
+      const run = (name, fn) => { try { fn(); } catch (e) { console.error(name + ':', e); } };
+      run('updateKelasTabLabels', () => updateKelasTabLabels());
+      run('updateInputRombelDropdown', () => updateInputRombelDropdown());
+      run('initInputAnalisa', () => initInputAnalisa());
+      run('initDashboard', () => initDashboard());
+      run('renderRekapKelas', () => renderRekapKelas());
+      run('initRekapFan', () => initRekapFan());
+      run('renderSeluruhKelas', () => renderSeluruhKelas());
+      run('updateFormKelasDropdown', () => updateFormKelasDropdown());
+      run('initAudit', () => initAudit());
+      run('initMenuSoal', () => initMenuSoal());
+      run('renderMasterData', () => { if (typeof renderMasterData === 'function') renderMasterData(); });
+      const banner = document.getElementById('ctx-empty-banner');
+      if (banner) banner.classList.toggle('hidden', ((APP_DATA && APP_DATA.total_fan) || 0) > 0);
+    }
+
+    // ---- Pengaturan Tingkat, Kelas & Tahap Ujian ----
+    function markAcademicDirty(v) { try { if (v) localStorage.setItem(ACADEMIC_DIRTY_KEY, '1'); else localStorage.removeItem(ACADEMIC_DIRTY_KEY); } catch (e) {} }
+    function isAcademicDirty() { try { return localStorage.getItem(ACADEMIC_DIRTY_KEY) === '1'; } catch (e) { return false; } }
+    function persistAcademicLocal() { try { localStorage.setItem(ACADEMIC_CACHE_KEY, JSON.stringify(ACADEMIC)); } catch (e) {} }
+
+    function academicPayload() {
+      return { tahunAjaran: ACADEMIC.tahunAjaran, tingkat: ACADEMIC.tingkat.map(t => ({ nama: t.nama, kelas: t.kelas.map(k => ({ no: k.no, tahap: k.tahap.slice() })) })) };
+    }
+    function pushAcademic(silent) {
+      const payload = academicPayload();
+      const isGas = (typeof google !== 'undefined' && google.script && google.script.run);
+      const url = getApiUrl();
+      const done = (res) => {
+        if (res && res.success) { markAcademicDirty(false); ACADEMIC.exists = true; persistAcademicLocal(); if (!silent) showToast('Pengaturan tingkat & tahap ujian tersimpan di Spreadsheet.', 'success'); }
+        else { showToast('Pengaturan belum tersimpan ke Spreadsheet: ' + ((res && res.error) || 'kesalahan server'), 'error'); }
+      };
+      if (isGas) {
+        google.script.run.withSuccessHandler(done).withFailureHandler(err => showToast('Pengaturan belum tersimpan ke Spreadsheet: ' + err, 'error')).saveTingkatConfig(payload);
+        return;
+      }
+      if (!url) { if (!silent) showToast('Pengaturan hanya tersimpan di browser ini. Hubungkan Spreadsheet agar sama di semua perangkat.', 'warning'); return; }
+      const viaPost = () => {
+        fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveTingkat', data: payload, token: getApiToken() }) })
+          .then(() => showToast('Pengaturan dikirim, belum terverifikasi. Klik Refresh Data untuk memastikan.', 'warning'))
+          .catch(() => showToast('Gagal mengirim pengaturan ke Spreadsheet. Perubahan tetap aman di browser ini.', 'error'));
+      };
+      const getUrl = url + (url.includes('?') ? '&' : '?') + 'action=saveTingkat&data=' + encodeURIComponent(JSON.stringify(payload)) + '&token=' + encodeURIComponent(getApiToken()) + '&_t=' + Date.now();
+      if (getUrl.length > 6000) { viaPost(); return; }
+      fetch(getUrl, { method: 'GET', redirect: 'follow' })
+        .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(done)
+        .catch(() => viaPost());
+    }
+    // Ambil pengaturan dari Spreadsheet (kecuali ada perubahan lokal yang belum terkirim)
+    function adoptAcademicFromServer(serverData) {
+      const c = serverData && serverData.config;
+      if (!c) return;
+      if (c.exists) {
+        const srv = normalizeAcademic(c);
+        if (isAcademicDirty() && JSON.stringify(academicPayload()) !== JSON.stringify({ tahunAjaran: srv.tahunAjaran, tingkat: srv.tingkat })) { pushAcademic(true); return; }
+        ACADEMIC = srv; ACADEMIC.exists = true;
+        persistAcademicLocal(); markAcademicDirty(false);
+      } else if (isAcademicDirty()) {
+        pushAcademic(true);
+      }
+    }
+
+    let akademikDraft = null;
+    function openAkademikModal() {
+      akademikDraft = JSON.parse(JSON.stringify(ACADEMIC));
+      renderAkademikModal();
+      const m = document.getElementById('modal-akademik');
+      if (m) { m.classList.remove('hidden'); m.onclick = (e) => { if (e.target === m) closeAkademikModal(); }; }
+    }
+    function closeAkademikModal() { const m = document.getElementById('modal-akademik'); if (m) m.classList.add('hidden'); }
+    function akademikFinalNo(t) { return t.kelas.length ? Math.max.apply(null, t.kelas.map(k => k.no)) : 0; }
+    function akademikFix(t) {
+      t.kelas.sort((a, b) => a.no - b.no);
+      const fin = akademikFinalNo(t);
+      t.kelas.forEach(k => { if (k.no !== fin) k.tahap = k.tahap.filter(h => h !== 'Imni'); });
+    }
+    function akademikToggleKelas(ti, no) {
+      const t = akademikDraft.tingkat[ti];
+      const idx = t.kelas.findIndex(k => k.no === no);
+      if (idx >= 0) {
+        if (t.kelas.length === 1) { showToast('Setiap tingkat minimal punya 1 kelas.', 'warning'); return; }
+        t.kelas.splice(idx, 1);
+      } else {
+        t.kelas.push({ no, tahap: ['Imda 1', 'Imda 2'] });
+      }
+      akademikFix(t); renderAkademikModal();
+    }
+    function akademikToggleTahap(ti, no, h) {
+      const t = akademikDraft.tingkat[ti];
+      const k = t.kelas.find(x => x.no === no);
+      if (!k) return;
+      if (h === 'Imni' && no !== akademikFinalNo(t)) return;
+      const i = k.tahap.indexOf(h);
+      if (i >= 0) k.tahap.splice(i, 1); else k.tahap.push(h);
+      k.tahap = TAHAP_LIST.filter(x => k.tahap.includes(x));
+      renderAkademikModal();
+    }
+    function akademikSetTahunAjaran(v) { akademikDraft.tahunAjaran = String(v || '').slice(0, 40); }
+    function renderAkademikModal() {
+      const body = document.getElementById('akademik-body');
+      if (!body || !akademikDraft) return;
+      const chip = (on, disabled) => 'px-2.5 py-1 rounded-lg border text-[11px] font-bold transition ' + (disabled ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200' : (on ? 'bg-sky-600 text-white border-sky-700 cursor-pointer' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 cursor-pointer'));
+      let html = `
+        <div class="flex items-center gap-2">
+          <label for="akademik-tahun" class="font-bold text-slate-700">Tahun Ajaran (untuk judul form cetak):</label>
+          <input id="akademik-tahun" type="text" value="${escapeHtml(akademikDraft.tahunAjaran)}" oninput="akademikSetTahunAjaran(this.value)" class="w-44 text-xs p-2 rounded-lg border border-slate-300 font-medium" placeholder="1447 - 1448 H.">
+        </div>`;
+      akademikDraft.tingkat.forEach((t, ti) => {
+        const fin = akademikFinalNo(t);
+        html += `<div class="rounded-xl border border-slate-200 p-3 space-y-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-extrabold text-sm text-slate-800">${escapeHtml(t.nama)}</span>
+            <span class="text-[11px] text-slate-500">Kelas yang ada:</span>
+            ${[1, 2, 3].map(no => `<button type="button" onclick="akademikToggleKelas(${ti},${no})" class="${chip(t.kelas.some(k => k.no === no), false)}">Kelas ${no}</button>`).join('')}
+          </div>`;
+        t.kelas.forEach(k => {
+          const isFinal = k.no === fin;
+          const n = k.tahap.length;
+          html += `<div class="flex flex-wrap items-center gap-1.5 pl-1">
+            <span class="w-16 font-bold text-slate-700">Kelas ${k.no}${isFinal ? ' <span class="text-[10px] text-amber-700">(akhir)</span>' : ''}</span>
+            ${TAHAP_LIST.map(h => { const dis = (h === 'Imni' && !isFinal); return `<button type="button" ${dis ? 'disabled' : ''} onclick="akademikToggleTahap(${ti},${k.no},'${h}')" class="${chip(k.tahap.includes(h), dis)}">${h}</button>`; }).join('')}
+            <span class="text-[10px] ${n >= 2 && n <= 3 ? 'text-slate-400' : 'text-amber-700'}">${n} tahap${n >= 2 && n <= 3 ? '' : ' (biasanya 2 atau 3)'}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      });
+      body.innerHTML = html;
+    }
+    function saveAkademikConfig() {
+      if (!akademikDraft) return;
+      for (const t of akademikDraft.tingkat) {
+        if (!t.kelas.length) { showToast(`Tingkat ${t.nama} minimal punya 1 kelas.`, 'error'); return; }
+        for (const k of t.kelas) {
+          if (!k.tahap.length) { showToast(`${t.nama} Kelas ${k.no}: pilih minimal 1 tahap ujian.`, 'error'); return; }
+        }
+      }
+      ACADEMIC = normalizeAcademic(akademikDraft);
+      persistAcademicLocal();
+      markAcademicDirty(true);
+      closeAkademikModal();
+      pushAcademic(false);
+      const prev = CTX.tingkat + '|' + CTX.tahap;
+      const changed = ensureValidCtx();
+      renderContextSelectors();
+      applyContextLabels();
+      if (changed) {
+        showToast('Tahap ujian terpilih tidak dipakai lagi; beralih ke ' + CTX.tahap + '.', 'warning');
+        reloadMasterScope();
+        APP_DATA = emptyAppData(); window.APP_DATA = APP_DATA;
+        refreshAllViews();
+        syncFromSpreadsheet(false);
+      } else {
+        try { updateKelasTabLabels(); renderRekapKelas(); } catch (e) {}
+      }
+    }
+    window.openAkademikModal = openAkademikModal;
+    window.closeAkademikModal = closeAkademikModal;
+    window.saveAkademikConfig = saveAkademikConfig;
+
+    // ==========================================
     // MASTER DATA (Model Fan, Nama Fan, Rombel)
     // Sumber kebenaran = Spreadsheet (sheet MASTER_FAN / MASTER_ROMBEL / MASTER_MODEL),
     // sehingga tampil sama di semua perangkat. localStorage hanya cadangan offline.
@@ -1795,32 +2126,40 @@
     let MASTER_ROMBELS = [];
     let masterReady = false;      // true setelah master data berhasil dicocokkan dengan Spreadsheet
     let masterPushTimer = null;
-    const MASTER_CACHE_KEY = 'IMDA_MASTER_CACHE';
-    const MASTER_DIRTY_KEY = 'IMDA_MASTER_DIRTY';
+    // Master data dipisah per TINGKAT (fan & rombel tiap tingkat berbeda); model fan bersifat global.
+    function masterScopeSuffix() { return CTX.tingkat === DEFAULT_CTX.tingkat ? '' : '_' + slugify(CTX.tingkat); }
+    function masterCacheKey() { return 'IMDA_MASTER_CACHE' + masterScopeSuffix(); }
+    function masterDirtyKey() { return 'IMDA_MASTER_DIRTY' + masterScopeSuffix(); }
 
-    (function loadMasterCache() {
+    function reloadMasterScope() {
+      MASTER_FANS = [];
+      MASTER_ROMBELS = [];
       try {
-        const c = JSON.parse(localStorage.getItem(MASTER_CACHE_KEY) || 'null');
+        const c = JSON.parse(localStorage.getItem(masterCacheKey()) || 'null');
         if (c && Array.isArray(c.fans)) MASTER_FANS = c.fans;
         if (c && Array.isArray(c.rombels)) MASTER_ROMBELS = c.rombels;
       } catch (e) {}
-    })();
+      masterReady = false;
+      clearTimeout(masterPushTimer);
+    }
+    reloadMasterScope();
 
     function masterPayload() {
       return {
+        tingkat: CTX.tingkat,
         fans: MASTER_FANS.map(f => ({ name: f.name, classes: (f.classes || []).map(Number).sort(), defaultModel: f.defaultModel || 'FAN 1' })),
         rombels: MASTER_ROMBELS.map(r => ({ rombel: r.rombel, kelas: Number(r.kelas), n: Number(r.n) || 0 })),
         models: (typeof FAN_MODELS !== 'undefined') ? FAN_MODELS : {}
       };
     }
     function persistMasterLocal() {
-      try { localStorage.setItem(MASTER_CACHE_KEY, JSON.stringify({ fans: MASTER_FANS, rombels: MASTER_ROMBELS })); } catch (e) {}
+      try { localStorage.setItem(masterCacheKey(), JSON.stringify({ fans: MASTER_FANS, rombels: MASTER_ROMBELS })); } catch (e) {}
     }
     function markMasterDirty(v) {
-      try { if (v) localStorage.setItem(MASTER_DIRTY_KEY, '1'); else localStorage.removeItem(MASTER_DIRTY_KEY); } catch (e) {}
+      try { if (v) localStorage.setItem(masterDirtyKey(), '1'); else localStorage.removeItem(masterDirtyKey()); } catch (e) {}
     }
     function isMasterDirty() {
-      try { return localStorage.getItem(MASTER_DIRTY_KEY) === '1'; } catch (e) { return false; }
+      try { return localStorage.getItem(masterDirtyKey()) === '1'; } catch (e) { return false; }
     }
     function saveMasterFans() { persistMasterLocal(); pushMasterToSheet(); }
     function saveMasterRombels() { persistMasterLocal(); pushMasterToSheet(); }
@@ -1869,12 +2208,23 @@
         .catch(() => viaPost());
     }
 
-    // Cocokkan master data perangkat ini dengan Spreadsheet. Mengembalikan 'adopted' | 'seed' | null
+    // Cocokkan master data (tingkat aktif) dengan Spreadsheet. Mengembalikan 'adopted' | 'pending-local' | 'seed' | null
+    function applyServerModels(models) {
+      if (!models || Object.keys(models).length === 0) return;
+      const merged = {};
+      ['FAN 1', 'FAN 2', 'FAN 3'].forEach(k => { merged[k] = JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS[k])); });
+      Object.keys(models).forEach(k => { merged[k] = models[k]; });
+      FAN_MODELS = merged;
+      try { localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS)); } catch (e) {}
+    }
     function adoptMasterFromServer(serverData) {
       const m = serverData && serverData.master;
-      if (m && m.exists) {
-        const serverNorm = JSON.stringify({ fans: m.fans || [], rombels: m.rombels || [], models: m.models || {} });
-        if (isMasterDirty() && JSON.stringify(masterPayload()) !== serverNorm) {
+      if (!m) return null;
+      if ((m.tingkat || DEFAULT_CTX.tingkat) !== CTX.tingkat) return null;   // respons untuk tingkat lain
+      const dirty = isMasterDirty();
+      if (m.exists) {
+        const serverNorm = JSON.stringify({ tingkat: CTX.tingkat, fans: m.fans || [], rombels: m.rombels || [], models: m.models || {} });
+        if (dirty && JSON.stringify(masterPayload()) !== serverNorm) {
           // Ada perubahan di perangkat ini yang belum terkirim: kirim dulu, jangan ditimpa
           masterReady = true;
           doPushMaster();
@@ -1882,19 +2232,15 @@
         }
         MASTER_FANS = m.fans || [];
         MASTER_ROMBELS = m.rombels || [];
-        if (m.models && Object.keys(m.models).length > 0) {
-          const merged = {};
-          ['FAN 1', 'FAN 2', 'FAN 3'].forEach(k => { merged[k] = JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS[k])); });
-          Object.keys(m.models).forEach(k => { merged[k] = m.models[k]; });
-          FAN_MODELS = merged;
-          try { localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS)); } catch (e) {}
-        }
+        applyServerModels(m.models);
         persistMasterLocal();
         markMasterDirty(false);
         masterReady = true;
         return 'adopted';
       }
-      return 'seed'; // Spreadsheet belum punya master data: perangkat ini yang mengisi pertama kali
+      // Tingkat ini belum punya master di Spreadsheet: model (global) tetap diambil; fan & rombel diisi dari data
+      if (!dirty) applyServerModels(m.models);
+      return 'seed'; // perangkat ini yang mengisi pertama kali
     }
 
     function forcePushMaster() {
@@ -2037,12 +2383,12 @@
       // 1. DYNAMIC WELCOME BANNER
       const bannerBadge = document.getElementById('dash-banner-badge');
       if (bannerBadge) {
-        bannerBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> Hierarki: Tingkat Tsanawiyah &bull; Kelas ${activeK.join(', ')} Aktif`;
+        bannerBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> ${escapeHtml(CTX.tahap)} &bull; Tingkat ${escapeHtml(CTX.tingkat)} &bull; ${activeK.length ? 'Kelas ' + activeK.join(', ') + ' Aktif' : 'Belum ada data'}`;
       }
 
       const bannerDesc = document.getElementById('dash-banner-desc');
       if (bannerDesc) {
-        bannerDesc.innerHTML = `Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat Tsanawiyah</strong>. Data saat ini bersumber langsung dari spreadsheet master dengan <strong>${APP_DATA.total_fan || 11} Fan Ujian</strong> pada <strong>${APP_DATA.total_rombel} Rombel Paralel</strong> (Kelas ${activeK.join(' & ')}).`;
+        bannerDesc.innerHTML = `Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat ${escapeHtml(CTX.tingkat)}</strong> (<strong>${escapeHtml(CTX.tahap)}</strong>). Data saat ini bersumber langsung dari spreadsheet master dengan <strong>${APP_DATA.total_fan || 0} Fan Ujian</strong> pada <strong>${APP_DATA.total_rombel || 0} Rombel Paralel</strong> (Kelas ${activeK.join(' & ') || '-'}).`;
       }
 
       // Hitung santri per kelas secara akurat (Kelas 1, 2, 3)
@@ -2070,7 +2416,7 @@
 
       const bannerPills = document.getElementById('dash-banner-pills');
       if (bannerPills) {
-        let pillsHtml = `<span class="px-2.5 py-1 rounded-md bg-sky-800/80 border border-sky-600/50"><strong>Tingkat:</strong> Tsanawiyah</span>`;
+        let pillsHtml = `<span class="px-2.5 py-1 rounded-md bg-sky-800/80 border border-sky-600/50"><strong>Tingkat:</strong> ${escapeHtml(CTX.tingkat)}</span><span class="px-2.5 py-1 rounded-md bg-sky-800/80 border border-sky-600/50"><strong>Tahap:</strong> ${escapeHtml(CTX.tahap)}</span>`;
         resolvedActiveK.forEach(k => {
           const sCount = santriPerKelas[k] || 0;
           pillsHtml += `<span class="px-2.5 py-1 rounded-md bg-teal-800/80 border border-teal-600/50"><strong>Kelas ${k}:</strong> Aktif (${sCount} Santri)</span>`;
@@ -2209,7 +2555,7 @@
       const fans = Object.values(APP_DATA.fans || {});
       const fanStats = fans.map(f => {
         let avg = f.aggregate ? f.aggregate.rerata_daya_serap : 0;
-        let subText = 'Tingkat Tsanawiyah';
+        let subText = 'Tingkat ' + CTX.tingkat;
 
         if (targetKelas !== 'all') {
           const kNum = parseInt(targetKelas);
@@ -2353,7 +2699,8 @@
         const isActive = (APP_DATA.active_kelas && APP_DATA.active_kelas.includes(k)) ||
                          (APP_DATA.fans && Object.values(APP_DATA.fans).some(f => Object.keys(f.classes || {}).some(r => getGradeFromRombel(r) === k))) ||
                          (APP_DATA.input && APP_DATA.input.some(item => getGradeFromRombel(item.kelas) === k));
-        btn.textContent = `Kelas ${k} (${isActive ? 'Aktif' : 'Belum Diinput'})`;
+        const stK = kelasTahapStatus(k);
+        btn.textContent = isActive ? `Kelas ${k} (Aktif)` : (stK === 'ok' ? `Kelas ${k} (Belum Diinput)` : (stK === 'no-kelas' ? `Kelas ${k} (Tidak Ada)` : `Kelas ${k} (Tanpa ${CTX.tahap})`));
       });
     }
 
@@ -2373,9 +2720,9 @@
       if (!isKelasActive) {
         emptyNotice.classList.remove('hidden');
         tableWrapper.classList.add('hidden');
-        document.getElementById('rk-empty-title').textContent = `Data Kelas ${kelas} Belum Diinput di Spreadsheet`;
+        document.getElementById('rk-empty-title').textContent = kelasTahapStatus(kelas) === 'ok' ? `Data Kelas ${kelas} Belum Diinput di Spreadsheet` : `Kelas ${kelas} tidak memiliki ujian ${CTX.tahap} (${CTX.tingkat})`;
         document.getElementById('rk-empty-desc').innerHTML = `
-          Di sheet <strong>INPUT_DATA</strong> saat ini belum terdapat data untuk <strong>Kelas ${kelas}</strong>.<br>
+          Di sheet <strong>INPUT_DATA</strong> saat ini belum terdapat data untuk <strong>Kelas ${kelas}</strong> pada <strong>${escapeHtml(CTX.tahap)} ${escapeHtml(CTX.tingkat)}</strong>.<br>
           Silakan tambahkan baris nilai untuk Kelas ${kelas} (format rombel: <strong>${kelas}-A, ${kelas}-B, dst.</strong>) di Google Sheets aktif Anda, lalu klik tombol <strong>🔄 Refresh Data</strong>!
         `;
         return;
@@ -2570,11 +2917,12 @@
         totalSantri,
         html: `
           <div class="hd">
-            <div class="sub">Pondok Pesantren Sidogiri &mdash; Madrasah Miftahul Ulum Tsanawiyah</div>
+            <div class="sub">Pondok Pesantren Sidogiri &mdash; Madrasah Miftahul Ulum ${esc(CTX.tingkat)}</div>
             <h1>${title}</h1>
           </div>
           <table class="meta"><tbody>
-            <tr><td style="width:24%">Mata Pelajaran (Fan)</td><td>: <b>${esc(snap.fanName)}</b> (${esc(snap.modelKey)})</td></tr>
+            <tr><td style="width:24%">Tingkat / Tahap Ujian</td><td>: ${esc(CTX.tingkat)} &bull; ${esc(CTX.tahap)}</td></tr>
+            <tr><td>Mata Pelajaran (Fan)</td><td>: <b>${esc(snap.fanName)}</b> (${esc(snap.modelKey)})</td></tr>
             <tr><td>Cakupan</td><td>: ${esc(snap.kelasLabel)} &bull; ${snap.rombelNames.length} rombel &bull; ${totalSantri} santri</td></tr>
             <tr><td>Rerata Daya Serap</td><td>: <b>${snap.rerata}%</b> (${esc(calculateCategory(snap.rerata))})</td></tr>
             ${extraRows || ''}
@@ -2625,7 +2973,7 @@
       const fanObj = APP_DATA.fans[snap.fanName] || { classes: {} };
       const groups = rekapFanTypeGroups(snap);
       const total = snap.qStats.length;
-      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP PER ROMBEL &amp; PER BUTIR SOAL IMDA 2');
+      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP PER ROMBEL &amp; PER BUTIR SOAL ' + escapeHtml(CTX.tahap.toUpperCase()));
       const fs = total > 40 ? 5.5 : (total > 32 ? 6.5 : 7.5);
 
       const cols = `<col style="width:17mm"><col style="width:12mm">${'<col>'.repeat(total)}<col style="width:14mm">`;
@@ -2672,7 +3020,7 @@
       lowest3.forEach((q, i) => { rankOf[q.q_num] = i + 1; });
       const narKelas = snap.selectedK === 'all' ? '1' : snap.selectedK;
       const groups = rekapFanTypeGroups(snap);
-      const head = rekapFanPrintHeader(snap, 'FORM ANALISIS BUTIR SOAL &amp; TINDAK LANJUT IMDA 2',
+      const head = rekapFanPrintHeader(snap, 'FORM ANALISIS BUTIR SOAL &amp; TINDAK LANJUT ' + escapeHtml(CTX.tahap.toUpperCase()),
         `<tr><td>Jumlah Peserta</td><td>: ${head_placeholder()} santri</td></tr>`);
       function head_placeholder() { return Math.max.apply(null, valid.map(q => q.peserta)); }
 
@@ -3704,11 +4052,29 @@
     // ==========================================
     function handleSyncSuccess(serverData) {
       if (serverData && serverData.success) {
+        // Server lama (belum diperbarui) tidak mengenal Tahap Ujian: hanya cocok untuk konteks bawaan
+        if (!serverData.tahap && !ctxIsDefault()) {
+          showToast('Google Apps Script belum diperbarui ke versi Tingkat & Tahap Ujian. Tempel Code.gs terbaru lalu Deploy ulang.', 'error');
+          return;
+        }
+        // Abaikan respons usang (pengguna sudah berpindah tingkat/tahap sebelum respons tiba)
+        if (serverData.tahap && (serverData.tingkat !== CTX.tingkat || serverData.tahap !== CTX.tahap)) return;
+        // Pengaturan tingkat/kelas/tahap dari Spreadsheet
+        try { adoptAcademicFromServer(serverData); } catch (e) { console.warn('adoptAcademic:', e); }
+        if (ensureValidCtx()) {
+          showToast('Tahap ujian terpilih tidak dipakai lagi; beralih ke ' + CTX.tahap + '.', 'warning');
+          reloadMasterScope();
+          APP_DATA = emptyAppData(); window.APP_DATA = APP_DATA;
+          renderContextSelectors(); applyContextLabels(); refreshAllViews();
+          syncFromSpreadsheet(false);
+          return;
+        }
         APP_DATA = serverData;
+        if (!APP_DATA.contexts) APP_DATA.contexts = [];
         let masterMode = null;
         try { masterMode = adoptMasterFromServer(serverData); } catch (e) { console.warn('adoptMaster:', e); }
         try { syncMasterDataWithSpreadsheet(serverData); } catch(e) { console.warn('syncMaster:', e); }
-        if (masterMode === 'seed') { masterReady = true; try { doPushMaster(); } catch (e) {} }
+        if (masterMode === 'seed') { masterReady = true; if (MASTER_FANS.length || MASTER_ROMBELS.length) { try { doPushMaster(); } catch (e) {} } }
         try { if (typeof updateModelDropdownOptions === 'function') updateModelDropdownOptions(); } catch (e) {}
         setupFanAliases(APP_DATA);
         const isGas = (typeof google !== 'undefined' && google.script && google.script.run);
@@ -3716,30 +4082,21 @@
         if (statusEl) {
           statusEl.textContent = isGas ? '🟢 Live Spreadsheet' : '🟢 Live Sheets (GitHub)';
         }
-        try { updateKelasTabLabels(); } catch(e) { console.error('updateKelasTabLabels:', e); }
-        try { updateInputRombelDropdown(); } catch(e) { console.error('updateInputRombelDropdown:', e); }
-        try { initInputAnalisa(); } catch(e) { console.error('initInputAnalisa:', e); }
-        try { initDashboard(); } catch(e) { console.error('initDashboard:', e); }
-        try { renderRekapKelas(); } catch(e) { console.error('renderRekapKelas:', e); }
-        try { initRekapFan(); } catch(e) { console.error('initRekapFan:', e); }
-        try { renderSeluruhKelas(); } catch(e) { console.error('renderSeluruhKelas:', e); }
-        try { updateFormKelasDropdown(); } catch(e) { console.error('updateFormKelasDropdown:', e); }
-        try { initAudit(); } catch(e) { console.error('initAudit:', e); }
-      try { initMenuSoal(); } catch(e) { console.error('initMenuSoal:', e); }
-        // Sinkronkan Bank Soal dari Spreadsheet jika tersedia
+        // Naskah soal dari Spreadsheet (khusus konteks aktif) disimpan lokal SEBELUM tampilan dirender
         if (serverData.bankSoal && typeof serverData.bankSoal === 'object') {
           try {
             Object.keys(serverData.bankSoal).forEach(k => {
+              const lk = `IMDA_SOAL_NARRATIVE_${soalCtxPrefix()}${k}`;
               // Jangan timpa naskah lokal yang belum berhasil terkirim ke server
-              if (localStorage.getItem('IMDA_SOAL_PENDING_IMDA_SOAL_NARRATIVE_' + k)) return;
-              localStorage.setItem(`IMDA_SOAL_NARRATIVE_${k}`, JSON.stringify(serverData.bankSoal[k]));
+              if (localStorage.getItem('IMDA_SOAL_PENDING_' + lk)) return;
+              localStorage.setItem(lk, JSON.stringify(serverData.bankSoal[k]));
             });
           } catch(e) { console.warn('Sync bankSoal error:', e); }
         }
-        if (typeof renderMasterData === 'function') {
-          try { renderMasterData(); } catch(e) {}
-        }
-        showToast('Data berhasil disinkronkan langsung dari Google Spreadsheet!', 'success');
+        renderContextSelectors();
+        applyContextLabels();
+        refreshAllViews();
+        showToast('Data ' + CTX.tahap + ' ' + CTX.tingkat + ' berhasil disinkronkan dari Google Spreadsheet!', 'success');
         if (Array.isArray(serverData.warnings) && serverData.warnings.length) {
           showToast('Ada ' + serverData.warnings.length + ' peringatan data (mis. N berbeda / baris ganda). Detail ada di konsol browser (F12) dan menu Sheets > Hitung & Analisis.', 'warning');
           console.warn('Peringatan data:', serverData.warnings);
@@ -3763,7 +4120,7 @@
         onSuccess(data);
       };
       const script = document.createElement('script');
-      script.src = url + (url.includes('?') ? '&' : '?') + 'action=getData&callback=' + callbackName + '&_t=' + Date.now();
+      script.src = url + (url.includes('?') ? '&' : '?') + 'action=getData&tingkat=' + encodeURIComponent(CTX.tingkat) + '&tahap=' + encodeURIComponent(CTX.tahap) + '&callback=' + callbackName + '&_t=' + Date.now();
       script.onerror = function() {
         delete window[callbackName];
         if (script.parentNode) script.parentNode.removeChild(script);
@@ -3784,7 +4141,7 @@
         google.script.run
           .withSuccessHandler(handleSyncSuccess)
           .withFailureHandler(handleSyncFailure)
-          .getSpreadsheetData();
+          .getSpreadsheetData({ tingkat: CTX.tingkat, tahap: CTX.tahap });
         return;
       }
 
@@ -3797,7 +4154,7 @@
         }
         if (pulseDot) pulseDot.className = 'w-2 h-2 rounded-full bg-sky-400 animate-pulse';
 
-        const fetchUrl = customUrl + (customUrl.includes('?') ? '&' : '?') + 'action=getData&_t=' + Date.now();
+        const fetchUrl = customUrl + (customUrl.includes('?') ? '&' : '?') + 'action=getData&tingkat=' + encodeURIComponent(CTX.tingkat) + '&tahap=' + encodeURIComponent(CTX.tahap) + '&_t=' + Date.now();
         fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
           .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
           .then(data => handleSyncSuccess(data))
@@ -5079,7 +5436,8 @@
       }
 
       // Copy / Export Action
-      document.getElementById('btn-export-current-input').onclick = copyInputRowToClipboard;
+      const btnExportInput = document.getElementById('btn-export-current-input');
+      if (btnExportInput) btnExportInput.onclick = copyInputRowToClipboard;
 
       // Initial check & render
       updateModelQuestionCount();
@@ -6558,8 +6916,11 @@
           : `dari total <strong>${maxPossible.toLocaleString('id-ID')}</strong> peluang`;
       }
 
-      document.getElementById('live-max-possible').textContent = maxPossible.toLocaleString('id-ID');
-      document.getElementById('live-daya-serap').textContent = `${dayaSerapPct}%`;
+      // (#live-max-possible berada di dalam #live-total-subtext yang isinya diganti di atas, jadi bisa tidak ada)
+      const maxPossibleEl = document.getElementById('live-max-possible');
+      if (maxPossibleEl) maxPossibleEl.textContent = maxPossible.toLocaleString('id-ID');
+      const dayaSerapEl = document.getElementById('live-daya-serap');
+      if (dayaSerapEl) dayaSerapEl.textContent = `${dayaSerapPct}%`;
 
       // Kategori
       let kat = 'SEDANG';
@@ -6644,6 +7005,14 @@
         showToast('Jumlah murid hadir (N) harus lebih besar dari 0!', 'error');
         return;
       }
+      const kelasNoSave = getGradeFromRombel(rombel);
+      const kStat = kelasTahapStatus(kelasNoSave);
+      if (kStat !== 'ok') {
+        showToast(kStat === 'no-kelas'
+          ? `Kelas ${kelasNoSave} tidak dipakai di tingkat ${CTX.tingkat}. Ubah lewat tombol ⚙️ Atur Tingkat & Tahap Ujian.`
+          : `Tahap ${CTX.tahap} tidak dipakai di Kelas ${kelasNoSave} ${CTX.tingkat}. Pilih tahap lain atau ubah lewat tombol ⚙️.`, 'error');
+        return;
+      }
 
       // Validasi anomali (tidak boleh > n)
       for (let q = 0; q < totalQ; q++) {
@@ -6722,6 +7091,8 @@
       };
 
       const payload = {
+        tingkat: CTX.tingkat,
+        tahap: CTX.tahap,
         model: model,
         fan: fan,
         rombel: rombel,
@@ -7205,6 +7576,7 @@
 
 
     function startIMDAApplication() {
+      try { ensureValidCtx(); renderContextSelectors(); applyContextLabels(); } catch (e) { console.warn('konteks awal:', e); }
       // Isi awal master (dari cache / data bawaan) tanpa menandai perubahan; nanti dicocokkan dengan Spreadsheet
       try { syncMasterDataWithSpreadsheet(APP_DATA, true); } catch (e) { console.warn('master awal:', e); }
       try { initTheme(); } catch(e) {}
@@ -7232,7 +7604,7 @@
     }
 
     // =========================================================================
-    // MODUL: BANK NASKAH & NARASI SOAL IMDA 2 (FILTER KELAS & FAN)
+    // MODUL: BANK NASKAH & NARASI SOAL (FILTER KELAS & FAN, PER TINGKAT & TAHAP UJIAN)
     // =========================================================================
     
     // Default seed narasi realistis untuk Hadits Nabawy Kelas 1 (khususnya 3 butir terendah: ES 4, ML 6, ES 5)
@@ -7266,10 +7638,12 @@
       }
     };
 
+    // Konteks bawaan memakai kunci lama (tanpa prefix) agar naskah lama tetap terbaca
+    function soalCtxPrefix() { return ctxIsDefault() ? '' : slugify(CTX.tingkat + '-' + CTX.tahap) + '__'; }
     function getSoalStorageKey(kelas, fan) {
       const k = String(kelas || '1');
       const f = String(fan || 'Hadits Nabawy').trim().replace(/\s+/g, '_');
-      return `IMDA_SOAL_NARRATIVE_${k}_${f}`;
+      return `IMDA_SOAL_NARRATIVE_${soalCtxPrefix()}${k}_${f}`;
     }
 
     function loadSoalNarratives(kelas, fan) {
@@ -7285,7 +7659,7 @@
       
       // Jika belum ada data dan kelas 1 Hadits Nabawy, kembalikan seeded data Hadits Nabawy
       const fClean = String(fan || '').trim().toLowerCase();
-      if (String(kelas) === '1' && (fClean.includes('hadits') || fClean.includes('hadis'))) {
+      if (ctxIsDefault() && String(kelas) === '1' && (fClean.includes('hadits') || fClean.includes('hadis'))) {
         return JSON.parse(JSON.stringify(DEFAULT_HADITS_NARRATIVES));
       }
       return {};
@@ -7310,6 +7684,8 @@
       });
 
       const payload = {
+        tingkat: CTX.tingkat,
+        tahap: CTX.tahap,
         kelas: kelas,
         fan: fan,
         items: uniqueItems
@@ -7633,7 +8009,7 @@
               <div class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
                 <span>${fanName}</span>
                 <span class="text-[11px] px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-mono font-bold">${modelKey}</span>
-                <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold">Kelas ${kelas} Tsanawiyah</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold">Kelas ${kelas} ${escapeHtml(CTX.tingkat)}</span>
               </div>
               <div class="text-[11px] text-slate-600">Model Ujian: <strong>${currModel.name || modelKey}</strong> &bull; Total <strong>${totalQ} Butir Soal</strong> (${types.map(t => `${t.name}: ${t.count}`).join(', ')})</div>
             </div>
@@ -7843,7 +8219,7 @@
       const types = currModel.types || [{ name: 'Pilihan Ganda', count: 28 }];
       
       let lines = [
-        `# TEMPLATE NASKAH SOAL IMDA 2`,
+        `# TEMPLATE NASKAH SOAL ${CTX.tahap.toUpperCase()} ${CTX.tingkat.toUpperCase()}`,
         `# Fan: ${fanName} | Kelas: ${kelas} | Model: ${modelKey}`,
         `# Format: NOMOR_LABEL: Teks Soal | Materi: [Pokok Bahasan] | Kunci: [Kunci Jawaban]`,
         ``
@@ -7878,7 +8254,7 @@
       const kelas = state.soalFilter ? state.soalFilter.kelas : '1';
       const fanName = state.soalFilter ? state.soalFilter.fan : 'Hadits Nabawy';
       const subEl = document.getElementById('modal-upload-subtitle');
-      if (subEl) subEl.textContent = `Mata Pelajaran: ${fanName} &bull; Kelas ${kelas} Tsanawiyah`;
+      if (subEl) subEl.textContent = `Mata Pelajaran: ${fanName} &bull; Kelas ${kelas} ${CTX.tingkat} &bull; ${CTX.tahap}`;
       
       const modal = document.getElementById('modal-upload-naskah-soal');
       if (modal) modal.classList.remove('hidden');
@@ -8279,6 +8655,29 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
       <div class="p-4 border-t border-slate-200 dark:border-[#1a3d52] bg-slate-50 dark:bg-[#0b1d28] flex items-center justify-end gap-2 text-xs">
         <button type="button" id="btn-cancel-modal-fan" onclick="closeFanManagerModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition cursor-pointer">Batal</button>
         <button type="button" id="btn-save-modal-fan" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-600 text-white font-bold transition shadow-sm cursor-pointer">Simpan Mata Pelajaran</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ATUR TINGKAT, KELAS & TAHAP UJIAN -->
+  <div id="modal-akademik" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#0f2634] rounded-2xl max-w-4xl w-full max-h-[92vh] shadow-2xl border border-slate-200 dark:border-[#1a3d52] flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-slate-200 dark:border-[#1a3d52] flex items-center justify-between bg-slate-50 dark:bg-[#0b1d28]">
+        <div>
+          <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">⚙️ Atur Tingkat, Kelas &amp; Tahap Ujian</h3>
+          <p class="text-[11px] text-slate-500">Tentukan kelas yang ada di tiap tingkat dan tahap ujian yang dipakai di setiap kelas. Imni hanya untuk kelas jenjang akhir.</p>
+        </div>
+        <button type="button" onclick="closeAkademikModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition cursor-pointer" title="Tutup">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 text-xs overflow-y-auto" id="akademik-body"></div>
+      <div class="p-4 border-t border-slate-200 dark:border-[#1a3d52] bg-slate-50 dark:bg-[#0b1d28] flex flex-wrap items-center justify-between gap-2 text-xs">
+        <span class="text-[11px] text-slate-500">Pengaturan disimpan di Spreadsheet (sheet MASTER_TINGKAT) dan berlaku di semua perangkat.</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeAkademikModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition cursor-pointer">Batal</button>
+          <button type="button" onclick="saveAkademikConfig()" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-sm cursor-pointer">💾 Simpan Pengaturan</button>
+        </div>
       </div>
     </div>
   </div>
