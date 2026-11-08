@@ -57,6 +57,9 @@
     html {
       transition: background-color 0.25s ease, color 0.25s ease;
     }
+    /* Narasi butir soal (Rekap Fan): huruf Arab tradisional, diperbesar */
+    .narasi-arab { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.6rem; line-height: 2.1; }
+    .kunci-arab { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.45rem; line-height: 2; }
     #print-rekapfan-area { display: none; }
     @media print {
       body.printing-rekapfan > *:not(#print-rekapfan-area) { display: none !important; }
@@ -1286,6 +1289,9 @@
             <canvas id="chart-fan-komparasi"></canvas>
           </div>
         </div>
+
+        <!-- REKAP KLASIFIKASI KESUKARAN BUTIR SOAL (DI ATAS REKAP 3 BUTIR TERENDAH) -->
+        <div id="fan-klasifikasi-card" class="hidden bg-white dark:bg-[#0f2634] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-[#1a3d52] shadow-xs space-y-3.5"></div>
 
         <!-- REKAP ANALISA 3 BUTIR SOAL TERENDAH (DI BAWAH GRAFIK) -->
         <div id="fan-lowest-analysis-card" class="bg-gradient-to-br from-rose-50/80 via-amber-50/50 to-orange-50/70 p-4 sm:p-5 rounded-2xl border border-rose-200/80 shadow-xs space-y-3.5">
@@ -2934,18 +2940,46 @@
         .prf .box { border: 1px solid #000; padding: 8px 10px; margin: 8px 0; page-break-inside: avoid; }
         .prf .bh { font-weight: 800; margin-bottom: 4px; }
         .prf .lbl { font-weight: 700; margin-top: 6px; font-size: 9.5pt; }
-        .prf .nar { font-family: 'Amiri', 'Plus Jakarta Sans', serif; font-size: 13pt; line-height: 1.6; white-space: pre-line; font-style: normal; border: 1px solid #999; padding: 4px 8px; margin-top: 2px; }
+        .prf .nar { font-family: 'Traditional Arabic', 'Amiri', 'Plus Jakarta Sans', serif; font-size: 16pt; line-height: 1.7; white-space: pre-line; font-style: normal; border: 1px solid #999; padding: 4px 8px; margin-top: 2px; }
         .prf .ln { border-bottom: 1px dotted #000; height: 20px; }
         .prf .cat { white-space: pre-line; border-bottom: 1px dotted #000; padding: 2px 0; min-height: 20px; }
         .prf .sig { display: flex; justify-content: space-between; margin-top: 22px; page-break-inside: avoid; }
         .prf .sig div { width: 44%; text-align: center; }
         .prf .sig .sp { height: 60px; }
+        .prf table.klas td, .prf table.klas th { text-align: center; font-size: 9pt; }
+        .prf table.klas td.rl { text-align: left; font-weight: 700; background: #f3f4f6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .prf table.klas td.kb { font-size: 7.5pt; line-height: 1.25; word-break: break-word; }
         .prf table.mx { table-layout: fixed; }
         .prf table.mx th, .prf table.mx td { padding: 2px 1px; text-align: center; font-size: var(--mxfs, 7.5pt); overflow: hidden; }
         .prf table.mx td.rl { text-align: left; padding-left: 4px; font-weight: 700; }
         .prf table.mx tr.ft td { font-weight: 800; background: #f3f4f6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .prf table.mx td.rt { font-weight: 800; background: #ecfdf5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       </style>`;
+
+    // Tabel rekap klasifikasi kesukaran (jumlah & persen butir per kategori) untuk form cetak
+    function rekapFanKlasifikasiPrintHtml(snap) {
+      const esc = escapeHtml;
+      const valid = (snap.qStats || []).filter(q => q.peserta > 0);
+      if (valid.length === 0) return '';
+      const total = valid.length;
+      const pct = n => String(Math.round((n / total) * 1000) / 10) + '%';
+      const groups = KLASIFIKASI_META.map(c => ({ meta: c, items: valid.filter(q => q.kategori === c.key) }));
+      const head = groups.map(g => `<th>${esc(g.meta.key)}</th>`).join('');
+      const rentang = groups.map(g => `<td>${esc(g.meta.range)}</td>`).join('');
+      const jumlah = groups.map(g => `<td><b>${g.items.length}</b></td>`).join('');
+      const persen = groups.map(g => `<td><b>${pct(g.items.length)}</b></td>`).join('');
+      const butir = groups.map(g => `<td class="kb">${g.items.length ? esc(g.items.map(q => q.shortLabel).join(', ')) : '&ndash;'}</td>`).join('');
+      return `
+        <table class="klas">
+          <thead><tr><th style="width:17%">Klasifikasi</th>${head}<th style="width:9%">Total</th></tr></thead>
+          <tbody>
+            <tr><td class="rl">Rentang daya serap</td>${rentang}<td>&ndash;</td></tr>
+            <tr><td class="rl">Jumlah soal</td>${jumlah}<td><b>${total}</b></td></tr>
+            <tr><td class="rl">Persentase</td>${persen}<td><b>100%</b></td></tr>
+            <tr><td class="rl">Butir soal</td>${butir}<td>&ndash;</td></tr>
+          </tbody>
+        </table>`;
+    }
 
     function rekapFanPrintHeader(snap, title, extraRows) {
       const esc = escapeHtml;
@@ -3039,6 +3073,8 @@
       const html = REKAPFAN_PRINT_CSS + `
         <div class="prf" style="--mxfs:${fs}pt">
           ${head.html}
+          <div class="tipe">Rekap Klasifikasi Kesukaran Butir Soal</div>
+          ${rekapFanKlasifikasiPrintHtml(snap)}
           <div class="tipe">Jumlah santri yang menjawab benar pada setiap butir soal (nomor butir dihitung dari 1 di setiap tipe soal)</div>
           <table class="mx"><colgroup>${cols}</colgroup>
             <thead>${th1}${th2}</thead>
@@ -3105,11 +3141,13 @@
       const html = REKAPFAN_PRINT_CSS + `
         <div class="prf">
           ${head.html}
-          <h2>A. Daya Serap per Butir Soal</h2>
+          <h2>A. Rekap Klasifikasi Kesukaran Butir Soal</h2>
+          ${rekapFanKlasifikasiPrintHtml(snap)}
+          <h2>B. Daya Serap per Butir Soal</h2>
           ${tipeTables}
-          <h2>B. Analisis 3 Butir Soal Terendah (Prioritas Pembahasan)</h2>
+          <h2>C. Analisis 3 Butir Soal Terendah (Prioritas Pembahasan)</h2>
           ${lowBlocks}
-          <h2>C. Catatan Umum / Kesimpulan</h2>
+          <h2>D. Catatan Umum / Kesimpulan</h2>
           ${lines(4)}
           ${rekapFanSignature(snap)}
         </div>`;
@@ -3117,6 +3155,62 @@
     }
     window.cetakFormRekapFanRombel = cetakFormRekapFanRombel;
     window.cetakFormRekapFanAnalisa = cetakFormRekapFanAnalisa;
+
+    // ==========================================
+    // REKAP KLASIFIKASI KESUKARAN (jumlah & persen butir per kategori) untuk Fan + Kelas yang dipilih
+    // ==========================================
+    const KLASIFIKASI_META = [
+      { key: 'SANGAT MUDAH', range: '\u2265 80%',   box: 'bg-sky-50 border-sky-300 text-sky-900',       bar: 'bg-sky-500' },
+      { key: 'MUDAH',        range: '60 \u2013 79%', box: 'bg-blue-50 border-blue-300 text-blue-900',     bar: 'bg-blue-500' },
+      { key: 'SEDANG',       range: '40 \u2013 59%', box: 'bg-amber-50 border-amber-300 text-amber-900',  bar: 'bg-amber-500' },
+      { key: 'SULIT',        range: '20 \u2013 39%', box: 'bg-orange-50 border-orange-300 text-orange-900', bar: 'bg-orange-500' },
+      { key: 'SANGAT SULIT', range: '< 20%',        box: 'bg-red-50 border-red-300 text-red-900',        bar: 'bg-red-500' }
+    ];
+    function renderFanKlasifikasiCard(qStats, fanName, kelasLabel) {
+      const el = document.getElementById('fan-klasifikasi-card');
+      if (!el) return;
+      const valid = (qStats || []).filter(q => q.peserta > 0);
+      if (valid.length === 0) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+      el.classList.remove('hidden');
+      const total = valid.length;
+      const pctFmt = n => String(Math.round((n / total) * 1000) / 10);
+      const groups = KLASIFIKASI_META.map(c => ({ meta: c, items: valid.filter(q => q.kategori === c.key) }));
+      const stacked = groups.filter(g => g.items.length > 0).map(g =>
+        `<div class="${g.meta.bar} h-full" style="width:${(g.items.length / total) * 100}%" title="${escapeHtml(g.meta.key)}: ${g.items.length} soal (${pctFmt(g.items.length)}%)"></div>`).join('');
+      const tiles = groups.map(g => {
+        const n = g.items.length;
+        const labels = g.items.map(q => q.shortLabel).join(', ');
+        return `
+          <div class="rounded-xl border p-3 ${g.meta.box} flex flex-col gap-1.5" data-klasifikasi="${escapeHtml(g.meta.key)}">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] font-black uppercase tracking-wide">${escapeHtml(g.meta.key)}</span>
+              <span class="text-[10px] font-semibold opacity-70">${escapeHtml(g.meta.range)}</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl font-black leading-none" data-k-count>${n}</span><span class="text-xs font-bold">soal</span>
+              <span class="ml-auto text-lg font-black" data-k-pct>${pctFmt(n)}%</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-white/70 overflow-hidden"><div class="${g.meta.bar} h-full" style="width:${(n / total) * 100}%"></div></div>
+            <div class="text-[10px] leading-snug opacity-80 break-words" title="${escapeHtml(labels)}">${n > 0 ? escapeHtml(labels) : '&ndash;'}</div>
+          </div>`;
+      }).join('');
+      el.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-[#1a3d52] pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-base shadow-sm">\ud83d\udcca</div>
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Rekap Klasifikasi Kesukaran Butir Soal</h3>
+              <p class="text-[11px] text-slate-500">Jumlah dan persentase butir soal pada setiap kategori daya serap</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700">${escapeHtml(fanName)} &bull; ${escapeHtml(kelasLabel)}</span>
+            <span class="px-2.5 py-1 rounded-lg bg-sky-100 border border-sky-200 text-sky-900">Total ${total} butir soal</span>
+          </div>
+        </div>
+        <div class="flex h-3 w-full rounded-full overflow-hidden bg-slate-100 border border-slate-200">${stacked}</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2.5">${tiles}</div>`;
+    }
 
     function updateRekapFanDropdown() {
       const selectFan = document.getElementById('select-fan-komparasi');
@@ -3147,10 +3241,23 @@
       }
     }
 
+    // Konteks tanpa data: bersihkan tampilan Rekap Fan agar tidak menyisakan data tingkat/tahap sebelumnya
+    function clearRekapFanView() {
+      state.rekapFan.snapshot = null;
+      const kc = document.getElementById('fan-klasifikasi-card');
+      if (kc) { kc.classList.add('hidden'); kc.innerHTML = ''; }
+      const lc = document.getElementById('fan-lowest-analysis-card');
+      if (lc) lc.innerHTML = `<div class="p-4 rounded-xl border border-dashed border-slate-300 text-center text-xs text-slate-500">Belum ada data butir soal untuk ${escapeHtml(CTX.tahap)} ${escapeHtml(CTX.tingkat)}.</div>`;
+      const cc = document.getElementById('fan-comp-cards'); if (cc) cc.innerHTML = '';
+      const tb = document.getElementById('table-rekap-fan'); if (tb) tb.innerHTML = '';
+      const tt = document.getElementById('fan-comp-chart-title'); if (tt) tt.textContent = 'Grafik Daya Serap Materi';
+      if (state.charts && state.charts.fanComp) { state.charts.fanComp.destroy(); state.charts.fanComp = null; }
+    }
+
     function renderRekapFan() {
       const fanName = state.rekapFan.selectedFan;
       const fanObj = APP_DATA.fans[fanName];
-      if (!fanObj) return;
+      if (!fanObj) { clearRekapFanView(); return; }
 
       const modelKey = getModelForFan(fanName);
       const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey]) 
@@ -3212,6 +3319,9 @@
         fanName, modelKey, kelasLabel, selectedK, rombelNames, qStats, types, total: totalQuestionsInModel,
         rerata: totalPesertaGabungan > 0 ? Math.round((totalBenarGabungan / totalPesertaGabungan) * 1000) / 10 : 0
       };
+
+      // 0. REKAP KLASIFIKASI KESUKARAN (jumlah & persen) - di atas rekap 3 butir terendah
+      renderFanKlasifikasiCard(qStats, fanName, kelasLabel);
 
       // 1. REKAP ANALISA 3 BUTIR SOAL TERENDAH (DI BAWAH GRAFIK)
       // INSTRUKSI USER: Menampilkan nomor soal di setiap tipe (bukan sekadar total seluruh soal)
@@ -7885,13 +7995,13 @@
               </span>
               ${narrative.materi ? `<span class="bg-amber-200/80 text-amber-950 px-2 py-0.5 rounded text-[10px] font-semibold truncate max-w-[150px] sm:max-w-xs" title="${escapeHtml(narrative.materi)}">📖 ${escapeHtml(narrative.materi)}</span>` : ''}
             </div>
-            <p class="text-slate-800 font-medium leading-relaxed text-xs bg-white/95 p-2.5 rounded-lg border border-amber-100 whitespace-pre-line font-sans select-text">
+            <p dir="auto" class="narasi-arab text-slate-800 font-medium bg-white/95 p-2.5 rounded-lg border border-amber-100 whitespace-pre-line select-text">
               "${escapeHtml(narrative.soal)}"
             </p>
             ${narrative.kunci ? `
-            <div class="text-[11px] text-slate-700 flex items-start gap-1 pt-0.5 bg-amber-100/50 px-2 py-1 rounded border border-amber-200/60">
+            <div class="text-[11px] text-slate-700 flex items-baseline gap-1.5 pt-0.5 bg-amber-100/50 px-2 py-1 rounded border border-amber-200/60">
               <strong class="text-amber-900 whitespace-nowrap">Kunci:</strong>
-              <span class="text-slate-800">${escapeHtml(narrative.kunci)}</span>
+              <span dir="auto" class="kunci-arab text-slate-800">${escapeHtml(narrative.kunci)}</span>
             </div>` : ''}
             <div class="pt-1 flex items-center justify-between text-[10px]">
               <span class="text-slate-400 font-medium">Tersambung otomatis dari Menu Soal</span>
