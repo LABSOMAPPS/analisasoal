@@ -70,6 +70,7 @@
     td .soal-no-btn, th .soal-no-btn { font-size: 11px; }
     .dark .soal-no-btn { background: #0c4a6e; color: #bae6fd; border-color: #0369a1; }
     .dark .soal-no-btn:hover { background: #0284c7; color: #fff; }
+    .naskah-input-arab-sm { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', system-ui, sans-serif; font-size: 1.1rem; line-height: 1.7; }
     .naskah-input-arab { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', system-ui, sans-serif; font-size: 1.4rem; line-height: 2; }
     #print-rekapfan-area { display: none; }
     @media print {
@@ -8530,22 +8531,22 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-                      <div class="md:col-span-5 space-y-1">
-                        <label class="block text-[11px] font-bold text-slate-700">Pokok Bahasan / Kompetensi Dasar:</label>
-                        <input type="text" id="soal-materi-${qNum}" class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Kaidah Keshahihan Sanad & Sifat Rowi" value="${escapeHtml(saved.materi || '')}">
-                      </div>
-
-                      <div class="md:col-span-7 space-y-1">
-                        <label class="block text-[11px] font-bold text-slate-700">Kunci Jawaban / Rubrik Penilaian:</label>
-                        <input type="text" id="soal-kunci-${qNum}" class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Hadits Mutawatir / 5 Syarat Shahih..." value="${escapeHtml(saved.kunci || '')}">
-                      </div>
-
                       <div class="md:col-span-12 space-y-1">
                         <label class="block text-[11px] font-bold text-slate-700 flex items-center justify-between">
                           <span>Naskah / Teks Soal Lengkap:</span>
                           <span class="text-[10px] text-slate-400 font-normal">Mendukung tulisan Arab, Pegon, dan Latin</span>
                         </label>
-                        <textarea id="soal-teks-${qNum}" rows="2" class="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:ring-amber-500 focus:border-amber-500 font-medium leading-relaxed font-sans" placeholder="Tuliskan teks naskah soal nomor ${meta.typeNo} di sini...">${escapeHtml(saved.soal || '')}</textarea>
+                        <textarea id="soal-teks-${qNum}" dir="auto" rows="3" class="naskah-input-arab w-full p-2.5 rounded-lg border border-slate-300 focus:ring-amber-500 focus:border-amber-500 font-medium" placeholder="Tuliskan teks naskah soal nomor ${meta.typeNo} di sini...">${escapeHtml(saved.soal || '')}</textarea>
+                      </div>
+
+                      <div class="md:col-span-7 space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700">Kunci Jawaban / Rubrik Penilaian:</label>
+                        <textarea id="soal-kunci-${qNum}" dir="auto" rows="2" class="naskah-input-arab-sm w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Hadits Mutawatir / 5 Syarat Shahih...">${escapeHtml(saved.kunci || '')}</textarea>
+                      </div>
+
+                      <div class="md:col-span-5 space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700">Pokok Bahasan / Kompetensi Dasar:</label>
+                        <textarea id="soal-materi-${qNum}" dir="auto" rows="2" class="naskah-input-arab-sm w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Kaidah Keshahihan Sanad & Sifat Rowi">${escapeHtml(saved.materi || '')}</textarea>
                       </div>
                     </div>
                   </div>
@@ -8679,25 +8680,19 @@
         : DEFAULT_FAN_MODELS['FAN 1'];
       const types = currModel.types || [{ name: 'Pilihan Ganda', count: 28 }];
       
-      let lines = [
-        `# TEMPLATE NASKAH SOAL ${CTX.tahap.toUpperCase()} ${CTX.tingkat.toUpperCase()}`,
-        `# Fan: ${fanName} | Kelas: ${kelas} | Model: ${modelKey}`,
-        `# Format: NOMOR_LABEL: Teks Soal | Materi: [Pokok Bahasan] | Kunci: [Kunci Jawaban]`,
-        ``
-      ];
-      
+      // Format baru: soal -> kunci -> pokok bahasan (1 butir per baris, urutan sama)
+      const labels = [];
       let qGlobal = 0;
       types.forEach(t => {
-        lines.push(`## ${t.name}`);
         const count = parseInt(t.count, 10) || 0;
-        for (let i = 0; i < count; i++) {
-          const meta = getQuestionLabelMeta(qGlobal, modelKey);
-          lines.push(`${meta.shortLabel}: Tuliskan naskah soal ${meta.shortLabel} di sini... | Materi: Pokok bahasan ${meta.shortLabel} | Kunci: Kunci jawaban`);
-          qGlobal++;
-        }
-        lines.push(``);
+        for (let i = 0; i < count; i++) { labels.push(getQuestionLabelMeta(qGlobal, modelKey).shortLabel); qGlobal++; }
       });
-      
+      const lines = [].concat(
+        ['soal'], labels.map(l => `Tuliskan soal ${l} lengkap di sini`), [''],
+        ['Kunci'], labels.map(l => `Kunci jawaban ${l}`), [''],
+        ['Pokok bahasan'], labels.map(l => `Pokok bahasan ${l}`)
+      );
+
       const fullText = lines.join('\n');
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(fullText).then(() => {
@@ -8755,14 +8750,90 @@
     function isiContohNaskahUpload() {
       const ta = document.getElementById('modal-upload-textarea');
       if (!ta) return;
-      ta.value = `ES 4: Sebutkan 5 (lima) syarat hadits shahih menurut kaidah Ibnu Shalah dan jelaskan perbedaan dhabit shadr dengan dhabit kitab! | Materi: Kaidah Keshahihan Sanad | Kunci: Sanad bersambung, rawi adil, dhabit, tidak syadz, tidak berillat
-ML 6: Hadits yang diriwayatkan oleh orang banyak yang menurut adat mustahil mereka bersepakat berdusta dinamakan hadits ...... | Materi: Musthalah Hadits | Kunci: Hadits Mutawatir
-ES 5: Jelaskan makna hadits "Innamal a'maalu bin-niyyaat" serta sebutkan asbabul wurud disabdakannya hadits tersebut oleh Rasulullah SAW! | Materi: Asbabul Wurud Hadits | Kunci: Muhajir Ummi Qais
-PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Perawi Hadits | Kunci: Abu Hurairah RA`;
+      ta.value = `soal
+Sahabat Nabi yang paling banyak meriwayatkan hadits adalah (أ. أبو هريرة  ب. أنس  ج. عائشة  د. ابن عمر)
+Hadits yang diriwayatkan oleh banyak perawi yang mustahil sepakat berdusta dinamakan hadits ......
+Sebutkan 5 syarat hadits shahih menurut Ibnu Shalah!
+
+Kunci
+أ/7
+Hadits Mutawatir
+Sanad bersambung, rawi adil, dhabith, tidak syadz, tidak berillat
+
+Pokok bahasan
+Perawi Hadits
+Musthalah Hadits
+Kaidah Keshahihan Sanad`;
       previewUploadSoal();
     }
 
+    // ------------------------------------------------------------------
+    // FORMAT PASTE BARU (mengikuti berkas Word):
+    //   soal            -> semua soal dari awal sampai akhir (1 butir per baris/paragraf)
+    //   Kunci           -> semua kunci jawaban, urutan sama dengan soal
+    //   Pokok bahasan   -> semua pokok bahasan, urutan sama dengan soal
+    // Penomoran otomatis hasil salinan Word (1. / 2) / ١- dst.) dibuang.
+    // ------------------------------------------------------------------
+    let lastParseInfo = null;
+    const RE_HDR_SOAL = /^\s*(?:naskah\s+)?(?:teks\s+)?soal(?:\s+lengkap)?\s*[:\-]?\s*$/i;
+    const RE_HDR_KUNCI = /^\s*kunci(?:\s+jawaban)?\s*[:\-]?\s*$/i;
+    const RE_HDR_MATERI = /^\s*(?:pokok\s+bahasan|materi|kompetensi\s+dasar|pokok\s+bahasan\s*\/\s*kompetensi\s+dasar)\s*[:\-]?\s*$/i;
+    const RE_NUM_PREFIX = /^\s*[\(\[]?[0-9\u0660-\u0669]{1,3}[\.\)\]\-:]\s+/;
+
+    function parseNaskahBertahap(rawText, modelKey) {
+      const lines = rawText.replace(/\r/g, '').split('\n');
+      const sec = { soal: [], kunci: [], materi: [] };
+      let cur = null, found = { soal: false, kunci: false, materi: false };
+      lines.forEach(l => {
+        const t = l.replace(/[\u200e\u200f\u202a-\u202e]/g, '').trim();
+        if (RE_HDR_SOAL.test(t)) { cur = 'soal'; found.soal = true; return; }
+        if (RE_HDR_KUNCI.test(t)) { cur = 'kunci'; found.kunci = true; return; }
+        if (RE_HDR_MATERI.test(t)) { cur = 'materi'; found.materi = true; return; }
+        if (!cur || !t) return;
+        sec[cur].push(t);
+      });
+      if (!(found.soal && (found.kunci || found.materi))) return null;   // bukan format bertahap
+
+      // Susun butir: jika sebagian besar baris bernomor, baris tanpa nomor = lanjutan butir sebelumnya
+      const toItems = (arr) => {
+        if (!arr.length) return [];
+        const numbered = arr.filter(x => RE_NUM_PREFIX.test(x)).length;
+        const useNum = numbered >= Math.ceil(arr.length / 2) && numbered >= 1;
+        const clean = x => x.replace(RE_NUM_PREFIX, '').replace(/[\t ]+$/g, '').trim();
+        if (!useNum) return arr.map(clean).filter(Boolean);
+        const out = [];
+        arr.forEach(x => {
+          if (RE_NUM_PREFIX.test(x) || !out.length) out.push(clean(x));
+          else out[out.length - 1] += '\n' + x.trim();
+        });
+        return out.filter(Boolean);
+      };
+      const soal = toItems(sec.soal), kunci = toItems(sec.kunci), materi = toItems(sec.materi);
+
+      const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey]) ? FAN_MODELS[modelKey] : DEFAULT_FAN_MODELS['FAN 1'];
+      const totalQ = getModelTotal(currModel);
+      const results = {};
+      const warnings = [];
+      const n = Math.min(soal.length, totalQ);
+      for (let i = 0; i < n; i++) {
+        const meta = getQuestionLabelMeta(i, modelKey);
+        const item = { q_num: i + 1, shortLabel: meta.shortLabel, typeNo: meta.typeNo, typeName: meta.typeName,
+                       materi: materi[i] || '', kunci: kunci[i] || '', soal: soal[i] };
+        results[i + 1] = item;
+        results[meta.shortLabel] = item;
+      }
+      if (soal.length > totalQ) warnings.push(`Jumlah soal (${soal.length}) melebihi struktur fan ini (${totalQ} butir); ${soal.length - totalQ} soal terakhir diabaikan.`);
+      if (soal.length < totalQ) warnings.push(`Soal baru terbaca ${soal.length} dari ${totalQ} butir. Butir sisanya tidak diubah.`);
+      if (found.kunci && kunci.length !== soal.length) warnings.push(`Jumlah kunci (${kunci.length}) tidak sama dengan jumlah soal (${soal.length}).`);
+      if (found.materi && materi.length !== soal.length) warnings.push(`Jumlah pokok bahasan (${materi.length}) tidak sama dengan jumlah soal (${soal.length}).`);
+      lastParseInfo = { format: 'bertahap', soal: soal.length, kunci: kunci.length, materi: materi.length, warnings: warnings };
+      return results;
+    }
+
     function parseTextNaskahSoal(rawText, modelKey) {
+      lastParseInfo = null;
+      const bertahap = parseNaskahBertahap(rawText, modelKey);
+      if (bertahap) return bertahap;
       const results = {};
       const lines = rawText.split('\n');
       const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
@@ -8949,15 +9020,14 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
       const modelKey = getModelForFan(fanName);
       const parsed = parseTextNaskahSoal(text, modelKey);
       
-      const count = Object.values(parsed).filter(item => item && item.soal).length / 2;
-      const actualCount = Math.round(count);
+      const actualCount = new Set(Object.values(parsed).filter(item => item && item.soal).map(item => item.q_num)).size;
       
       const previewCont = document.getElementById('modal-preview-container');
       const countEl = document.getElementById('modal-preview-count');
       const listEl = document.getElementById('modal-preview-list');
       
       if (previewCont) previewCont.classList.remove('hidden');
-      if (countEl) countEl.textContent = `${actualCount} butir berhasil dikenali`;
+      if (countEl) countEl.textContent = `${actualCount} butir berhasil dikenali` + (lastParseInfo ? ` \u2022 soal ${lastParseInfo.soal} \u2022 kunci ${lastParseInfo.kunci} \u2022 pokok bahasan ${lastParseInfo.materi}` : '');
       
       if (listEl) {
         const uniqueItems = [];
@@ -8970,7 +9040,9 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
         });
         uniqueItems.sort((a, b) => a.q_num - b.q_num);
         
-        listEl.innerHTML = uniqueItems.map(item => `
+        const warnHtml = (lastParseInfo && lastParseInfo.warnings.length)
+          ? `<div class="mb-2 p-2 rounded-lg bg-amber-50 border border-amber-300 text-[11px] text-amber-900 space-y-0.5">${lastParseInfo.warnings.map(w => '<div>\u26a0\ufe0f ' + escapeHtml(w) + '</div>').join('')}</div>` : '';
+        listEl.innerHTML = warnHtml + uniqueItems.map(item => `
           <div class="border-b border-slate-200 dark:border-[#1a3d52] pb-1 flex items-start gap-2">
             <span class="font-bold text-amber-700 whitespace-nowrap">[${item.shortLabel}]</span>
             <div class="flex-1">
@@ -9151,22 +9223,22 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
 
       <div class="p-5 space-y-3 text-xs overflow-y-auto">
         <div id="quick-naskah-stats"></div>
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-          <div class="md:col-span-5 space-y-1">
-            <label for="quick-naskah-materi" class="block text-[11px] font-bold text-slate-700">Pokok Bahasan / Kompetensi Dasar:</label>
-            <input type="text" id="quick-naskah-materi" class="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Kaidah Keshahihan Sanad & Sifat Rowi">
-          </div>
-          <div class="md:col-span-7 space-y-1">
-            <label for="quick-naskah-kunci" class="block text-[11px] font-bold text-slate-700">Kunci Jawaban / Rubrik Penilaian:</label>
-            <input type="text" id="quick-naskah-kunci" dir="auto" class="naskah-input-arab w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Hadits Mutawatir / 5 Syarat Shahih...">
-          </div>
-        </div>
         <div class="space-y-1">
           <label for="quick-naskah-teks" class="block text-[11px] font-bold text-slate-700 flex items-center justify-between">
             <span>Naskah / Teks Soal Lengkap:</span>
             <span class="text-[10px] text-slate-400 font-normal">Mendukung tulisan Arab, Pegon, dan Latin &bull; Ctrl+Enter untuk simpan</span>
           </label>
-          <textarea id="quick-naskah-teks" dir="auto" rows="8" class="naskah-input-arab w-full p-2.5 rounded-lg border border-slate-300 focus:ring-amber-500 focus:border-amber-500 font-medium" placeholder="Tuliskan teks naskah soal di sini..."></textarea>
+          <textarea id="quick-naskah-teks" dir="auto" rows="7" class="naskah-input-arab w-full p-2.5 rounded-lg border border-slate-300 focus:ring-amber-500 focus:border-amber-500 font-medium" placeholder="Tuliskan teks naskah soal di sini..."></textarea>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+          <div class="md:col-span-7 space-y-1">
+            <label for="quick-naskah-kunci" class="block text-[11px] font-bold text-slate-700">Kunci Jawaban / Rubrik Penilaian:</label>
+            <textarea id="quick-naskah-kunci" dir="auto" rows="3" class="naskah-input-arab-sm w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Hadits Mutawatir / 5 Syarat Shahih..."></textarea>
+          </div>
+          <div class="md:col-span-5 space-y-1">
+            <label for="quick-naskah-materi" class="block text-[11px] font-bold text-slate-700">Pokok Bahasan / Kompetensi Dasar:</label>
+            <textarea id="quick-naskah-materi" dir="auto" rows="3" class="naskah-input-arab-sm w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-sky-500 focus:border-sky-500 font-medium" placeholder="Misal: Kaidah Keshahihan Sanad & Sifat Rowi"></textarea>
+          </div>
         </div>
         <p class="text-[11px] text-slate-500" id="quick-naskah-note">Naskah disimpan di Menu Soal (Bank Naskah) dan ikut tersinkron ke Spreadsheet.</p>
       </div>
@@ -9401,14 +9473,27 @@ PG 1: Sahabat Nabi yang paling banyak meriwayatkan hadits adalah... | Materi: Pe
         <!-- Tab 1: Paste Text -->
         <div id="modal-tab-paste" class="space-y-3">
           <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
-            <strong>Format Fleksibel:</strong> Anda dapat menempelkan daftar soal berurutan (misal: <code>1. Teks soal...</code>) atau per butir tipe (misal: <code>ES 4: Sebutkan 5 syarat hadits shahih... | Materi: Syarat Sah Hadits | Kunci: Sanad dll.</code>). Sistem otomatis mengenali nomor butir.
+            <strong>Format paste (sama seperti berkas Word):</strong> tiga bagian berurutan, setiap butir satu baris/paragraf, urutan butir sama di ketiga bagian.
+            <div class="mt-1.5 font-mono text-[11px] bg-white/70 rounded p-2 border border-amber-200 leading-relaxed">soal<br>&nbsp;&nbsp;(semua soal, dari awal sampai akhir)<br>Kunci<br>&nbsp;&nbsp;(semua kunci jawaban, urutan sama)<br>Pokok bahasan<br>&nbsp;&nbsp;(semua pokok bahasan, urutan sama)</div>
+            <div class="mt-1.5">Nomor otomatis hasil salin dari Word (1. / 2) / ١-) dibuang sendiri. Soal pertama = butir pertama di fan ini (PG 1, dst.). Format lama <code>PG 1: soal | Materi: ... | Kunci: ...</code> masih bisa dibaca.</div>
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1">Tempelkan (Paste) Teks Naskah Soal di Bawah Ini:</label>
             <textarea id="modal-upload-textarea" rows="8" class="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs focus:ring-amber-500 focus:border-amber-500" placeholder="Contoh format:
-ES 4: Sebutkan 5 syarat hadits shahih menurut kaidah Ibnu Shalah! | Materi: Syarat Sah Hadits | Kunci: Sanad bersambung, adil, dhabit, tidak syadz, tidak berillat
-ML 6: Hadits yang diriwayatkan oleh orang banyak... dinamakan hadits... | Materi: Musthalah Hadits | Kunci: Hadits Mutawatir
-ES 5: Jelaskan asbabul wurud hadits innamal a'maalu bin-niyyaat! | Materi: Asbabul Wurud | Kunci: Niat hijrah karena wanita"></textarea>
+soal
+(soal 1)
+(soal 2)
+(soal 3)
+
+Kunci
+(kunci 1)
+(kunci 2)
+(kunci 3)
+
+Pokok bahasan
+(pokok bahasan 1)
+(pokok bahasan 2)
+(pokok bahasan 3)"></textarea>
           </div>
           <div class="flex justify-between items-center pt-1">
             <button type="button" onclick="isiContohNaskahUpload()" class="text-xs text-amber-700 hover:underline font-semibold cursor-pointer">
