@@ -60,7 +60,7 @@
     /* Narasi butir soal (Rekap Fan): huruf Arab tradisional, diperbesar */
     .narasi-arab { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.6rem; line-height: 2.1; }
     .kunci-arab { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 1.45rem; line-height: 2; }
-    /* Penanda 3 tertinggi (emas) & 3 terendah (merah) per butir soal - Seluruh Rombel Paralel */
+    /* Penanda 3 tertinggi (emas) & 3 terendah (merah) per butir soal - Seluruh Abjad Paralel */
     td.cell-gold { background: linear-gradient(135deg,#fde68a,#fbbf24) !important; color: #78350f !important; font-weight: 900 !important; box-shadow: inset 0 0 0 1.5px #d97706; }
     td.cell-low { background: #ef4444 !important; color: #ffffff !important; font-weight: 900 !important; box-shadow: inset 0 0 0 1.5px #b91c1c; }
     /* Nomor soal sebagai tombol -> popup naskah soal */
@@ -140,7 +140,7 @@
     @media (max-width: 767px) {
       #app-sidebar {
         position: fixed !important;
-        top: 4rem !important;
+        top: 3.5rem !important;
         left: 0 !important;
         bottom: 0 !important;
         z-index: 50 !important;
@@ -152,6 +152,356 @@
       #app-sidebar.mobile-open {
         transform: translateX(0) !important;
       }
+    }
+
+    /* ===================================================================
+       TAMPILAN HP (layar < 768px)
+       =================================================================== */
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    #main-content-container { min-width: 0; overflow-x: clip; }
+    @media (max-width: 767px) {
+      #app-sidebar { height: calc(100dvh - 3.5rem) !important; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom); }
+      .mh-btn { width: 2.25rem !important; height: 2.25rem !important; }
+      #main-content-container { padding: .75rem !important; }
+      #main-content-container > * + * { margin-top: 1rem !important; }
+      /* kolom isian minimal 16px agar HP tidak zoom otomatis saat diketuk */
+      input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea { font-size: 16px !important; }
+      /* tabel lebar: geser ke samping di dalam kotaknya sendiri, bukan seluruh halaman */
+      .tab-content table { font-size: 11px; }
+      .tab-content th, .tab-content td { padding-left: .5rem; padding-right: .5rem; }
+      /* modal: penuh lebar & bisa digulir */
+      .fixed.inset-0.flex.items-center.justify-center { align-items: flex-end !important; padding: 0 !important; }
+      .fixed.inset-0.flex.items-center.justify-center > * { max-height: 92dvh; overflow-y: auto; border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important; width: 100% !important; max-width: 100% !important; }
+      #login-overlay.fixed.inset-0.flex.items-center.justify-center { align-items: center !important; padding: 1rem !important; }
+      #login-overlay > * { max-height: none; overflow: visible; width: 100% !important; max-width: 24rem !important; }
+      #toast-container { left: .75rem !important; right: .75rem !important; bottom: calc(.75rem + env(safe-area-inset-bottom)) !important; max-width: none !important; }
+      #toast-container > :nth-last-child(n+3) { display: none !important; }   /* maks. 2 notifikasi sekaligus */
+      textarea { line-height: 1.45 !important; }
+      .tab-content th, .tab-content td { padding-top: .45rem; padding-bottom: .45rem; }
+      /* label kecil (badge) di dalam tabel jangan dipecah per kata */
+      .tab-content td .rounded, .tab-content td .rounded-md, .tab-content td .rounded-full { white-space: nowrap; }
+      /* Tabel lebar: kolom ke-2 (nama Fan / Abjad / Santri) tetap terlihat saat tabel digeser ke samping */
+      .tab-content .overflow-x-auto > table thead tr:first-child > th:nth-child(2):not([colspan]),
+      .tab-content .overflow-x-auto > table tbody tr:not(:has(> td[colspan])) > td:nth-child(2) {
+        position: sticky; left: 0; z-index: 2; background-color: #fff; box-shadow: 1px 0 0 #e2e8f0;
+      }
+      .tab-content .overflow-x-auto > table thead tr:first-child > th:nth-child(2):not([colspan]) { background-color: #f8fafc; z-index: 3; }
+      .dark .tab-content .overflow-x-auto > table thead tr:first-child > th:nth-child(2):not([colspan]) { background-color: #133042; }
+      .tab-content td button, .tab-content td a { white-space: nowrap; }
+      .dark .tab-content .overflow-x-auto > table tbody td:nth-child(2) { background-color: #0f2634; box-shadow: 1px 0 0 #1a3d52; }
+      /* tombol & area sentuh lebih nyaman */
+      .tab-content button { min-height: 2rem; }
+      /* judul besar sedikit diperkecil */
+      .tab-content h2.text-2xl, .tab-content h2.text-3xl { font-size: 1.25rem !important; line-height: 1.6rem !important; }
+    }
+    /* ===================================================================
+       MODE GELAP: kontras wadah vs isi diperjelas, teks lebih terang
+       =================================================================== */
+    .dark .dark\:bg-\[\#081721\] { background-color: #061520 !important; }
+    .dark .dark\:hover\:bg-\[\#081721\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#06131c\] { background-color: #081b28 !important; }
+    .dark .dark\:hover\:bg-\[\#06131c\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#0f2634\] { background-color: #0f2a3b !important; }
+    .dark .dark\:hover\:bg-\[\#0f2634\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#133042\] { background-color: #18405a !important; }
+    .dark .dark\:hover\:bg-\[\#133042\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#0b1d28\] { background-color: #0c2231 !important; }
+    .dark .dark\:hover\:bg-\[\#0b1d28\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#071924\] { background-color: #0c2231 !important; }
+    .dark .dark\:hover\:bg-\[\#071924\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:bg-\[\#0b2130\] { background-color: #0b2130 !important; }
+    .dark .dark\:hover\:bg-\[\#0b2130\]:hover { background-color: #2a5873 !important; }
+    .dark .dark\:border-\[\#1a3d52\] { border-color: #2a5873 !important; }
+    .dark .dark\:hover\:border-\[\#1a3d52\]:hover { border-color: #33688a !important; }
+    .dark .dark\:border-\[\#244e68\] { border-color: #33688a !important; }
+    .dark .dark\:hover\:border-\[\#244e68\]:hover { border-color: #33688a !important; }
+    .dark .dark\:border-\[\#163547\] { border-color: #2a5873 !important; }
+    .dark .dark\:hover\:border-\[\#163547\]:hover { border-color: #33688a !important; }
+    .dark .dark\:border-\[\#1a3d52\]\/80, .dark .dark\:border-\[\#1a3d52\]\/90 { border-color: #2a5873 !important; }
+    html.dark body { background-color: #061520 !important; }
+    .dark .dark\:text-slate-300 { color: #dbe5ef !important; }
+    .dark .dark\:text-slate-400 { color: #b9c8d6 !important; }
+    .dark .dark\:text-slate-500 { color: #9fb3c8 !important; }
+    .dark .dark\:text-slate-600 { color: #9fb3c8 !important; }
+    .dark .dark\:border-slate-700, .dark .dark\:border-slate-800 { border-color: #2a5873 !important; }
+    .dark :is([class~="bg-white"],[class~="bg-white/40"],[class~="bg-white/50"],[class~="bg-white/60"],[class~="bg-white/70"],[class~="bg-white/80"],[class~="bg-white/90"],[class~="bg-white/95"]):not([class*="dark:bg-"]) { background-color: #0f2a3b !important; }
+    .dark :is([class~="bg-slate-50"],[class~="bg-slate-50/40"],[class~="bg-slate-50/50"],[class~="bg-slate-50/60"],[class~="bg-slate-50/70"],[class~="bg-slate-50/80"],[class~="bg-slate-50/90"],[class~="bg-slate-50/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-gray-50"],[class~="bg-gray-50/40"],[class~="bg-gray-50/50"],[class~="bg-gray-50/60"],[class~="bg-gray-50/70"],[class~="bg-gray-50/80"],[class~="bg-gray-50/90"],[class~="bg-gray-50/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-zinc-50"],[class~="bg-zinc-50/40"],[class~="bg-zinc-50/50"],[class~="bg-zinc-50/60"],[class~="bg-zinc-50/70"],[class~="bg-zinc-50/80"],[class~="bg-zinc-50/90"],[class~="bg-zinc-50/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-slate-100"],[class~="bg-slate-100/40"],[class~="bg-slate-100/50"],[class~="bg-slate-100/60"],[class~="bg-slate-100/70"],[class~="bg-slate-100/80"],[class~="bg-slate-100/90"],[class~="bg-slate-100/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-gray-100"],[class~="bg-gray-100/40"],[class~="bg-gray-100/50"],[class~="bg-gray-100/60"],[class~="bg-gray-100/70"],[class~="bg-gray-100/80"],[class~="bg-gray-100/90"],[class~="bg-gray-100/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-slate-200"],[class~="bg-slate-200/40"],[class~="bg-slate-200/50"],[class~="bg-slate-200/60"],[class~="bg-slate-200/70"],[class~="bg-slate-200/80"],[class~="bg-slate-200/90"],[class~="bg-slate-200/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-gray-200"],[class~="bg-gray-200/40"],[class~="bg-gray-200/50"],[class~="bg-gray-200/60"],[class~="bg-gray-200/70"],[class~="bg-gray-200/80"],[class~="bg-gray-200/90"],[class~="bg-gray-200/95"]):not([class*="dark:bg-"]) { background-color: #18405a !important; }
+    .dark :is([class~="bg-rose-50"],[class~="bg-rose-50/40"],[class~="bg-rose-50/50"],[class~="bg-rose-50/60"],[class~="bg-rose-50/70"],[class~="bg-rose-50/80"],[class~="bg-rose-50/90"],[class~="bg-rose-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(244,63,94,0.12) !important; }
+    .dark :is([class~="bg-rose-100"],[class~="bg-rose-100/40"],[class~="bg-rose-100/50"],[class~="bg-rose-100/60"],[class~="bg-rose-100/70"],[class~="bg-rose-100/80"],[class~="bg-rose-100/90"],[class~="bg-rose-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(244,63,94,0.18) !important; }
+    .dark :is([class~="bg-rose-200"],[class~="bg-rose-200/40"],[class~="bg-rose-200/50"],[class~="bg-rose-200/60"],[class~="bg-rose-200/70"],[class~="bg-rose-200/80"],[class~="bg-rose-200/90"],[class~="bg-rose-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(244,63,94,0.26) !important; }
+    .dark :is([class~="border-rose-100"]):not([class*="dark:border-"]) { border-color: rgba(244,63,94,0.35) !important; }
+    .dark :is([class~="border-rose-200"]):not([class*="dark:border-"]) { border-color: rgba(244,63,94,0.45) !important; }
+    .dark :is([class~="border-rose-300"]):not([class*="dark:border-"]) { border-color: rgba(244,63,94,0.55) !important; }
+    .dark :is([class~="text-rose-600"]):not([class*="dark:text-"]) { color: #fda4af !important; }
+    .dark :is([class~="text-rose-700"]):not([class*="dark:text-"]) { color: #fda4af !important; }
+    .dark :is([class~="text-rose-800"]):not([class*="dark:text-"]) { color: #fda4af !important; }
+    .dark :is([class~="text-rose-900"]):not([class*="dark:text-"]) { color: #fda4af !important; }
+    .dark :is([class~="text-rose-950"]):not([class*="dark:text-"]) { color: #fda4af !important; }
+    .dark :is([class~="from-rose-50"],[class~="from-rose-50/40"],[class~="from-rose-50/50"],[class~="from-rose-50/60"],[class~="from-rose-50/70"],[class~="from-rose-50/80"],[class~="from-rose-50/90"],[class~="from-rose-50/95"],[class~="from-rose-100"],[class~="from-rose-100/40"],[class~="from-rose-100/50"],[class~="from-rose-100/60"],[class~="from-rose-100/70"],[class~="from-rose-100/80"],[class~="from-rose-100/90"],[class~="from-rose-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(244,63,94,.12) !important; }
+    .dark :is([class~="bg-red-50"],[class~="bg-red-50/40"],[class~="bg-red-50/50"],[class~="bg-red-50/60"],[class~="bg-red-50/70"],[class~="bg-red-50/80"],[class~="bg-red-50/90"],[class~="bg-red-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(239,68,68,0.12) !important; }
+    .dark :is([class~="bg-red-100"],[class~="bg-red-100/40"],[class~="bg-red-100/50"],[class~="bg-red-100/60"],[class~="bg-red-100/70"],[class~="bg-red-100/80"],[class~="bg-red-100/90"],[class~="bg-red-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(239,68,68,0.18) !important; }
+    .dark :is([class~="bg-red-200"],[class~="bg-red-200/40"],[class~="bg-red-200/50"],[class~="bg-red-200/60"],[class~="bg-red-200/70"],[class~="bg-red-200/80"],[class~="bg-red-200/90"],[class~="bg-red-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(239,68,68,0.26) !important; }
+    .dark :is([class~="border-red-100"]):not([class*="dark:border-"]) { border-color: rgba(239,68,68,0.35) !important; }
+    .dark :is([class~="border-red-200"]):not([class*="dark:border-"]) { border-color: rgba(239,68,68,0.45) !important; }
+    .dark :is([class~="border-red-300"]):not([class*="dark:border-"]) { border-color: rgba(239,68,68,0.55) !important; }
+    .dark :is([class~="text-red-600"]):not([class*="dark:text-"]) { color: #fca5a5 !important; }
+    .dark :is([class~="text-red-700"]):not([class*="dark:text-"]) { color: #fca5a5 !important; }
+    .dark :is([class~="text-red-800"]):not([class*="dark:text-"]) { color: #fca5a5 !important; }
+    .dark :is([class~="text-red-900"]):not([class*="dark:text-"]) { color: #fca5a5 !important; }
+    .dark :is([class~="text-red-950"]):not([class*="dark:text-"]) { color: #fca5a5 !important; }
+    .dark :is([class~="from-red-50"],[class~="from-red-50/40"],[class~="from-red-50/50"],[class~="from-red-50/60"],[class~="from-red-50/70"],[class~="from-red-50/80"],[class~="from-red-50/90"],[class~="from-red-50/95"],[class~="from-red-100"],[class~="from-red-100/40"],[class~="from-red-100/50"],[class~="from-red-100/60"],[class~="from-red-100/70"],[class~="from-red-100/80"],[class~="from-red-100/90"],[class~="from-red-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(239,68,68,.12) !important; }
+    .dark :is([class~="bg-orange-50"],[class~="bg-orange-50/40"],[class~="bg-orange-50/50"],[class~="bg-orange-50/60"],[class~="bg-orange-50/70"],[class~="bg-orange-50/80"],[class~="bg-orange-50/90"],[class~="bg-orange-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(249,115,22,0.12) !important; }
+    .dark :is([class~="bg-orange-100"],[class~="bg-orange-100/40"],[class~="bg-orange-100/50"],[class~="bg-orange-100/60"],[class~="bg-orange-100/70"],[class~="bg-orange-100/80"],[class~="bg-orange-100/90"],[class~="bg-orange-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(249,115,22,0.18) !important; }
+    .dark :is([class~="bg-orange-200"],[class~="bg-orange-200/40"],[class~="bg-orange-200/50"],[class~="bg-orange-200/60"],[class~="bg-orange-200/70"],[class~="bg-orange-200/80"],[class~="bg-orange-200/90"],[class~="bg-orange-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(249,115,22,0.26) !important; }
+    .dark :is([class~="border-orange-100"]):not([class*="dark:border-"]) { border-color: rgba(249,115,22,0.35) !important; }
+    .dark :is([class~="border-orange-200"]):not([class*="dark:border-"]) { border-color: rgba(249,115,22,0.45) !important; }
+    .dark :is([class~="border-orange-300"]):not([class*="dark:border-"]) { border-color: rgba(249,115,22,0.55) !important; }
+    .dark :is([class~="text-orange-600"]):not([class*="dark:text-"]) { color: #fdba74 !important; }
+    .dark :is([class~="text-orange-700"]):not([class*="dark:text-"]) { color: #fdba74 !important; }
+    .dark :is([class~="text-orange-800"]):not([class*="dark:text-"]) { color: #fdba74 !important; }
+    .dark :is([class~="text-orange-900"]):not([class*="dark:text-"]) { color: #fdba74 !important; }
+    .dark :is([class~="text-orange-950"]):not([class*="dark:text-"]) { color: #fdba74 !important; }
+    .dark :is([class~="from-orange-50"],[class~="from-orange-50/40"],[class~="from-orange-50/50"],[class~="from-orange-50/60"],[class~="from-orange-50/70"],[class~="from-orange-50/80"],[class~="from-orange-50/90"],[class~="from-orange-50/95"],[class~="from-orange-100"],[class~="from-orange-100/40"],[class~="from-orange-100/50"],[class~="from-orange-100/60"],[class~="from-orange-100/70"],[class~="from-orange-100/80"],[class~="from-orange-100/90"],[class~="from-orange-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(249,115,22,.12) !important; }
+    .dark :is([class~="bg-amber-50"],[class~="bg-amber-50/40"],[class~="bg-amber-50/50"],[class~="bg-amber-50/60"],[class~="bg-amber-50/70"],[class~="bg-amber-50/80"],[class~="bg-amber-50/90"],[class~="bg-amber-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(245,158,11,0.12) !important; }
+    .dark :is([class~="bg-amber-100"],[class~="bg-amber-100/40"],[class~="bg-amber-100/50"],[class~="bg-amber-100/60"],[class~="bg-amber-100/70"],[class~="bg-amber-100/80"],[class~="bg-amber-100/90"],[class~="bg-amber-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(245,158,11,0.18) !important; }
+    .dark :is([class~="bg-amber-200"],[class~="bg-amber-200/40"],[class~="bg-amber-200/50"],[class~="bg-amber-200/60"],[class~="bg-amber-200/70"],[class~="bg-amber-200/80"],[class~="bg-amber-200/90"],[class~="bg-amber-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(245,158,11,0.26) !important; }
+    .dark :is([class~="border-amber-100"]):not([class*="dark:border-"]) { border-color: rgba(245,158,11,0.35) !important; }
+    .dark :is([class~="border-amber-200"]):not([class*="dark:border-"]) { border-color: rgba(245,158,11,0.45) !important; }
+    .dark :is([class~="border-amber-300"]):not([class*="dark:border-"]) { border-color: rgba(245,158,11,0.55) !important; }
+    .dark :is([class~="text-amber-600"]):not([class*="dark:text-"]) { color: #fcd34d !important; }
+    .dark :is([class~="text-amber-700"]):not([class*="dark:text-"]) { color: #fcd34d !important; }
+    .dark :is([class~="text-amber-800"]):not([class*="dark:text-"]) { color: #fcd34d !important; }
+    .dark :is([class~="text-amber-900"]):not([class*="dark:text-"]) { color: #fcd34d !important; }
+    .dark :is([class~="text-amber-950"]):not([class*="dark:text-"]) { color: #fcd34d !important; }
+    .dark :is([class~="from-amber-50"],[class~="from-amber-50/40"],[class~="from-amber-50/50"],[class~="from-amber-50/60"],[class~="from-amber-50/70"],[class~="from-amber-50/80"],[class~="from-amber-50/90"],[class~="from-amber-50/95"],[class~="from-amber-100"],[class~="from-amber-100/40"],[class~="from-amber-100/50"],[class~="from-amber-100/60"],[class~="from-amber-100/70"],[class~="from-amber-100/80"],[class~="from-amber-100/90"],[class~="from-amber-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(245,158,11,.12) !important; }
+    .dark :is([class~="bg-yellow-50"],[class~="bg-yellow-50/40"],[class~="bg-yellow-50/50"],[class~="bg-yellow-50/60"],[class~="bg-yellow-50/70"],[class~="bg-yellow-50/80"],[class~="bg-yellow-50/90"],[class~="bg-yellow-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(234,179,8,0.12) !important; }
+    .dark :is([class~="bg-yellow-100"],[class~="bg-yellow-100/40"],[class~="bg-yellow-100/50"],[class~="bg-yellow-100/60"],[class~="bg-yellow-100/70"],[class~="bg-yellow-100/80"],[class~="bg-yellow-100/90"],[class~="bg-yellow-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(234,179,8,0.18) !important; }
+    .dark :is([class~="bg-yellow-200"],[class~="bg-yellow-200/40"],[class~="bg-yellow-200/50"],[class~="bg-yellow-200/60"],[class~="bg-yellow-200/70"],[class~="bg-yellow-200/80"],[class~="bg-yellow-200/90"],[class~="bg-yellow-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(234,179,8,0.26) !important; }
+    .dark :is([class~="border-yellow-100"]):not([class*="dark:border-"]) { border-color: rgba(234,179,8,0.35) !important; }
+    .dark :is([class~="border-yellow-200"]):not([class*="dark:border-"]) { border-color: rgba(234,179,8,0.45) !important; }
+    .dark :is([class~="border-yellow-300"]):not([class*="dark:border-"]) { border-color: rgba(234,179,8,0.55) !important; }
+    .dark :is([class~="text-yellow-600"]):not([class*="dark:text-"]) { color: #fde047 !important; }
+    .dark :is([class~="text-yellow-700"]):not([class*="dark:text-"]) { color: #fde047 !important; }
+    .dark :is([class~="text-yellow-800"]):not([class*="dark:text-"]) { color: #fde047 !important; }
+    .dark :is([class~="text-yellow-900"]):not([class*="dark:text-"]) { color: #fde047 !important; }
+    .dark :is([class~="text-yellow-950"]):not([class*="dark:text-"]) { color: #fde047 !important; }
+    .dark :is([class~="from-yellow-50"],[class~="from-yellow-50/40"],[class~="from-yellow-50/50"],[class~="from-yellow-50/60"],[class~="from-yellow-50/70"],[class~="from-yellow-50/80"],[class~="from-yellow-50/90"],[class~="from-yellow-50/95"],[class~="from-yellow-100"],[class~="from-yellow-100/40"],[class~="from-yellow-100/50"],[class~="from-yellow-100/60"],[class~="from-yellow-100/70"],[class~="from-yellow-100/80"],[class~="from-yellow-100/90"],[class~="from-yellow-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(234,179,8,.12) !important; }
+    .dark :is([class~="bg-lime-50"],[class~="bg-lime-50/40"],[class~="bg-lime-50/50"],[class~="bg-lime-50/60"],[class~="bg-lime-50/70"],[class~="bg-lime-50/80"],[class~="bg-lime-50/90"],[class~="bg-lime-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(132,204,22,0.12) !important; }
+    .dark :is([class~="bg-lime-100"],[class~="bg-lime-100/40"],[class~="bg-lime-100/50"],[class~="bg-lime-100/60"],[class~="bg-lime-100/70"],[class~="bg-lime-100/80"],[class~="bg-lime-100/90"],[class~="bg-lime-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(132,204,22,0.18) !important; }
+    .dark :is([class~="bg-lime-200"],[class~="bg-lime-200/40"],[class~="bg-lime-200/50"],[class~="bg-lime-200/60"],[class~="bg-lime-200/70"],[class~="bg-lime-200/80"],[class~="bg-lime-200/90"],[class~="bg-lime-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(132,204,22,0.26) !important; }
+    .dark :is([class~="border-lime-100"]):not([class*="dark:border-"]) { border-color: rgba(132,204,22,0.35) !important; }
+    .dark :is([class~="border-lime-200"]):not([class*="dark:border-"]) { border-color: rgba(132,204,22,0.45) !important; }
+    .dark :is([class~="border-lime-300"]):not([class*="dark:border-"]) { border-color: rgba(132,204,22,0.55) !important; }
+    .dark :is([class~="text-lime-600"]):not([class*="dark:text-"]) { color: #bef264 !important; }
+    .dark :is([class~="text-lime-700"]):not([class*="dark:text-"]) { color: #bef264 !important; }
+    .dark :is([class~="text-lime-800"]):not([class*="dark:text-"]) { color: #bef264 !important; }
+    .dark :is([class~="text-lime-900"]):not([class*="dark:text-"]) { color: #bef264 !important; }
+    .dark :is([class~="text-lime-950"]):not([class*="dark:text-"]) { color: #bef264 !important; }
+    .dark :is([class~="from-lime-50"],[class~="from-lime-50/40"],[class~="from-lime-50/50"],[class~="from-lime-50/60"],[class~="from-lime-50/70"],[class~="from-lime-50/80"],[class~="from-lime-50/90"],[class~="from-lime-50/95"],[class~="from-lime-100"],[class~="from-lime-100/40"],[class~="from-lime-100/50"],[class~="from-lime-100/60"],[class~="from-lime-100/70"],[class~="from-lime-100/80"],[class~="from-lime-100/90"],[class~="from-lime-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(132,204,22,.12) !important; }
+    .dark :is([class~="bg-green-50"],[class~="bg-green-50/40"],[class~="bg-green-50/50"],[class~="bg-green-50/60"],[class~="bg-green-50/70"],[class~="bg-green-50/80"],[class~="bg-green-50/90"],[class~="bg-green-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(34,197,94,0.12) !important; }
+    .dark :is([class~="bg-green-100"],[class~="bg-green-100/40"],[class~="bg-green-100/50"],[class~="bg-green-100/60"],[class~="bg-green-100/70"],[class~="bg-green-100/80"],[class~="bg-green-100/90"],[class~="bg-green-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(34,197,94,0.18) !important; }
+    .dark :is([class~="bg-green-200"],[class~="bg-green-200/40"],[class~="bg-green-200/50"],[class~="bg-green-200/60"],[class~="bg-green-200/70"],[class~="bg-green-200/80"],[class~="bg-green-200/90"],[class~="bg-green-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(34,197,94,0.26) !important; }
+    .dark :is([class~="border-green-100"]):not([class*="dark:border-"]) { border-color: rgba(34,197,94,0.35) !important; }
+    .dark :is([class~="border-green-200"]):not([class*="dark:border-"]) { border-color: rgba(34,197,94,0.45) !important; }
+    .dark :is([class~="border-green-300"]):not([class*="dark:border-"]) { border-color: rgba(34,197,94,0.55) !important; }
+    .dark :is([class~="text-green-600"]):not([class*="dark:text-"]) { color: #86efac !important; }
+    .dark :is([class~="text-green-700"]):not([class*="dark:text-"]) { color: #86efac !important; }
+    .dark :is([class~="text-green-800"]):not([class*="dark:text-"]) { color: #86efac !important; }
+    .dark :is([class~="text-green-900"]):not([class*="dark:text-"]) { color: #86efac !important; }
+    .dark :is([class~="text-green-950"]):not([class*="dark:text-"]) { color: #86efac !important; }
+    .dark :is([class~="from-green-50"],[class~="from-green-50/40"],[class~="from-green-50/50"],[class~="from-green-50/60"],[class~="from-green-50/70"],[class~="from-green-50/80"],[class~="from-green-50/90"],[class~="from-green-50/95"],[class~="from-green-100"],[class~="from-green-100/40"],[class~="from-green-100/50"],[class~="from-green-100/60"],[class~="from-green-100/70"],[class~="from-green-100/80"],[class~="from-green-100/90"],[class~="from-green-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(34,197,94,.12) !important; }
+    .dark :is([class~="bg-emerald-50"],[class~="bg-emerald-50/40"],[class~="bg-emerald-50/50"],[class~="bg-emerald-50/60"],[class~="bg-emerald-50/70"],[class~="bg-emerald-50/80"],[class~="bg-emerald-50/90"],[class~="bg-emerald-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(16,185,129,0.12) !important; }
+    .dark :is([class~="bg-emerald-100"],[class~="bg-emerald-100/40"],[class~="bg-emerald-100/50"],[class~="bg-emerald-100/60"],[class~="bg-emerald-100/70"],[class~="bg-emerald-100/80"],[class~="bg-emerald-100/90"],[class~="bg-emerald-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(16,185,129,0.18) !important; }
+    .dark :is([class~="bg-emerald-200"],[class~="bg-emerald-200/40"],[class~="bg-emerald-200/50"],[class~="bg-emerald-200/60"],[class~="bg-emerald-200/70"],[class~="bg-emerald-200/80"],[class~="bg-emerald-200/90"],[class~="bg-emerald-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(16,185,129,0.26) !important; }
+    .dark :is([class~="border-emerald-100"]):not([class*="dark:border-"]) { border-color: rgba(16,185,129,0.35) !important; }
+    .dark :is([class~="border-emerald-200"]):not([class*="dark:border-"]) { border-color: rgba(16,185,129,0.45) !important; }
+    .dark :is([class~="border-emerald-300"]):not([class*="dark:border-"]) { border-color: rgba(16,185,129,0.55) !important; }
+    .dark :is([class~="text-emerald-600"]):not([class*="dark:text-"]) { color: #6ee7b7 !important; }
+    .dark :is([class~="text-emerald-700"]):not([class*="dark:text-"]) { color: #6ee7b7 !important; }
+    .dark :is([class~="text-emerald-800"]):not([class*="dark:text-"]) { color: #6ee7b7 !important; }
+    .dark :is([class~="text-emerald-900"]):not([class*="dark:text-"]) { color: #6ee7b7 !important; }
+    .dark :is([class~="text-emerald-950"]):not([class*="dark:text-"]) { color: #6ee7b7 !important; }
+    .dark :is([class~="from-emerald-50"],[class~="from-emerald-50/40"],[class~="from-emerald-50/50"],[class~="from-emerald-50/60"],[class~="from-emerald-50/70"],[class~="from-emerald-50/80"],[class~="from-emerald-50/90"],[class~="from-emerald-50/95"],[class~="from-emerald-100"],[class~="from-emerald-100/40"],[class~="from-emerald-100/50"],[class~="from-emerald-100/60"],[class~="from-emerald-100/70"],[class~="from-emerald-100/80"],[class~="from-emerald-100/90"],[class~="from-emerald-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(16,185,129,.12) !important; }
+    .dark :is([class~="bg-teal-50"],[class~="bg-teal-50/40"],[class~="bg-teal-50/50"],[class~="bg-teal-50/60"],[class~="bg-teal-50/70"],[class~="bg-teal-50/80"],[class~="bg-teal-50/90"],[class~="bg-teal-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(20,184,166,0.12) !important; }
+    .dark :is([class~="bg-teal-100"],[class~="bg-teal-100/40"],[class~="bg-teal-100/50"],[class~="bg-teal-100/60"],[class~="bg-teal-100/70"],[class~="bg-teal-100/80"],[class~="bg-teal-100/90"],[class~="bg-teal-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(20,184,166,0.18) !important; }
+    .dark :is([class~="bg-teal-200"],[class~="bg-teal-200/40"],[class~="bg-teal-200/50"],[class~="bg-teal-200/60"],[class~="bg-teal-200/70"],[class~="bg-teal-200/80"],[class~="bg-teal-200/90"],[class~="bg-teal-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(20,184,166,0.26) !important; }
+    .dark :is([class~="border-teal-100"]):not([class*="dark:border-"]) { border-color: rgba(20,184,166,0.35) !important; }
+    .dark :is([class~="border-teal-200"]):not([class*="dark:border-"]) { border-color: rgba(20,184,166,0.45) !important; }
+    .dark :is([class~="border-teal-300"]):not([class*="dark:border-"]) { border-color: rgba(20,184,166,0.55) !important; }
+    .dark :is([class~="text-teal-600"]):not([class*="dark:text-"]) { color: #5eead4 !important; }
+    .dark :is([class~="text-teal-700"]):not([class*="dark:text-"]) { color: #5eead4 !important; }
+    .dark :is([class~="text-teal-800"]):not([class*="dark:text-"]) { color: #5eead4 !important; }
+    .dark :is([class~="text-teal-900"]):not([class*="dark:text-"]) { color: #5eead4 !important; }
+    .dark :is([class~="text-teal-950"]):not([class*="dark:text-"]) { color: #5eead4 !important; }
+    .dark :is([class~="from-teal-50"],[class~="from-teal-50/40"],[class~="from-teal-50/50"],[class~="from-teal-50/60"],[class~="from-teal-50/70"],[class~="from-teal-50/80"],[class~="from-teal-50/90"],[class~="from-teal-50/95"],[class~="from-teal-100"],[class~="from-teal-100/40"],[class~="from-teal-100/50"],[class~="from-teal-100/60"],[class~="from-teal-100/70"],[class~="from-teal-100/80"],[class~="from-teal-100/90"],[class~="from-teal-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(20,184,166,.12) !important; }
+    .dark :is([class~="bg-cyan-50"],[class~="bg-cyan-50/40"],[class~="bg-cyan-50/50"],[class~="bg-cyan-50/60"],[class~="bg-cyan-50/70"],[class~="bg-cyan-50/80"],[class~="bg-cyan-50/90"],[class~="bg-cyan-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(6,182,212,0.12) !important; }
+    .dark :is([class~="bg-cyan-100"],[class~="bg-cyan-100/40"],[class~="bg-cyan-100/50"],[class~="bg-cyan-100/60"],[class~="bg-cyan-100/70"],[class~="bg-cyan-100/80"],[class~="bg-cyan-100/90"],[class~="bg-cyan-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(6,182,212,0.18) !important; }
+    .dark :is([class~="bg-cyan-200"],[class~="bg-cyan-200/40"],[class~="bg-cyan-200/50"],[class~="bg-cyan-200/60"],[class~="bg-cyan-200/70"],[class~="bg-cyan-200/80"],[class~="bg-cyan-200/90"],[class~="bg-cyan-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(6,182,212,0.26) !important; }
+    .dark :is([class~="border-cyan-100"]):not([class*="dark:border-"]) { border-color: rgba(6,182,212,0.35) !important; }
+    .dark :is([class~="border-cyan-200"]):not([class*="dark:border-"]) { border-color: rgba(6,182,212,0.45) !important; }
+    .dark :is([class~="border-cyan-300"]):not([class*="dark:border-"]) { border-color: rgba(6,182,212,0.55) !important; }
+    .dark :is([class~="text-cyan-600"]):not([class*="dark:text-"]) { color: #67e8f9 !important; }
+    .dark :is([class~="text-cyan-700"]):not([class*="dark:text-"]) { color: #67e8f9 !important; }
+    .dark :is([class~="text-cyan-800"]):not([class*="dark:text-"]) { color: #67e8f9 !important; }
+    .dark :is([class~="text-cyan-900"]):not([class*="dark:text-"]) { color: #67e8f9 !important; }
+    .dark :is([class~="text-cyan-950"]):not([class*="dark:text-"]) { color: #67e8f9 !important; }
+    .dark :is([class~="from-cyan-50"],[class~="from-cyan-50/40"],[class~="from-cyan-50/50"],[class~="from-cyan-50/60"],[class~="from-cyan-50/70"],[class~="from-cyan-50/80"],[class~="from-cyan-50/90"],[class~="from-cyan-50/95"],[class~="from-cyan-100"],[class~="from-cyan-100/40"],[class~="from-cyan-100/50"],[class~="from-cyan-100/60"],[class~="from-cyan-100/70"],[class~="from-cyan-100/80"],[class~="from-cyan-100/90"],[class~="from-cyan-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(6,182,212,.12) !important; }
+    .dark :is([class~="bg-sky-50"],[class~="bg-sky-50/40"],[class~="bg-sky-50/50"],[class~="bg-sky-50/60"],[class~="bg-sky-50/70"],[class~="bg-sky-50/80"],[class~="bg-sky-50/90"],[class~="bg-sky-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(14,165,233,0.12) !important; }
+    .dark :is([class~="bg-sky-100"],[class~="bg-sky-100/40"],[class~="bg-sky-100/50"],[class~="bg-sky-100/60"],[class~="bg-sky-100/70"],[class~="bg-sky-100/80"],[class~="bg-sky-100/90"],[class~="bg-sky-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(14,165,233,0.18) !important; }
+    .dark :is([class~="bg-sky-200"],[class~="bg-sky-200/40"],[class~="bg-sky-200/50"],[class~="bg-sky-200/60"],[class~="bg-sky-200/70"],[class~="bg-sky-200/80"],[class~="bg-sky-200/90"],[class~="bg-sky-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(14,165,233,0.26) !important; }
+    .dark :is([class~="border-sky-100"]):not([class*="dark:border-"]) { border-color: rgba(14,165,233,0.35) !important; }
+    .dark :is([class~="border-sky-200"]):not([class*="dark:border-"]) { border-color: rgba(14,165,233,0.45) !important; }
+    .dark :is([class~="border-sky-300"]):not([class*="dark:border-"]) { border-color: rgba(14,165,233,0.55) !important; }
+    .dark :is([class~="text-sky-600"]):not([class*="dark:text-"]) { color: #7dd3fc !important; }
+    .dark :is([class~="text-sky-700"]):not([class*="dark:text-"]) { color: #7dd3fc !important; }
+    .dark :is([class~="text-sky-800"]):not([class*="dark:text-"]) { color: #7dd3fc !important; }
+    .dark :is([class~="text-sky-900"]):not([class*="dark:text-"]) { color: #7dd3fc !important; }
+    .dark :is([class~="text-sky-950"]):not([class*="dark:text-"]) { color: #7dd3fc !important; }
+    .dark :is([class~="from-sky-50"],[class~="from-sky-50/40"],[class~="from-sky-50/50"],[class~="from-sky-50/60"],[class~="from-sky-50/70"],[class~="from-sky-50/80"],[class~="from-sky-50/90"],[class~="from-sky-50/95"],[class~="from-sky-100"],[class~="from-sky-100/40"],[class~="from-sky-100/50"],[class~="from-sky-100/60"],[class~="from-sky-100/70"],[class~="from-sky-100/80"],[class~="from-sky-100/90"],[class~="from-sky-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(14,165,233,.12) !important; }
+    .dark :is([class~="bg-blue-50"],[class~="bg-blue-50/40"],[class~="bg-blue-50/50"],[class~="bg-blue-50/60"],[class~="bg-blue-50/70"],[class~="bg-blue-50/80"],[class~="bg-blue-50/90"],[class~="bg-blue-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(59,130,246,0.12) !important; }
+    .dark :is([class~="bg-blue-100"],[class~="bg-blue-100/40"],[class~="bg-blue-100/50"],[class~="bg-blue-100/60"],[class~="bg-blue-100/70"],[class~="bg-blue-100/80"],[class~="bg-blue-100/90"],[class~="bg-blue-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(59,130,246,0.18) !important; }
+    .dark :is([class~="bg-blue-200"],[class~="bg-blue-200/40"],[class~="bg-blue-200/50"],[class~="bg-blue-200/60"],[class~="bg-blue-200/70"],[class~="bg-blue-200/80"],[class~="bg-blue-200/90"],[class~="bg-blue-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(59,130,246,0.26) !important; }
+    .dark :is([class~="border-blue-100"]):not([class*="dark:border-"]) { border-color: rgba(59,130,246,0.35) !important; }
+    .dark :is([class~="border-blue-200"]):not([class*="dark:border-"]) { border-color: rgba(59,130,246,0.45) !important; }
+    .dark :is([class~="border-blue-300"]):not([class*="dark:border-"]) { border-color: rgba(59,130,246,0.55) !important; }
+    .dark :is([class~="text-blue-600"]):not([class*="dark:text-"]) { color: #93c5fd !important; }
+    .dark :is([class~="text-blue-700"]):not([class*="dark:text-"]) { color: #93c5fd !important; }
+    .dark :is([class~="text-blue-800"]):not([class*="dark:text-"]) { color: #93c5fd !important; }
+    .dark :is([class~="text-blue-900"]):not([class*="dark:text-"]) { color: #93c5fd !important; }
+    .dark :is([class~="text-blue-950"]):not([class*="dark:text-"]) { color: #93c5fd !important; }
+    .dark :is([class~="from-blue-50"],[class~="from-blue-50/40"],[class~="from-blue-50/50"],[class~="from-blue-50/60"],[class~="from-blue-50/70"],[class~="from-blue-50/80"],[class~="from-blue-50/90"],[class~="from-blue-50/95"],[class~="from-blue-100"],[class~="from-blue-100/40"],[class~="from-blue-100/50"],[class~="from-blue-100/60"],[class~="from-blue-100/70"],[class~="from-blue-100/80"],[class~="from-blue-100/90"],[class~="from-blue-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(59,130,246,.12) !important; }
+    .dark :is([class~="bg-indigo-50"],[class~="bg-indigo-50/40"],[class~="bg-indigo-50/50"],[class~="bg-indigo-50/60"],[class~="bg-indigo-50/70"],[class~="bg-indigo-50/80"],[class~="bg-indigo-50/90"],[class~="bg-indigo-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(99,102,241,0.12) !important; }
+    .dark :is([class~="bg-indigo-100"],[class~="bg-indigo-100/40"],[class~="bg-indigo-100/50"],[class~="bg-indigo-100/60"],[class~="bg-indigo-100/70"],[class~="bg-indigo-100/80"],[class~="bg-indigo-100/90"],[class~="bg-indigo-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(99,102,241,0.18) !important; }
+    .dark :is([class~="bg-indigo-200"],[class~="bg-indigo-200/40"],[class~="bg-indigo-200/50"],[class~="bg-indigo-200/60"],[class~="bg-indigo-200/70"],[class~="bg-indigo-200/80"],[class~="bg-indigo-200/90"],[class~="bg-indigo-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(99,102,241,0.26) !important; }
+    .dark :is([class~="border-indigo-100"]):not([class*="dark:border-"]) { border-color: rgba(99,102,241,0.35) !important; }
+    .dark :is([class~="border-indigo-200"]):not([class*="dark:border-"]) { border-color: rgba(99,102,241,0.45) !important; }
+    .dark :is([class~="border-indigo-300"]):not([class*="dark:border-"]) { border-color: rgba(99,102,241,0.55) !important; }
+    .dark :is([class~="text-indigo-600"]):not([class*="dark:text-"]) { color: #a5b4fc !important; }
+    .dark :is([class~="text-indigo-700"]):not([class*="dark:text-"]) { color: #a5b4fc !important; }
+    .dark :is([class~="text-indigo-800"]):not([class*="dark:text-"]) { color: #a5b4fc !important; }
+    .dark :is([class~="text-indigo-900"]):not([class*="dark:text-"]) { color: #a5b4fc !important; }
+    .dark :is([class~="text-indigo-950"]):not([class*="dark:text-"]) { color: #a5b4fc !important; }
+    .dark :is([class~="from-indigo-50"],[class~="from-indigo-50/40"],[class~="from-indigo-50/50"],[class~="from-indigo-50/60"],[class~="from-indigo-50/70"],[class~="from-indigo-50/80"],[class~="from-indigo-50/90"],[class~="from-indigo-50/95"],[class~="from-indigo-100"],[class~="from-indigo-100/40"],[class~="from-indigo-100/50"],[class~="from-indigo-100/60"],[class~="from-indigo-100/70"],[class~="from-indigo-100/80"],[class~="from-indigo-100/90"],[class~="from-indigo-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(99,102,241,.12) !important; }
+    .dark :is([class~="bg-violet-50"],[class~="bg-violet-50/40"],[class~="bg-violet-50/50"],[class~="bg-violet-50/60"],[class~="bg-violet-50/70"],[class~="bg-violet-50/80"],[class~="bg-violet-50/90"],[class~="bg-violet-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(139,92,246,0.12) !important; }
+    .dark :is([class~="bg-violet-100"],[class~="bg-violet-100/40"],[class~="bg-violet-100/50"],[class~="bg-violet-100/60"],[class~="bg-violet-100/70"],[class~="bg-violet-100/80"],[class~="bg-violet-100/90"],[class~="bg-violet-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(139,92,246,0.18) !important; }
+    .dark :is([class~="bg-violet-200"],[class~="bg-violet-200/40"],[class~="bg-violet-200/50"],[class~="bg-violet-200/60"],[class~="bg-violet-200/70"],[class~="bg-violet-200/80"],[class~="bg-violet-200/90"],[class~="bg-violet-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(139,92,246,0.26) !important; }
+    .dark :is([class~="border-violet-100"]):not([class*="dark:border-"]) { border-color: rgba(139,92,246,0.35) !important; }
+    .dark :is([class~="border-violet-200"]):not([class*="dark:border-"]) { border-color: rgba(139,92,246,0.45) !important; }
+    .dark :is([class~="border-violet-300"]):not([class*="dark:border-"]) { border-color: rgba(139,92,246,0.55) !important; }
+    .dark :is([class~="text-violet-600"]):not([class*="dark:text-"]) { color: #c4b5fd !important; }
+    .dark :is([class~="text-violet-700"]):not([class*="dark:text-"]) { color: #c4b5fd !important; }
+    .dark :is([class~="text-violet-800"]):not([class*="dark:text-"]) { color: #c4b5fd !important; }
+    .dark :is([class~="text-violet-900"]):not([class*="dark:text-"]) { color: #c4b5fd !important; }
+    .dark :is([class~="text-violet-950"]):not([class*="dark:text-"]) { color: #c4b5fd !important; }
+    .dark :is([class~="from-violet-50"],[class~="from-violet-50/40"],[class~="from-violet-50/50"],[class~="from-violet-50/60"],[class~="from-violet-50/70"],[class~="from-violet-50/80"],[class~="from-violet-50/90"],[class~="from-violet-50/95"],[class~="from-violet-100"],[class~="from-violet-100/40"],[class~="from-violet-100/50"],[class~="from-violet-100/60"],[class~="from-violet-100/70"],[class~="from-violet-100/80"],[class~="from-violet-100/90"],[class~="from-violet-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(139,92,246,.12) !important; }
+    .dark :is([class~="bg-purple-50"],[class~="bg-purple-50/40"],[class~="bg-purple-50/50"],[class~="bg-purple-50/60"],[class~="bg-purple-50/70"],[class~="bg-purple-50/80"],[class~="bg-purple-50/90"],[class~="bg-purple-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(168,85,247,0.12) !important; }
+    .dark :is([class~="bg-purple-100"],[class~="bg-purple-100/40"],[class~="bg-purple-100/50"],[class~="bg-purple-100/60"],[class~="bg-purple-100/70"],[class~="bg-purple-100/80"],[class~="bg-purple-100/90"],[class~="bg-purple-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(168,85,247,0.18) !important; }
+    .dark :is([class~="bg-purple-200"],[class~="bg-purple-200/40"],[class~="bg-purple-200/50"],[class~="bg-purple-200/60"],[class~="bg-purple-200/70"],[class~="bg-purple-200/80"],[class~="bg-purple-200/90"],[class~="bg-purple-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(168,85,247,0.26) !important; }
+    .dark :is([class~="border-purple-100"]):not([class*="dark:border-"]) { border-color: rgba(168,85,247,0.35) !important; }
+    .dark :is([class~="border-purple-200"]):not([class*="dark:border-"]) { border-color: rgba(168,85,247,0.45) !important; }
+    .dark :is([class~="border-purple-300"]):not([class*="dark:border-"]) { border-color: rgba(168,85,247,0.55) !important; }
+    .dark :is([class~="text-purple-600"]):not([class*="dark:text-"]) { color: #d8b4fe !important; }
+    .dark :is([class~="text-purple-700"]):not([class*="dark:text-"]) { color: #d8b4fe !important; }
+    .dark :is([class~="text-purple-800"]):not([class*="dark:text-"]) { color: #d8b4fe !important; }
+    .dark :is([class~="text-purple-900"]):not([class*="dark:text-"]) { color: #d8b4fe !important; }
+    .dark :is([class~="text-purple-950"]):not([class*="dark:text-"]) { color: #d8b4fe !important; }
+    .dark :is([class~="from-purple-50"],[class~="from-purple-50/40"],[class~="from-purple-50/50"],[class~="from-purple-50/60"],[class~="from-purple-50/70"],[class~="from-purple-50/80"],[class~="from-purple-50/90"],[class~="from-purple-50/95"],[class~="from-purple-100"],[class~="from-purple-100/40"],[class~="from-purple-100/50"],[class~="from-purple-100/60"],[class~="from-purple-100/70"],[class~="from-purple-100/80"],[class~="from-purple-100/90"],[class~="from-purple-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(168,85,247,.12) !important; }
+    .dark :is([class~="bg-fuchsia-50"],[class~="bg-fuchsia-50/40"],[class~="bg-fuchsia-50/50"],[class~="bg-fuchsia-50/60"],[class~="bg-fuchsia-50/70"],[class~="bg-fuchsia-50/80"],[class~="bg-fuchsia-50/90"],[class~="bg-fuchsia-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(217,70,239,0.12) !important; }
+    .dark :is([class~="bg-fuchsia-100"],[class~="bg-fuchsia-100/40"],[class~="bg-fuchsia-100/50"],[class~="bg-fuchsia-100/60"],[class~="bg-fuchsia-100/70"],[class~="bg-fuchsia-100/80"],[class~="bg-fuchsia-100/90"],[class~="bg-fuchsia-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(217,70,239,0.18) !important; }
+    .dark :is([class~="bg-fuchsia-200"],[class~="bg-fuchsia-200/40"],[class~="bg-fuchsia-200/50"],[class~="bg-fuchsia-200/60"],[class~="bg-fuchsia-200/70"],[class~="bg-fuchsia-200/80"],[class~="bg-fuchsia-200/90"],[class~="bg-fuchsia-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(217,70,239,0.26) !important; }
+    .dark :is([class~="border-fuchsia-100"]):not([class*="dark:border-"]) { border-color: rgba(217,70,239,0.35) !important; }
+    .dark :is([class~="border-fuchsia-200"]):not([class*="dark:border-"]) { border-color: rgba(217,70,239,0.45) !important; }
+    .dark :is([class~="border-fuchsia-300"]):not([class*="dark:border-"]) { border-color: rgba(217,70,239,0.55) !important; }
+    .dark :is([class~="text-fuchsia-600"]):not([class*="dark:text-"]) { color: #f0abfc !important; }
+    .dark :is([class~="text-fuchsia-700"]):not([class*="dark:text-"]) { color: #f0abfc !important; }
+    .dark :is([class~="text-fuchsia-800"]):not([class*="dark:text-"]) { color: #f0abfc !important; }
+    .dark :is([class~="text-fuchsia-900"]):not([class*="dark:text-"]) { color: #f0abfc !important; }
+    .dark :is([class~="text-fuchsia-950"]):not([class*="dark:text-"]) { color: #f0abfc !important; }
+    .dark :is([class~="from-fuchsia-50"],[class~="from-fuchsia-50/40"],[class~="from-fuchsia-50/50"],[class~="from-fuchsia-50/60"],[class~="from-fuchsia-50/70"],[class~="from-fuchsia-50/80"],[class~="from-fuchsia-50/90"],[class~="from-fuchsia-50/95"],[class~="from-fuchsia-100"],[class~="from-fuchsia-100/40"],[class~="from-fuchsia-100/50"],[class~="from-fuchsia-100/60"],[class~="from-fuchsia-100/70"],[class~="from-fuchsia-100/80"],[class~="from-fuchsia-100/90"],[class~="from-fuchsia-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(217,70,239,.12) !important; }
+    .dark :is([class~="bg-pink-50"],[class~="bg-pink-50/40"],[class~="bg-pink-50/50"],[class~="bg-pink-50/60"],[class~="bg-pink-50/70"],[class~="bg-pink-50/80"],[class~="bg-pink-50/90"],[class~="bg-pink-50/95"]):not([class*="dark:bg-"]) { background-color: rgba(236,72,153,0.12) !important; }
+    .dark :is([class~="bg-pink-100"],[class~="bg-pink-100/40"],[class~="bg-pink-100/50"],[class~="bg-pink-100/60"],[class~="bg-pink-100/70"],[class~="bg-pink-100/80"],[class~="bg-pink-100/90"],[class~="bg-pink-100/95"]):not([class*="dark:bg-"]) { background-color: rgba(236,72,153,0.18) !important; }
+    .dark :is([class~="bg-pink-200"],[class~="bg-pink-200/40"],[class~="bg-pink-200/50"],[class~="bg-pink-200/60"],[class~="bg-pink-200/70"],[class~="bg-pink-200/80"],[class~="bg-pink-200/90"],[class~="bg-pink-200/95"]):not([class*="dark:bg-"]) { background-color: rgba(236,72,153,0.26) !important; }
+    .dark :is([class~="border-pink-100"]):not([class*="dark:border-"]) { border-color: rgba(236,72,153,0.35) !important; }
+    .dark :is([class~="border-pink-200"]):not([class*="dark:border-"]) { border-color: rgba(236,72,153,0.45) !important; }
+    .dark :is([class~="border-pink-300"]):not([class*="dark:border-"]) { border-color: rgba(236,72,153,0.55) !important; }
+    .dark :is([class~="text-pink-600"]):not([class*="dark:text-"]) { color: #f9a8d4 !important; }
+    .dark :is([class~="text-pink-700"]):not([class*="dark:text-"]) { color: #f9a8d4 !important; }
+    .dark :is([class~="text-pink-800"]):not([class*="dark:text-"]) { color: #f9a8d4 !important; }
+    .dark :is([class~="text-pink-900"]):not([class*="dark:text-"]) { color: #f9a8d4 !important; }
+    .dark :is([class~="text-pink-950"]):not([class*="dark:text-"]) { color: #f9a8d4 !important; }
+    .dark :is([class~="from-pink-50"],[class~="from-pink-50/40"],[class~="from-pink-50/50"],[class~="from-pink-50/60"],[class~="from-pink-50/70"],[class~="from-pink-50/80"],[class~="from-pink-50/90"],[class~="from-pink-50/95"],[class~="from-pink-100"],[class~="from-pink-100/40"],[class~="from-pink-100/50"],[class~="from-pink-100/60"],[class~="from-pink-100/70"],[class~="from-pink-100/80"],[class~="from-pink-100/90"],[class~="from-pink-100/95"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: rgba(236,72,153,.12) !important; }
+    .dark :is([class~="from-white"],[class~="from-slate-50"],[class~="from-slate-100"]):not([class*="dark:from-"]):not([class*="dark:bg-"]) { background-image: none !important; background-color: #0f2a3b !important; }
+    .dark :is([class~="text-slate-950"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-slate-900"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-gray-900"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-black"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-slate-800"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-gray-800"]):not([class*="dark:text-"]) { color: #f1f5f9 !important; }
+    .dark :is([class~="text-slate-700"]):not([class*="dark:text-"]) { color: #dbe5ef !important; }
+    .dark :is([class~="text-gray-700"]):not([class*="dark:text-"]) { color: #dbe5ef !important; }
+    .dark :is([class~="text-slate-600"]):not([class*="dark:text-"]) { color: #b9c8d6 !important; }
+    .dark :is([class~="text-gray-600"]):not([class*="dark:text-"]) { color: #b9c8d6 !important; }
+    .dark :is([class~="text-slate-500"]):not([class*="dark:text-"]) { color: #9fb3c8 !important; }
+    .dark :is([class~="text-gray-500"]):not([class*="dark:text-"]) { color: #9fb3c8 !important; }
+    .dark :is([class~="text-slate-400"]):not([class*="dark:text-"]) { color: #9fb3c8 !important; }
+    .dark.dark :is([class~="bg-rose-300"],[class~="bg-rose-400"],[class~="bg-red-300"],[class~="bg-red-400"],[class~="bg-orange-300"],[class~="bg-orange-400"],[class~="bg-amber-300"],[class~="bg-amber-400"],[class~="bg-yellow-300"],[class~="bg-yellow-400"],[class~="bg-lime-300"],[class~="bg-lime-400"],[class~="bg-green-300"],[class~="bg-green-400"],[class~="bg-emerald-300"],[class~="bg-emerald-400"],[class~="bg-teal-300"],[class~="bg-teal-400"],[class~="bg-cyan-300"],[class~="bg-cyan-400"],[class~="bg-sky-300"],[class~="bg-sky-400"],[class~="bg-blue-300"],[class~="bg-blue-400"],[class~="bg-indigo-300"],[class~="bg-indigo-400"],[class~="bg-violet-300"],[class~="bg-violet-400"],[class~="bg-purple-300"],[class~="bg-purple-400"],[class~="bg-fuchsia-300"],[class~="bg-fuchsia-400"],[class~="bg-pink-300"],[class~="bg-pink-400"]):is([class~="text-rose-700"],[class~="text-rose-800"],[class~="text-rose-900"],[class~="text-rose-950"],[class~="text-red-700"],[class~="text-red-800"],[class~="text-red-900"],[class~="text-red-950"],[class~="text-orange-700"],[class~="text-orange-800"],[class~="text-orange-900"],[class~="text-orange-950"],[class~="text-amber-700"],[class~="text-amber-800"],[class~="text-amber-900"],[class~="text-amber-950"],[class~="text-yellow-700"],[class~="text-yellow-800"],[class~="text-yellow-900"],[class~="text-yellow-950"],[class~="text-lime-700"],[class~="text-lime-800"],[class~="text-lime-900"],[class~="text-lime-950"],[class~="text-green-700"],[class~="text-green-800"],[class~="text-green-900"],[class~="text-green-950"],[class~="text-emerald-700"],[class~="text-emerald-800"],[class~="text-emerald-900"],[class~="text-emerald-950"],[class~="text-teal-700"],[class~="text-teal-800"],[class~="text-teal-900"],[class~="text-teal-950"],[class~="text-cyan-700"],[class~="text-cyan-800"],[class~="text-cyan-900"],[class~="text-cyan-950"],[class~="text-sky-700"],[class~="text-sky-800"],[class~="text-sky-900"],[class~="text-sky-950"],[class~="text-blue-700"],[class~="text-blue-800"],[class~="text-blue-900"],[class~="text-blue-950"],[class~="text-indigo-700"],[class~="text-indigo-800"],[class~="text-indigo-900"],[class~="text-indigo-950"],[class~="text-violet-700"],[class~="text-violet-800"],[class~="text-violet-900"],[class~="text-violet-950"],[class~="text-purple-700"],[class~="text-purple-800"],[class~="text-purple-900"],[class~="text-purple-950"],[class~="text-fuchsia-700"],[class~="text-fuchsia-800"],[class~="text-fuchsia-900"],[class~="text-fuchsia-950"],[class~="text-pink-700"],[class~="text-pink-800"],[class~="text-pink-900"],[class~="text-pink-950"],[class~="text-slate-700"],[class~="text-slate-800"],[class~="text-slate-900"],[class~="text-slate-950"],[class~="text-gray-700"],[class~="text-gray-800"],[class~="text-gray-900"],[class~="text-gray-950"],[class~="text-black"]) { color: #0f172a !important; }
+    .dark.dark :is([class~="bg-rose-300"],[class~="bg-rose-400"],[class~="bg-red-300"],[class~="bg-red-400"],[class~="bg-orange-300"],[class~="bg-orange-400"],[class~="bg-amber-300"],[class~="bg-amber-400"],[class~="bg-yellow-300"],[class~="bg-yellow-400"],[class~="bg-lime-300"],[class~="bg-lime-400"],[class~="bg-green-300"],[class~="bg-green-400"],[class~="bg-emerald-300"],[class~="bg-emerald-400"],[class~="bg-teal-300"],[class~="bg-teal-400"],[class~="bg-cyan-300"],[class~="bg-cyan-400"],[class~="bg-sky-300"],[class~="bg-sky-400"],[class~="bg-blue-300"],[class~="bg-blue-400"],[class~="bg-indigo-300"],[class~="bg-indigo-400"],[class~="bg-violet-300"],[class~="bg-violet-400"],[class~="bg-purple-300"],[class~="bg-purple-400"],[class~="bg-fuchsia-300"],[class~="bg-fuchsia-400"],[class~="bg-pink-300"],[class~="bg-pink-400"]):is([class~="text-rose-700"],[class~="text-rose-800"],[class~="text-rose-900"],[class~="text-rose-950"],[class~="text-red-700"],[class~="text-red-800"],[class~="text-red-900"],[class~="text-red-950"],[class~="text-orange-700"],[class~="text-orange-800"],[class~="text-orange-900"],[class~="text-orange-950"],[class~="text-amber-700"],[class~="text-amber-800"],[class~="text-amber-900"],[class~="text-amber-950"],[class~="text-yellow-700"],[class~="text-yellow-800"],[class~="text-yellow-900"],[class~="text-yellow-950"],[class~="text-lime-700"],[class~="text-lime-800"],[class~="text-lime-900"],[class~="text-lime-950"],[class~="text-green-700"],[class~="text-green-800"],[class~="text-green-900"],[class~="text-green-950"],[class~="text-emerald-700"],[class~="text-emerald-800"],[class~="text-emerald-900"],[class~="text-emerald-950"],[class~="text-teal-700"],[class~="text-teal-800"],[class~="text-teal-900"],[class~="text-teal-950"],[class~="text-cyan-700"],[class~="text-cyan-800"],[class~="text-cyan-900"],[class~="text-cyan-950"],[class~="text-sky-700"],[class~="text-sky-800"],[class~="text-sky-900"],[class~="text-sky-950"],[class~="text-blue-700"],[class~="text-blue-800"],[class~="text-blue-900"],[class~="text-blue-950"],[class~="text-indigo-700"],[class~="text-indigo-800"],[class~="text-indigo-900"],[class~="text-indigo-950"],[class~="text-violet-700"],[class~="text-violet-800"],[class~="text-violet-900"],[class~="text-violet-950"],[class~="text-purple-700"],[class~="text-purple-800"],[class~="text-purple-900"],[class~="text-purple-950"],[class~="text-fuchsia-700"],[class~="text-fuchsia-800"],[class~="text-fuchsia-900"],[class~="text-fuchsia-950"],[class~="text-pink-700"],[class~="text-pink-800"],[class~="text-pink-900"],[class~="text-pink-950"],[class~="text-slate-700"],[class~="text-slate-800"],[class~="text-slate-900"],[class~="text-slate-950"],[class~="text-gray-700"],[class~="text-gray-800"],[class~="text-gray-900"],[class~="text-gray-950"],[class~="text-black"]) * { color: inherit; }
+    .dark :is([class~="border-slate-100"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark :is([class~="border-slate-200"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark :is([class~="border-slate-300"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark :is([class~="border-gray-100"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark :is([class~="border-gray-200"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark :is([class~="border-gray-300"]):not([class*="dark:border-"]) { border-color: #2a5873 !important; }
+    .dark [class~="divide-slate-100"]:not([class*="dark:divide-"]) > * + * { border-color: #2a5873 !important; }
+    .dark [class~="divide-slate-200"]:not([class*="dark:divide-"]) > * + * { border-color: #2a5873 !important; }
+    .dark [class~="divide-gray-100"]:not([class*="dark:divide-"]) > * + * { border-color: #2a5873 !important; }
+    .dark [class~="divide-gray-200"]:not([class*="dark:divide-"]) > * + * { border-color: #2a5873 !important; }
+    .dark [class~="hover:bg-slate-50"]:not([class*="dark:hover:bg-"]):hover, .dark [class~="hover:bg-slate-100"]:not([class*="dark:hover:bg-"]):hover, .dark [class~="hover:bg-slate-200"]:not([class*="dark:hover:bg-"]):hover, .dark [class~="hover:bg-white"]:not([class*="dark:hover:bg-"]):hover { background-color: #2a5873 !important; }
+    .dark [class~="hover:bg-sky-50"]:not([class*="dark:hover:bg-"]):hover { background-color: rgba(14,165,233,.16) !important; }
+    .dark.dark td.cell-gold { color: #78350f !important; }
+    .dark.dark td.cell-low { color: #ffffff !important; }
+    .dark input:not([type=checkbox]):not([type=radio]):not([type=range]):not([class*="dark:bg-"]), .dark select:not([class*="dark:bg-"]), .dark textarea:not([class*="dark:bg-"]) { background-color: #0c2231 !important; color: #f1f5f9 !important; border-color: #33688a !important; }
+    .dark input::placeholder, .dark textarea::placeholder { color: #7f97ad !important; opacity: 1; }
+    .dark select option { background-color: #0c2231; color: #f1f5f9; }
+    .dark thead:not([class*="dark:bg-"]) { background-color: #18405a; }
+    .dark table th, .dark table td { border-color: #2a5873; }
+    .dark code:not([class*="dark:"]) { background-color: #0c2231; color: #a5f3fc; }
+    .dark .tab-content .overflow-x-auto > table thead tr:first-child > th:nth-child(2):not([colspan]) { background-color: #18405a !important; }
+    .dark .tab-content .overflow-x-auto > table tbody tr:not(:has(> td[colspan])) > td:nth-child(2) { background-color: #0f2a3b !important; box-shadow: 1px 0 0 #2a5873 !important; }
+    .dark .tab-content > div, .dark .tab-content > section { box-shadow: 0 1px 0 rgba(255,255,255,.03), 0 4px 14px rgba(0,0,0,.25); }
+    /* ===== NAVIGASI BAWAH (HP) ===== */
+    #mobile-bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+    .bnav-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; padding: 0 2px 8px;
+      font-size: 10px; font-weight: 700; color: #64748b; cursor: pointer; -webkit-tap-highlight-color: transparent; line-height: 1.1; text-align: center; }
+    .bnav-item.is-active { color: #0e7490; }
+    .bnav-item.is-active:not(.bnav-main) svg { transform: translateY(-1px); }
+    .bnav-item:not(.bnav-main).is-active::before { content: ''; position: absolute; top: 0; width: 28px; height: 3px; border-radius: 0 0 4px 4px; background: #06b6d4; }
+    .bnav-item { position: relative; }
+    .dark .bnav-item { color: #9fb3c8; }
+    .dark .bnav-item.is-active { color: #67e8f9; }
+    .bnav-main-circle { width: 3.4rem; height: 3.4rem; margin-top: -1.6rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+      color: #fff; background: linear-gradient(135deg, #0891b2, #0f766e); box-shadow: 0 6px 16px rgba(8,145,178,.45); border: 4px solid #fff; transition: transform .15s ease; }
+    .dark .bnav-main-circle { border-color: #0b2130; }
+    .bnav-main:active .bnav-main-circle { transform: scale(.94); }
+    .bnav-main.is-active .bnav-main-circle { background: linear-gradient(135deg, #06b6d4, #0d9488); box-shadow: 0 6px 18px rgba(6,182,212,.6); }
+    body.auth-locked #mobile-bottom-nav { display: none !important; }
+    @media (max-width: 767px) {
+      body { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+      /* tombol ☰ dan akun di header disembunyikan: diganti navigasi bawah */
+      #btn-toggle-sidebar, #user-chip { display: none !important; }
+      #app-sidebar { bottom: calc(4rem + env(safe-area-inset-bottom)) !important; height: auto !important; }
+      #sidebar-backdrop { bottom: calc(4rem + env(safe-area-inset-bottom)) !important; }
+      #sidebar-account { order: -1; margin-top: .75rem; }
+      #app-sidebar > div:last-child { display: none !important; }   /* footer sidebar disembunyikan di HP */
+      #main-nav-tabs { padding-top: .25rem; }
+      #toast-container { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+      .fixed.inset-0.flex.items-center.justify-center > * { padding-bottom: env(safe-area-inset-bottom); }
     }
   </style>
 </head>
@@ -199,19 +549,24 @@
   <!-- TOP HEADER: LABSOMA PPS CONTROLS -->
   <header class="no-print bg-white dark:bg-[#06131c] text-slate-800 dark:text-slate-100 shadow-xs border-b border-slate-200 dark:border-[#1a3d52]/80 dark:border-[#163547] sticky top-0 z-40 transition-colors">
     <div class="w-full px-3 sm:px-6">
-      <div class="flex items-center justify-between h-16">
+      <div class="flex items-center justify-between gap-2 h-14 md:h-16">
         
         <!-- Left Controls: 4 Squircle Action Buttons (Matching Screenshot) -->
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1.5 sm:space-x-2 min-w-0">
+          <!-- Logo ringkas (khusus HP) -->
+          <div class="md:hidden flex flex-col leading-none mr-1 min-w-0">
+            <span class="text-[15px] font-black tracking-tight text-[#0d687a] dark:text-cyan-300 truncate">Labsoma PPS</span>
+            <span class="text-[8.5px] font-black tracking-wider text-amber-600 dark:text-amber-300 uppercase mt-0.5 truncate">MMU Sidogiri</span>
+          </div>
           <!-- 1. Hamburger Toggle Button -->
-          <button id="btn-toggle-sidebar" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Sembunyikan / Munculkan Menu Sidebar">
+          <button id="btn-toggle-sidebar" class="mh-btn w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Sembunyikan / Munculkan Menu Sidebar">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
 
           <!-- 2. Notification Bell Button -->
-          <button id="btn-notification" class="relative w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Pemberitahuan & Agenda">
+          <button id="btn-notification" class="mh-btn relative w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Pemberitahuan & Agenda">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
             </svg>
@@ -219,7 +574,7 @@
           </button>
 
           <!-- 3. Dark/Light Mode Switcher Button -->
-          <button id="btn-theme-toggle" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-amber-400 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Ganti Mode Gelap / Terang">
+          <button id="btn-theme-toggle" class="mh-btn w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-amber-400 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Ganti Mode Gelap / Terang">
             <svg id="theme-icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
             </svg>
@@ -229,7 +584,7 @@
           </button>
 
           <!-- 4. Fullscreen Button -->
-          <button id="btn-fullscreen" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Layar Penuh (Fullscreen)">
+          <button id="btn-fullscreen" class="hidden md:inline-flex w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 flex items-center justify-center cursor-pointer" title="Layar Penuh (Fullscreen)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
             </svg>
@@ -245,15 +600,15 @@
         </div>
 
         <!-- Right Quick Actions & Sync Status -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
+        <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
           <!-- Live Spreadsheet Sync Status -->
-          <div id="sync-status-badge" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-50 dark:bg-[#133042] text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/60 shadow-2xs cursor-pointer hover:bg-cyan-100 dark:hover:bg-[#1a3d52] transition" onclick="openApiConfigModal()" title="Status Sinkronisasi (Klik untuk Pengaturan API)">
+          <div id="sync-status-badge" class="flex items-center space-x-1.5 px-2 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-50 dark:bg-[#133042] text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800/60 shadow-2xs cursor-pointer hover:bg-cyan-100 dark:hover:bg-[#1a3d52] transition" onclick="openApiConfigModal()" title="Status Sinkronisasi (Klik untuk Pengaturan API)">
             <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
-            <span id="sync-status-text" class="truncate max-w-[130px] sm:max-w-none">Sinkron Data Spreadsheet</span>
+            <span id="sync-status-text" class="hidden sm:inline truncate max-w-[130px] lg:max-w-none">Sinkron Data Spreadsheet</span>
           </div>
 
           <!-- Tombol Koneksi API untuk GitHub Pages -->
-          <button type="button" id="btn-config-api-url" onclick="openApiConfigModal()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 cursor-pointer" title="Hubungkan URL Web App Google Apps Script">
+          <button type="button" id="btn-config-api-url" onclick="openApiConfigModal()" class="hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 transition shadow-2xs border border-slate-200 dark:border-slate-700 cursor-pointer" title="Hubungkan URL Web App Google Apps Script">
             <span>🌐</span>
             <span class="hidden sm:inline">Koneksi API</span>
           </button>
@@ -262,26 +617,26 @@
           <div class="hidden xl:flex items-center space-x-2.5 text-xs text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#133042] px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
             <div><span class="font-extrabold text-slate-900 dark:text-white" id="header-stat-fan">15</span> Fan</div>
             <div class="w-px h-3 bg-slate-300 dark:bg-slate-700"></div>
-            <div><span class="font-extrabold text-slate-900 dark:text-white" id="header-stat-rombel">17</span> Rombel</div>
+            <div><span class="font-extrabold text-slate-900 dark:text-white" id="header-stat-rombel">17</span> Abjad</div>
             <div class="w-px h-3 bg-slate-300 dark:bg-slate-700"></div>
             <div><span class="font-extrabold text-slate-900 dark:text-white" id="header-stat-santri">840</span> Santri</div>
           </div>
 
           <!-- Akun yang sedang login -->
-          <div id="user-chip" class="hidden flex items-center gap-1.5 pl-1.5 pr-1 py-1 rounded-xl bg-slate-100 dark:bg-[#133042] border border-slate-200 dark:border-slate-700">
-            <div id="user-chip-avatar" class="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-600 to-teal-700 text-white flex items-center justify-center text-xs font-black">U</div>
+          <div id="user-chip" class="hidden flex items-center gap-1.5 p-1 md:pl-1.5 md:pr-1 rounded-xl bg-slate-100 dark:bg-[#133042] border border-slate-200 dark:border-slate-700">
+            <div id="user-chip-avatar" onclick="if(window.innerWidth<768)document.getElementById('btn-toggle-sidebar').click()" class="cursor-pointer md:cursor-default w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-600 to-teal-700 text-white flex items-center justify-center text-xs font-black">U</div>
             <div class="hidden md:flex flex-col leading-tight min-w-0 mr-0.5">
               <span id="user-chip-name" class="text-[11px] font-extrabold text-slate-800 dark:text-white truncate max-w-[120px]">Pengguna</span>
               <span id="user-chip-role" class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border w-fit">Peran</span>
             </div>
-            <button type="button" onclick="openChangePasswordModal(false)" class="w-7 h-7 rounded-lg hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-sm cursor-pointer" title="Ganti Password" aria-label="Ganti password">🔑</button>
-            <button type="button" onclick="logoutUser()" class="w-7 h-7 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950/50 text-rose-600 flex items-center justify-center cursor-pointer" title="Keluar" aria-label="Keluar">
+            <button type="button" onclick="openChangePasswordModal(false)" class="hidden md:block w-7 h-7 rounded-lg hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-sm cursor-pointer" title="Ganti Password" aria-label="Ganti password">🔑</button>
+            <button type="button" onclick="logoutUser()" class="hidden md:flex w-7 h-7 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950/50 text-rose-600 items-center justify-center cursor-pointer" title="Keluar" aria-label="Keluar">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             </button>
           </div>
 
           <!-- Refresh Data Button -->
-          <button id="btn-sync-spreadsheet" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#0d687a] hover:bg-[#095261] text-white transition shadow-sm border border-cyan-500/30 cursor-pointer" title="Muat ulang data live dari Spreadsheet">
+          <button id="btn-sync-spreadsheet" aria-label="Refresh Data" class="flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-xl text-xs font-extrabold bg-[#0d687a] hover:bg-[#095261] text-white transition shadow-sm border border-cyan-500/30 cursor-pointer" title="Muat ulang data live dari Spreadsheet">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             <span class="hidden sm:inline">Refresh Data</span>
           </button>
@@ -301,7 +656,7 @@
     <aside id="app-sidebar" class="no-print w-64 bg-white dark:bg-[#06131c] text-slate-700 dark:text-slate-200 border-r border-slate-200 dark:border-[#1a3d52]/90 dark:border-[#163547] flex flex-col flex-shrink-0 sticky top-16 h-[calc(100vh-4rem)] shadow-lg overflow-hidden z-20 transition-all">
       
       <!-- Labsoma PPS Top Brand Card (Matching Screenshot) -->
-      <div class="m-3 p-4 rounded-2xl bg-gradient-to-br from-[#0d687a] via-[#095261] to-[#063842] text-white shadow-md border border-cyan-400/20 flex flex-col justify-between">
+      <div class="hidden md:flex m-3 p-4 rounded-2xl bg-gradient-to-br from-[#0d687a] via-[#095261] to-[#063842] text-white shadow-md border border-cyan-400/20 flex flex-col justify-between">
         <div class="flex items-center justify-between">
           <h1 class="text-xl font-black tracking-tight text-white">Labsoma PPS</h1>
           <div class="flex items-center gap-2">
@@ -335,7 +690,7 @@
 
         <button data-tab="seluruh-kelas" class="nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#133042] transition text-xs sm:text-sm font-semibold text-left cursor-pointer">
           <svg class="w-4 h-4 shrink-0 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-          <span class="truncate">Seluruh Rombel Paralel</span>
+          <span class="truncate">Seluruh Abjad Paralel</span>
         </button>
 
         <button data-tab="form-analisa" class="nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#133042] transition text-xs sm:text-sm font-semibold text-left cursor-pointer">
@@ -380,6 +735,22 @@
         </button>
       </nav>
 
+      <!-- Kartu akun (khusus HP: tombol akun dipindah dari header ke sini) -->
+      <div id="sidebar-account" class="md:hidden mx-3 mb-3 p-3 rounded-xl border border-slate-200 dark:border-[#1a3d52] bg-slate-50 dark:bg-[#0b1d28]">
+        <div class="flex items-center gap-2.5">
+          <div id="sb-user-avatar" class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-600 to-teal-700 text-white flex items-center justify-center text-sm font-black shrink-0">U</div>
+          <div class="min-w-0">
+            <div id="sb-user-name" class="text-xs font-extrabold text-slate-800 dark:text-white truncate">Pengguna</div>
+            <span id="sb-user-role" class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border">Peran</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5 mt-3">
+          <button type="button" onclick="openChangePasswordModal(false)" class="py-2 rounded-lg text-[10px] font-bold bg-white dark:bg-[#133042] border border-slate-200 dark:border-[#244e68] text-slate-700 dark:text-slate-200 cursor-pointer">🔑<br>Password</button>
+          <button type="button" onclick="openApiConfigModal()" class="py-2 rounded-lg text-[10px] font-bold bg-white dark:bg-[#133042] border border-slate-200 dark:border-[#244e68] text-slate-700 dark:text-slate-200 cursor-pointer">🌐<br>Koneksi</button>
+          <button type="button" onclick="logoutUser()" class="py-2 rounded-lg text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 cursor-pointer">⎋<br>Keluar</button>
+        </div>
+      </div>
+
       <!-- Sidebar Footer (Labsoma PPS Style) -->
       <div class="p-3.5 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-[#071924] text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between mt-auto">
         <div>
@@ -396,10 +767,10 @@
       <div id="readonly-banner" class="hidden no-print rounded-xl border border-sky-200 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/40 text-sky-900 dark:text-sky-200 px-4 py-2.5 text-xs flex items-center gap-2">
         <span>👁️</span><span><strong>Mode Lihat Saja.</strong> Akun Guru dapat melihat seluruh analisis, tetapi tidak dapat menambah atau mengubah data.</span>
       </div>
-      <div id="ctx-bar-mobile" class="no-print lg:hidden flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1a3d52] bg-white dark:bg-[#0f2634] p-2.5">
-        <span class="text-[11px] font-bold text-slate-500">Tingkat &amp; Ujian:</span>
-        <select onchange="onCtxTingkatChange(this.value)" title="Tingkat" aria-label="Tingkat" class="ctx-tingkat-sel flex-1 min-w-[140px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
-        <select onchange="onCtxTahapChange(this.value)" title="Tahap Ujian" aria-label="Tahap Ujian" class="ctx-tahap-sel flex-1 min-w-[120px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+      <div id="ctx-bar-mobile" class="no-print lg:hidden flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1a3d52] bg-white dark:bg-[#0f2634] p-2">
+        <span class="hidden sm:inline text-[11px] font-bold text-slate-500">Tingkat &amp; Ujian:</span>
+        <select onchange="onCtxTingkatChange(this.value)" title="Tingkat" aria-label="Tingkat" class="ctx-tingkat-sel flex-1 min-w-0 sm:min-w-[140px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
+        <select onchange="onCtxTahapChange(this.value)" title="Tahap Ujian" aria-label="Tahap Ujian" class="ctx-tahap-sel flex-1 min-w-0 sm:min-w-[120px] text-xs font-bold rounded-lg border border-slate-300 dark:border-[#1a3d52] bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 px-2 py-1.5 focus:ring-cyan-500 focus:border-cyan-500 cursor-pointer"></select>
         <button type="button" onclick="openAkademikModal()" title="Atur Tingkat, Kelas &amp; Tahap Ujian" aria-label="Atur Tingkat, Kelas dan Tahap Ujian" class="perm-write w-8 h-8 shrink-0 rounded-lg bg-slate-100 dark:bg-[#133042] hover:bg-slate-200 dark:hover:bg-[#1a3d52] text-slate-600 dark:text-slate-200 flex items-center justify-center cursor-pointer border border-slate-300 dark:border-[#1a3d52]">⚙️</button>
       </div>
 
@@ -411,7 +782,7 @@
         <span class="text-lg">📭</span>
         <div>
           <div class="font-extrabold text-sm">Belum ada data untuk <span data-ctx="tahapTingkat"></span></div>
-          <p class="mt-1">Mulai dengan menambahkan Fan dan Rombel di <button type="button" class="font-bold underline cursor-pointer" onclick="document.querySelector('#main-nav-tabs [data-tab=master-data]').click()">Menu Data (Master)</button>, lalu isi nilai lewat <b>Input Nilai &amp; Koreksi</b>. Data tingkat atau tahap ujian lain tidak terpengaruh.</p>
+          <p class="mt-1">Mulai dengan menambahkan Fan dan Abjad di <button type="button" class="font-bold underline cursor-pointer" onclick="document.querySelector('#main-nav-tabs [data-tab=master-data]').click()">Menu Data (Master)</button>, lalu isi nilai lewat <b>Input Nilai &amp; Koreksi</b>. Data tingkat atau tahap ujian lain tidak terpengaruh.</p>
         </div>
       </div>
       <!-- Welcome Banner (Labsoma PPS Ocean-Teal Gradient Theme) -->
@@ -447,11 +818,11 @@
 
         <div class="bg-white dark:bg-[#0f2634] p-5 rounded-xl border border-slate-200/90 dark:border-[#1a3d52] shadow-sm transition-colors hover:shadow-md transition">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Rombel Aktif</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Abjad Aktif</span>
             <span id="dash-badge-rombel" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">5</span>
           </div>
-          <div class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-900"><span id="dash-stat-rombel">–</span> <span class="text-sm font-normal text-slate-500">Rombel</span></div>
-          <div class="mt-1 text-xs text-sky-600 font-medium" id="dash-stat-rombel-sub">Memuat rombel...</div>
+          <div class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-900"><span id="dash-stat-rombel">–</span> <span class="text-sm font-normal text-slate-500">Abjad</span></div>
+          <div class="mt-1 text-xs text-sky-600 font-medium" id="dash-stat-rombel-sub">Memuat abjad...</div>
         </div>
 
         <div class="bg-white dark:bg-[#0f2634] p-5 rounded-xl border border-slate-200/90 dark:border-[#1a3d52] shadow-sm transition-colors hover:shadow-md transition">
@@ -563,7 +934,7 @@
               <span>Analisa Butir Soal & Koreksi Ujian <span data-ctx="tahap">IMDA 2</span></span>
             </h2>
             <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-2xl">
-              Pengaturan model fan, kelas rombel, jumlah santri hadir, dan skor jawaban per butir soal. Data langsung tersinkronisasi dua arah dengan Google Sheets (Sheet <code>INPUT_DATA</code>).
+              Pengaturan model fan, kelas abjad, jumlah santri hadir, dan skor jawaban per butir soal. Data langsung tersinkronisasi dua arah dengan Google Sheets (Sheet <code>INPUT_DATA</code>).
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2 text-xs">
@@ -598,7 +969,7 @@
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Rata-rata Daya Serap</div>
             <div class="text-xl sm:text-2xl font-black text-blue-700 mt-1" id="live-daya-serap">0.0%</div>
-            <div class="text-[10px] text-slate-500 mt-0.5">Daya Serap Rombel</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Daya Serap Abjad</div>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Kategori Kesukaran</div>
@@ -668,7 +1039,7 @@
             <div class="flex items-center gap-2">
               <span class="text-base">📌</span>
               <span id="input-row-info-text" class="text-sky-900 font-medium">
-                Data Rombel <strong>1-A</strong> Fan <strong>Fikih</strong> tercatat di Spreadsheet (Baris 6). Nilai otomatis dimuat di bawah.
+                Data Abjad <strong>1-A</strong> Fan <strong>Fikih</strong> tercatat di Spreadsheet (Baris 6). Nilai otomatis dimuat di bawah.
               </span>
             </div>
             <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -759,15 +1130,15 @@
         </div>
       </div>
 
-      <!-- KARTU KHUSUS PILIHAN (MODEL FAN | NAMA FAN | KELAS/ROMBEL | JUMLAH MURID) -->
+      <!-- KARTU KHUSUS PILIHAN (MODEL FAN | NAMA FAN | KELAS/ABJAD | JUMLAH MURID) -->
       <!-- Letak: Tepat di atas kartu input soal dan di bawah toolbar tampilan input -->
       <div class="bg-white dark:bg-[#0f2634] p-5 rounded-2xl border border-slate-200/90 dark:border-[#1a3d52] shadow-sm transition-colors space-y-3">
         <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-xs">🎯</span>
-            <h4 class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">Pilihan Butir Ujian & Identitas Rombel</h4>
+            <h4 class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">Pilihan Butir Ujian & Identitas Abjad</h4>
           </div>
-          <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Pilih model fan, nama pelajaran, rombel, dan jumlah murid hadir</span>
+          <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Pilih model fan, nama pelajaran, abjad, dan jumlah murid hadir</span>
         </div>
 
         <!-- Filter Controls Grid -->
@@ -801,10 +1172,10 @@
             </select>
           </div>
 
-          <!-- 3. KELAS & ROMBEL -->
+          <!-- 3. KELAS & ABJAD -->
           <div class="space-y-1">
             <label for="input-filter-rombel" class="block font-bold text-slate-700 flex items-center justify-between">
-              <span>Kelas / Rombel</span>
+              <span>Kelas / Abjad</span>
               <button type="button" id="btn-add-new-rombel" class="text-[10px] text-sky-700 font-bold hover:underline">+ Baru</button>
             </label>
             <select id="input-filter-rombel" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition">
@@ -1039,7 +1410,7 @@
               <span>Pusat Manajemen Data & Referensi SI-<span data-ctx="tahapUpper">IMDA 2</span> &bull; <span data-ctx="tingkat">Tsanawiyah</span></span>
             </h2>
             <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-2xl">
-              Seluruh data acuan model fan, nama fan (mapel), kelas, rombel paralel, dan arsip data spreadsheet terpusat di sini. Menu Input Nilai mengambil data resmi dari menu ini.
+              Seluruh data acuan model fan, nama fan (mapel), kelas, abjad paralel, dan arsip data spreadsheet terpusat di sini. Menu Input Nilai mengambil data resmi dari menu ini.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
@@ -1067,8 +1438,8 @@
             <div class="text-lg font-black text-white" id="stat-md-fans">15 Fan</div>
           </div>
           <div class="bg-slate-900/60 p-2.5 rounded-xl border border-sky-700/50">
-            <div class="text-[10px] text-sky-300 uppercase font-bold">Rombel Paralel</div>
-            <div class="text-lg font-black text-white" id="stat-md-rombels">0 Rombel</div>
+            <div class="text-[10px] text-sky-300 uppercase font-bold">Abjad Paralel</div>
+            <div class="text-lg font-black text-white" id="stat-md-rombels">0 Abjad</div>
           </div>
         </div>
       </div>
@@ -1085,16 +1456,16 @@
           <span>📖</span> <span>Master Nama Fan (Mapel)</span>
         </button>
         <button type="button" data-mdtab="rombel" class="md-subtab-btn px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-2 cursor-pointer">
-          <span>🏫</span> <span>Master Kelas & Rombel</span>
+          <span>🏫</span> <span>Master Kelas & Abjad</span>
         </button>
       </div>
 
       <!-- SUB-CONTENT 1: DATA SPREADSHEET (INPUT_DATA) -->
       <div id="md-view-spreadsheet" class="md-subcontent space-y-3">
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div class="flex flex-wrap items-center gap-2.5">
-            <div class="relative">
-              <input type="text" id="md-search-ss" placeholder="Cari Nama Fan atau Rombel..." class="p-2 pl-8 border border-slate-300 rounded-lg w-60 sm:w-72 font-medium focus:ring-2 focus:ring-sky-500">
+          <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+            <div class="relative w-full sm:w-auto">
+              <input type="text" id="md-search-ss" placeholder="Cari Nama Fan atau Abjad..." class="p-2 pl-8 border border-slate-300 rounded-lg w-full sm:w-72 font-medium focus:ring-2 focus:ring-sky-500">
               <span class="absolute left-2.5 top-2.5 text-slate-400">🔍</span>
             </div>
             <select id="md-filter-ss-kelas" class="p-2 border border-slate-300 rounded-lg font-semibold bg-slate-50 text-slate-700">
@@ -1157,12 +1528,12 @@
         </div>
       </div>
 
-      <!-- SUB-CONTENT 4: MASTER KELAS & ROMBEL -->
+      <!-- SUB-CONTENT 4: MASTER KELAS & ABJAD -->
       <div id="md-view-rombel" class="md-subcontent hidden space-y-3">
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Daftar Master Kelas & Rombel Paralel</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Daftar rombel dan kapasitas standar santri (N) per kelas</p>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Daftar Master Kelas & Abjad Paralel</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Daftar abjad dan kapasitas standar santri (N) per kelas</p>
           </div>
           <div class="flex items-center gap-2">
             <select id="md-rombel-filter-kelas" class="p-2 border border-slate-300 rounded-lg font-bold text-xs bg-slate-50">
@@ -1172,7 +1543,7 @@
               <option value="3">Kelas 3</option>
             </select>
             <button type="button" id="md-btn-add-rombel" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-600 text-white transition shadow-sm flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-              <span>➕</span> <span>Tambah Rombel Baru</span>
+              <span>➕</span> <span>Tambah Abjad Baru</span>
             </button>
           </div>
         </div>
@@ -1295,7 +1666,7 @@
           <div class="w-12 h-12 mx-auto rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xl">⏳</div>
           <h3 class="text-base font-bold text-amber-950" id="rk-empty-title">Data Belum Diinput di Spreadsheet</h3>
           <p class="text-xs text-amber-800 max-w-xl mx-auto leading-relaxed" id="rk-empty-desc">
-            Saat ini data yang tersedia di sheet <strong>INPUT_DATA</strong> baru mencakup <strong>Kelas 1</strong> (5 Rombel: 1-A s/d 1-E). Begitu Ustadz menginput data nilai pada Google Sheets, sistem Web App ini akan otomatis menampilkan hasil analisisnya secara live!
+            Saat ini data yang tersedia di sheet <strong>INPUT_DATA</strong> baru mencakup <strong>Kelas 1</strong> (5 Abjad: 1-A s/d 1-E). Begitu Ustadz menginput data nilai pada Google Sheets, sistem Web App ini akan otomatis menampilkan hasil analisisnya secara live!
           </p>
         </div>
 
@@ -1352,7 +1723,7 @@
             </div>
             <button id="btn-print-rekap-rombel" type="button" onclick="cetakFormRekapFanRombel()" class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-white flex items-center gap-1.5 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-              <span>Cetak Form Per Rombel</span>
+              <span>Cetak Form Per Abjad</span>
             </button>
             <button id="btn-print-rekap-analisa" type="button" onclick="cetakFormRekapFanAnalisa()" class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-white flex items-center gap-1.5 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
@@ -1369,7 +1740,7 @@
           <div class="relative h-72">
             <canvas id="chart-fan-komparasi"></canvas>
           </div>
-          <!-- Daya serap tertinggi & terendah per rombel paralel di setiap butir (diisi JS renderRekapFan) -->
+          <!-- Daya serap tertinggi & terendah per abjad paralel di setiap butir (diisi JS renderRekapFan) -->
           <div id="fan-extreme-wrap" class="mt-4"></div>
         </div>
 
@@ -1396,7 +1767,7 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- TAB 4: SELURUH ROMBEL PARALEL -->
+    <!-- TAB 4: SELURUH ABJAD PARALEL -->
     <!-- ========================================== -->
     <section id="view-seluruh-kelas" class="tab-content hidden space-y-4">
       <div class="bg-white dark:bg-[#0f2634] p-5 rounded-xl border border-slate-200/90 dark:border-[#1a3d52] shadow-sm transition-colors space-y-4">
@@ -1404,14 +1775,14 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52]">
           <div>
             <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tingkat: <span data-ctx="tingkat">Tsanawiyah</span></div>
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Analisis Performa Seluruh Rombel Paralel</h2>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Analisis Performa Seluruh Abjad Paralel</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400" id="sk-subtitle">Perbandingan hasil ujian antarkelas paralel</p>
           </div>
 
           <div class="flex items-center gap-2">
             <label for="select-sk-kelas" class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">Pilih Kelas:</label>
             <select id="select-sk-kelas" class="bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg p-2 font-bold focus:ring-sky-500 focus:border-sky-500">
-              <option value="1" selected>Kelas 1 (Aktif - 5 Rombel)</option>
+              <option value="1" selected>Kelas 1 (Aktif - 5 Abjad)</option>
               <option value="2" disabled>Kelas 2 (Menunggu Data)</option>
               <option value="3" disabled>Kelas 3 (Menunggu Data)</option>
             </select>
@@ -1433,7 +1804,7 @@
           </div>
         </div>
 
-        <!-- Leaderboard: 3 Rombel Tertinggi & 3 Rombel Terendah -->
+        <!-- Leaderboard: 3 Abjad Tertinggi & 3 Abjad Terendah -->
         <div id="sk-cards-container" class="space-y-4">
           <!-- Populated via JS -->
         </div>
@@ -1442,7 +1813,7 @@
           <span class="font-bold">Keterangan warna per butir soal:</span>
           <span class="inline-flex items-center gap-1.5"><span class="inline-block w-4 h-4 rounded" style="background:linear-gradient(135deg,#fde68a,#fbbf24);box-shadow:inset 0 0 0 1.5px #d97706"></span> 3 tertinggi</span>
           <span class="inline-flex items-center gap-1.5"><span class="inline-block w-4 h-4 rounded" style="background:#ef4444;box-shadow:inset 0 0 0 1.5px #b91c1c"></span> 3 terendah</span>
-          <span class="text-slate-400">(dibandingkan berdasarkan % benar = benar &divide; jumlah santri rombel)</span>
+          <span class="text-slate-400">(dibandingkan berdasarkan % benar = benar &divide; jumlah santri abjad)</span>
         </div>
 
         <!-- Table Container: Urut Alfabetis A-Z dengan Kolom Rangking -->
@@ -1463,7 +1834,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#1a3d52] no-print">
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lembar Analisa Butir Soal Rombel</h2>
+              <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lembar Analisa Butir Soal Abjad</h2>
               <span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 text-xs font-semibold">Formulir Interaktif</span>
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Format digital pengisian analisis butir soal per santri (1 = Benar, 0 = Salah)</p>
@@ -1471,7 +1842,7 @@
 
           <div class="flex flex-wrap items-center gap-3">
             <div>
-              <label for="select-form-kelas" class="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-1.5">Rombel:</label>
+              <label for="select-form-kelas" class="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-1.5">Abjad:</label>
               <select id="select-form-kelas" class="bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg p-2 font-medium">
                 <option value="1-A">Kelas 1-A (43 Santri)</option>
                 <option value="1-B" selected>Kelas 1-B (46 Santri)</option>
@@ -1510,7 +1881,7 @@
         <div class="flex flex-wrap items-center justify-between gap-2 text-xs no-print">
           <div class="flex items-center gap-2">
             <button id="btn-form-fill-sample" class="px-2.5 py-1.5 rounded bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-300 font-medium transition">
-              ⚡ Muat Data Rombel Ini
+              ⚡ Muat Data Abjad Ini
             </button>
             <button id="btn-form-random" class="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium transition">
               🎲 Simulasi Sampel
@@ -1604,7 +1975,7 @@
                 P = (Total Benar / [Jumlah Santri &times; Butir Diisi]) &times; 100%
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Menghitung seberapa besar proporsi santri yang mampu menjawab soal dengan tepat pada rombel maupun jenjang kelas.
+                Menghitung seberapa besar proporsi santri yang mampu menjawab soal dengan tepat pada abjad maupun jenjang kelas.
               </p>
             </div>
 
@@ -1679,7 +2050,7 @@
               <h2 class="text-lg font-bold text-slate-900 dark:text-white">Audit & Deteksi Typo Input Spreadsheet</h2>
               <span class="px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-bold" id="audit-count-badge">4 Anomali</span>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Mendeteksi input jumlah jawaban benar yang melebihi kapasitas jumlah santri rombel (Nilai B &gt; N)</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Mendeteksi input jumlah jawaban benar yang melebihi kapasitas jumlah santri abjad (Nilai B &gt; N)</p>
           </div>
           <button id="btn-recheck-audit" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-600 text-white transition shadow-sm">
             <span>Periksa Ulang Data</span>
@@ -1691,15 +2062,15 @@
           <!-- Populated via JS -->
         </div>
 
-        <!-- Rombel Summary Table -->
+        <!-- Abjad Summary Table -->
         <div class="space-y-2 pt-4 border-t border-slate-200">
-          <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Rekapitulasi Kapasitas Rombel Kelas 1 (Tingkat <span data-ctx="tingkat">Tsanawiyah</span>)</h4>
+          <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Rekapitulasi Kapasitas Abjad Kelas 1 (Tingkat <span data-ctx="tingkat">Tsanawiyah</span>)</h4>
           <div class="overflow-x-auto border border-slate-200 dark:border-[#1a3d52] rounded-lg custom-scrollbar">
             <table class="w-full text-left text-xs border-collapse">
               <thead class="bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 font-semibold border-b border-slate-200 dark:border-[#1a3d52] dark:border-[#1a3d52]">
                 <tr>
                   <th class="p-3 w-16 text-center">No</th>
-                  <th class="p-3">Nama Rombel</th>
+                  <th class="p-3">Nama Abjad</th>
                   <th class="p-3 text-center">Jumlah Santri (N)</th>
                   <th class="p-3 text-center">Total Fan Ujian</th>
                   <th class="p-3 text-center">Status Integritas Data</th>
@@ -1735,18 +2106,18 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/20 p-3.5">
-            <div class="flex items-center justify-between"><span class="font-black text-rose-800 dark:text-rose-300">ADMIN</span><span id="users-count-admin" class="text-lg font-black text-rose-700 dark:text-rose-300">0</span></div>
-            <p class="mt-1 text-rose-900/80 dark:text-rose-200/80">Akses seluruh menu, termasuk menambah &amp; mengatur pengguna.</p>
+        <div class="grid grid-cols-3 gap-2 sm:gap-3 text-xs">
+          <div class="rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/20 p-2.5 sm:p-3.5">
+            <div class="flex items-center justify-between"><span class="font-black text-[10px] sm:text-xs text-rose-800 dark:text-rose-300">ADMIN</span><span id="users-count-admin" class="text-lg font-black text-rose-700 dark:text-rose-300">0</span></div>
+            <p class="hidden sm:block mt-1 text-rose-900/80 dark:text-rose-200/80">Akses seluruh menu, termasuk menambah &amp; mengatur pengguna.</p>
           </div>
-          <div class="rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/60 dark:bg-amber-950/20 p-3.5">
-            <div class="flex items-center justify-between"><span class="font-black text-amber-800 dark:text-amber-300">PIMPINAN</span><span id="users-count-pimpinan" class="text-lg font-black text-amber-700 dark:text-amber-300">0</span></div>
-            <p class="mt-1 text-amber-900/80 dark:text-amber-200/80">Bisa melihat, menambah, dan mengubah data (nilai, master, naskah, catatan).</p>
+          <div class="rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/60 dark:bg-amber-950/20 p-2.5 sm:p-3.5">
+            <div class="flex items-center justify-between"><span class="font-black text-[10px] sm:text-xs text-amber-800 dark:text-amber-300">PIMPINAN</span><span id="users-count-pimpinan" class="text-lg font-black text-amber-700 dark:text-amber-300">0</span></div>
+            <p class="hidden sm:block mt-1 text-amber-900/80 dark:text-amber-200/80">Bisa melihat, menambah, dan mengubah data (nilai, master, naskah, catatan).</p>
           </div>
-          <div class="rounded-xl border border-sky-200 dark:border-sky-900/60 bg-sky-50/60 dark:bg-sky-950/20 p-3.5">
-            <div class="flex items-center justify-between"><span class="font-black text-sky-800 dark:text-sky-300">GURU</span><span id="users-count-guru" class="text-lg font-black text-sky-700 dark:text-sky-300">0</span></div>
-            <p class="mt-1 text-sky-900/80 dark:text-sky-200/80">Hanya bisa melihat dashboard, rekap, dan naskah. Tidak bisa mengubah data.</p>
+          <div class="rounded-xl border border-sky-200 dark:border-sky-900/60 bg-sky-50/60 dark:bg-sky-950/20 p-2.5 sm:p-3.5">
+            <div class="flex items-center justify-between"><span class="font-black text-[10px] sm:text-xs text-sky-800 dark:text-sky-300">GURU</span><span id="users-count-guru" class="text-lg font-black text-sky-700 dark:text-sky-300">0</span></div>
+            <p class="hidden sm:block mt-1 text-sky-900/80 dark:text-sky-200/80">Hanya bisa melihat dashboard, rekap, dan naskah. Tidak bisa mengubah data.</p>
           </div>
         </div>
 
@@ -1760,8 +2131,8 @@
               <tr>
                 <th class="p-3">Pengguna</th>
                 <th class="p-3">Peran</th>
-                <th class="p-3">Status</th>
-                <th class="p-3">Login Terakhir</th>
+                <th class="p-3 hidden sm:table-cell">Status</th>
+                <th class="p-3 hidden sm:table-cell">Login Terakhir</th>
                 <th class="p-3 hidden md:table-cell">Dibuat</th>
                 <th class="p-3 text-right">Aksi</th>
               </tr>
@@ -1810,7 +2181,7 @@
 
         <div>
           <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-            Persentase Daya Serap Soal (Gabungan 5 Rombel Kelas 1)
+            Persentase Daya Serap Soal (Gabungan 5 Abjad Kelas 1)
           </h4>
           <div class="relative h-64 bg-slate-50 p-2 rounded-xl border border-slate-200">
             <canvas id="modal-fan-chart"></canvas>
@@ -1886,7 +2257,7 @@
             <span>🟢 Sinkronisasi Dua Arah Spreadsheet</span>
             <span class="text-[10px] text-sky-700 dark:text-sky-400 font-mono font-bold">Aktif</span>
           </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Pengisian lembar nilai rombel otomatis tersinkron ke Google Sheets via REST API &amp; Web App.</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Pengisian lembar nilai abjad otomatis tersinkron ke Google Sheets via REST API &amp; Web App.</p>
         </div>
         <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 space-y-1">
           <div class="flex items-center justify-between font-bold text-amber-900 dark:text-amber-200">
@@ -1903,6 +2274,34 @@
   </div>
 
   <!-- TOAST NOTIFICATION CONTAINER -->
+
+  <!-- ===================== NAVIGASI BAWAH (KHUSUS HP) ===================== -->
+  <nav id="mobile-bottom-nav" class="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#0b2130]/95 backdrop-blur border-t border-slate-200 dark:border-[#2a5873] shadow-[0_-4px_16px_rgba(15,23,42,0.08)]" aria-label="Menu utama">
+    <div class="grid grid-cols-5 items-end h-16 px-1">
+      <button type="button" data-bnav="seluruh-kelas" class="bnav-item">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <span>Abjad</span>
+      </button>
+      <button type="button" data-bnav="rekap-kelas" class="bnav-item">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <span>Rekap Kelas</span>
+      </button>
+      <button type="button" data-bnav="dashboard" class="bnav-item bnav-main" aria-label="Dashboard">
+        <span class="bnav-main-circle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        </span>
+        <span>Dashboard</span>
+      </button>
+      <button type="button" data-bnav="rekap-fan" class="bnav-item">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        <span>Rekap Fan</span>
+      </button>
+      <button type="button" data-bnav="akun" class="bnav-item" aria-label="Akun dan semua menu">
+        <span id="bnav-avatar" class="w-6 h-6 rounded-lg bg-gradient-to-br from-cyan-600 to-teal-700 text-white flex items-center justify-center text-[11px] font-black">U</span>
+        <span>Akun</span>
+      </button>
+    </div>
+  </nav>
   <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 max-w-sm pointer-events-none"></div>
 
   <!-- FOOTER -->
@@ -2018,6 +2417,12 @@
         if (nm) nm.textContent = CURRENT_USER.nama || CURRENT_USER.username;
         if (rl) { rl.textContent = info.label; rl.className = 'text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ' + info.cls; }
         if (av) av.textContent = String(CURRENT_USER.nama || CURRENT_USER.username).trim().charAt(0).toUpperCase() || 'U';
+        const sbn = document.getElementById('sb-user-name'), sbr = document.getElementById('sb-user-role'), sba = document.getElementById('sb-user-avatar');
+        if (sbn) sbn.textContent = CURRENT_USER.nama || CURRENT_USER.username;
+        if (sbr) { sbr.textContent = info.label; sbr.className = 'text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ' + info.cls; }
+        if (sba && av) sba.textContent = av.textContent;
+        const bav = document.getElementById('bnav-avatar');
+        if (bav && av) bav.textContent = av.textContent;
         const ro = document.getElementById('readonly-banner');
         if (ro) ro.classList.toggle('hidden', canWrite());
       }
@@ -2248,21 +2653,22 @@
         const self = u.username === USERS_ME;
         return `<tr class="border-b border-slate-100 dark:border-[#1a3d52] hover:bg-slate-50 dark:hover:bg-[#133042]/60">
           <td class="p-3">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2.5 min-w-[150px]">
               <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-600 to-teal-700 text-white flex items-center justify-center text-xs font-black shrink-0">${escapeHtml(String(u.nama || u.username).charAt(0).toUpperCase())}</div>
               <div class="min-w-0">
                 <div class="font-bold text-slate-900 dark:text-white truncate">${escapeHtml(u.nama || u.username)}${self ? ' <span class="text-[10px] font-semibold text-cyan-600">(Anda)</span>' : ''}</div>
                 <div class="font-mono text-[11px] text-slate-500">${escapeHtml(u.username)}</div>
+                <div class="sm:hidden text-[10px] mt-0.5">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.lastLogin ? ' <span class="text-slate-400">· ' + escapeHtml(u.lastLogin) + '</span>' : ''}</div>
               </div>
             </div>
           </td>
           <td class="p-3"><span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${info.cls}">${info.label}</span></td>
-          <td class="p-3">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.mustChange ? '<div class="text-[10px] text-amber-600">wajib ganti password</div>' : ''}</td>
-          <td class="p-3 text-slate-500 font-mono text-[11px]">${escapeHtml(u.lastLogin || '—')}</td>
+          <td class="p-3 hidden sm:table-cell">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.mustChange ? '<div class="text-[10px] text-amber-600">wajib ganti password</div>' : ''}</td>
+          <td class="p-3 text-slate-500 font-mono text-[11px] hidden sm:table-cell">${escapeHtml(u.lastLogin || '—')}</td>
           <td class="p-3 text-slate-500 font-mono text-[11px] hidden md:table-cell">${escapeHtml(u.created || '—')}</td>
           <td class="p-3 text-right whitespace-nowrap">
-            <button type="button" onclick="openUserModal('${jsq(u.username)}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 hover:bg-slate-200 dark:bg-[#133042] dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#244e68] cursor-pointer">✏️ Ubah</button>
-            ${self ? '' : `<button type="button" onclick="confirmDeleteUser('${jsq(u.username)}')" class="ml-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900 cursor-pointer">🗑️ Hapus</button>`}
+            <button type="button" onclick="openUserModal('${jsq(u.username)}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 hover:bg-slate-200 dark:bg-[#133042] dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#244e68] cursor-pointer" title="Ubah" aria-label="Ubah pengguna">✏️<span class="hidden sm:inline"> Ubah</span></button>
+            ${self ? '' : `<button type="button" onclick="confirmDeleteUser('${jsq(u.username)}')" class="ml-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900 cursor-pointer" title="Hapus" aria-label="Hapus pengguna">🗑️<span class="hidden sm:inline"> Hapus</span></button>`}
           </td>
         </tr>`;
       }).join('');
@@ -2363,7 +2769,7 @@
     // Semua data (nilai, master, naskah soal) dipisah per Tingkat + Tahap Ujian.
     // ==========================================
     const TINGKAT_LIST = ['Idadiyah Reguler', 'Idadiyah Program Khusus', 'Ibtidaiyah', 'Tsanawiyah', 'Aliyah'];
-    // Kelas pada tiap tingkat (tetap). Kode rombel selalu "<no kelas>-<huruf>", mis. 5-A.
+    // Kelas pada tiap tingkat (tetap). Kode abjad selalu "<no kelas>-<huruf>", mis. 5-A.
     // Idadiyah Program Khusus memakai kelas bernama: no 1 = Fikih, 2 = Hadits, 3 = Adab (rombel 1-A = Fikih A).
     const KELAS_DEF = {
       'Idadiyah Reguler': [5, 6, 7],
@@ -2731,7 +3137,7 @@
     window.saveAkademikConfig = saveAkademikConfig;
 
     // ==========================================
-    // MASTER DATA (Model Fan, Nama Fan, Rombel)
+    // MASTER DATA (Model Fan, Nama Fan, Abjad)
     // Sumber kebenaran = Spreadsheet (sheet MASTER_FAN / MASTER_ROMBEL / MASTER_MODEL),
     // sehingga tampil sama di semua perangkat. localStorage hanya cadangan offline.
     // ==========================================
@@ -2940,7 +3346,7 @@
 
     // Helper: Difficulty Badges
     
-    // Helper: Normalisasi Kode Rombel & Ekstrak Tingkat Kelas
+    // Helper: Normalisasi Kode Abjad & Ekstrak Tingkat Kelas
     function normalizeRombel(rombelStr) {
       if (!rombelStr) return '';
       const s = String(rombelStr).trim();
@@ -3004,7 +3410,7 @@
 
       const bannerDesc = document.getElementById('dash-banner-desc');
       if (bannerDesc) {
-        bannerDesc.innerHTML = `Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat ${escapeHtml(CTX.tingkat)}</strong> (<strong>${escapeHtml(CTX.tahap)}</strong>). Data saat ini bersumber langsung dari spreadsheet master dengan <strong>${APP_DATA.total_fan || 0} Fan Ujian</strong> pada <strong>${APP_DATA.total_rombel || 0} Rombel Paralel</strong> (Kelas ${activeK.join(' & ') || '-'}).`;
+        bannerDesc.innerHTML = `Sistem evaluasi komprehensif tingkat kesukaran soal dan daya serap materi ujian di <strong>Tingkat ${escapeHtml(CTX.tingkat)}</strong> (<strong>${escapeHtml(CTX.tahap)}</strong>). Data saat ini bersumber langsung dari spreadsheet master dengan <strong>${APP_DATA.total_fan || 0} Fan Ujian</strong> pada <strong>${APP_DATA.total_rombel || 0} Abjad Paralel</strong> (Kelas ${activeK.join(' & ') || '-'}).`;
       }
 
       // Hitung santri per kelas secara akurat (Kelas 1, 2, 3)
@@ -3024,7 +3430,7 @@
         }
       }
 
-      // Deteksi kelas aktif secara dinamis dari santri dan rombel
+      // Deteksi kelas aktif secara dinamis dari santri dan abjad
       const detectedKSet = new Set(activeK);
       getKelasNumbers().forEach(k => {
         if ((santriPerKelas[k] || 0) > 0) detectedKSet.add(k);
@@ -3077,7 +3483,7 @@
       if (subRombel) {
         const rParts = resolvedActiveK.map(k => {
           const list = (APP_DATA.active_rombel || []).filter(r => getGradeFromRombel(r) === k);
-          return `Kelas ${kelasName(k)} (${list.length} Rombel)`;
+          return `Kelas ${kelasName(k)} (${list.length} Abjad)`;
         });
         subRombel.textContent = rParts.join(' • ');
       }
@@ -3184,7 +3590,7 @@
             sumPossible += ((c.n || 0) * (c.butir || 0));
           });
           avg = sumPossible > 0 ? Math.round((sumBenar / sumPossible) * 1000) / 10 : 0;
-          subText = `Kelas ${kelasName(kNum)} (${rombelEntries.length} Rombel)`;
+          subText = `Kelas ${kelasName(kNum)} (${rombelEntries.length} Abjad)`;
         }
 
         return {
@@ -3331,7 +3737,7 @@
         document.getElementById('rk-empty-title').textContent = kelasTahapStatus(kelas) === 'ok' ? `Data Kelas ${kelasName(kelas)} Belum Diinput di Spreadsheet` : `Kelas ${kelasName(kelas)} tidak memiliki ujian ${CTX.tahap} (${CTX.tingkat})`;
         document.getElementById('rk-empty-desc').innerHTML = `
           Di sheet <strong>INPUT_DATA</strong> saat ini belum terdapat data untuk <strong>Kelas ${kelasName(kelas)}</strong> pada <strong>${escapeHtml(CTX.tahap)} ${escapeHtml(CTX.tingkat)}</strong>.<br>
-          Silakan tambahkan baris nilai untuk Kelas ${kelasName(kelas)} (format rombel: <strong>${kelas}-A, ${kelas}-B, dst.</strong>) di Google Sheets aktif Anda, lalu klik tombol <strong>🔄 Refresh Data</strong>!
+          Silakan tambahkan baris nilai untuk Kelas ${kelasName(kelas)} (format abjad: <strong>${kelas}-A, ${kelas}-B, dst.</strong>) di Google Sheets aktif Anda, lalu klik tombol <strong>🔄 Refresh Data</strong>!
         `;
         return;
       }
@@ -3394,10 +3800,10 @@
 
         tbody += `<tr class="hover:bg-slate-50 dark:hover:bg-[#133042]/70 transition cursor-pointer" onclick="openFanDetail('${f.fan_name}')">`;
         tbody += `<td class="p-2 text-center font-bold text-slate-500 border-r border-slate-200 dark:border-[#1a3d52]">${idx + 1}</td>`;
-        tbody += `<td class="p-2 font-bold text-sky-950 border-r border-slate-200 dark:border-[#1a3d52] flex items-center justify-between">
+        tbody += `<td class="p-2 font-bold text-sky-950 border-r border-slate-200 dark:border-[#1a3d52]"><div class="flex items-center justify-between gap-2">
                     <span>${f.fan_name}</span>
                     <span class="text-[10px] text-sky-600 underline">Detail</span>
-                  </td>`;
+                  </div></td>`;
         tbody += `<td class="p-2 text-center text-slate-600 border-r border-slate-200 dark:border-[#1a3d52] font-mono">${totalSantriKelas || 255}</td>`;
 
         for (let q = 0; q < 28; q++) {
@@ -3456,7 +3862,7 @@
     }
 
     // ==========================================
-    // CETAK FORM REKAP FAN: (1) Per Rombel, (2) Analisa
+    // CETAK FORM REKAP FAN: (1) Per Abjad, (2) Analisa
     // ==========================================
     function getRekapFanPrintSnapshot() {
       const snap = state.rekapFan && state.rekapFan.snapshot;
@@ -3560,7 +3966,7 @@
           <table class="meta"><tbody>
             <tr><td style="width:24%">Tingkat / Tahap Ujian</td><td>: ${esc(CTX.tingkat)} &bull; ${esc(CTX.tahap)}</td></tr>
             <tr><td>Mata Pelajaran (Fan)</td><td>: <b>${esc(snap.fanName)}</b> (${esc(snap.modelKey)})</td></tr>
-            <tr><td>Cakupan</td><td>: ${esc(snap.kelasLabel)} &bull; ${snap.rombelNames.length} rombel &bull; ${totalSantri} santri</td></tr>
+            <tr><td>Cakupan</td><td>: ${esc(snap.kelasLabel)} &bull; ${snap.rombelNames.length} abjad &bull; ${totalSantri} santri</td></tr>
             <tr><td>Rerata Daya Serap</td><td>: <b>${snap.rerata}%</b> (${esc(calculateCategory(snap.rerata))})</td></tr>
             ${extraRows || ''}
             <tr><td>Tanggal Cetak</td><td>: ${esc(tgl)}</td></tr>
@@ -3602,7 +4008,7 @@
       setTimeout(() => window.print(), 80);
     }
 
-    // ---- FORM 1: PER ROMBEL (matriks rombel x butir, sama seperti tabel di aplikasi) ----
+    // ---- FORM 1: PER ABJAD (matriks abjad x butir, sama seperti tabel di aplikasi) ----
     function cetakFormRekapFanRombel() {
       const snap = getRekapFanPrintSnapshot();
       if (!snap) return;
@@ -3610,11 +4016,11 @@
       const fanObj = APP_DATA.fans[snap.fanName] || { classes: {} };
       const groups = rekapFanTypeGroups(snap);
       const total = snap.qStats.length;
-      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP PER ROMBEL &amp; PER BUTIR SOAL ' + escapeHtml(CTX.tahap.toUpperCase()));
+      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP PER ABJAD &amp; PER BUTIR SOAL ' + escapeHtml(CTX.tahap.toUpperCase()));
       const fs = total > 40 ? 5.5 : (total > 32 ? 6.5 : 7.5);
 
       const cols = `<col style="width:17mm"><col style="width:12mm">${'<col>'.repeat(total)}<col style="width:14mm">`;
-      const th1 = `<tr><th rowspan="2">Rombel</th><th rowspan="2">Peserta</th>` +
+      const th1 = `<tr><th rowspan="2">Abjad</th><th rowspan="2">Peserta</th>` +
         groups.map(g => `<th colspan="${g.count}">${esc(g.name)} (${g.count} Soal)</th>`).join('') +
         `<th rowspan="2">Rerata</th></tr>`;
       const th2 = `<tr>${snap.qStats.map(q => `<th>${esc(q.typeNo)}</th>`).join('')}</tr>`;
@@ -3829,11 +4235,11 @@
       return `<button type="button" class="soal-no-btn${has ? ' has-naskah' : ''}" title="${escapeHtml(tip)}" onclick="bukaPopupNarasiSoal('${jsq(String(kelas))}', '${jsq(fan)}', ${qNum})">${label}</button>`;
     }
 
-    // Ringkas daftar nama rombel untuk tooltip grafik
+    // Ringkas daftar nama abjad untuk tooltip grafik
     function fanShortNames(arr) {
       if (!arr || arr.length === 0) return '-';
       if (arr.length <= 4) return arr.map(n => 'Kelas ' + n).join(', ');
-      return arr.slice(0, 3).map(n => 'Kelas ' + n).join(', ') + ` +${arr.length - 3} rombel lain`;
+      return arr.slice(0, 3).map(n => 'Kelas ' + n).join(', ') + ` +${arr.length - 3} abjad lain`;
     }
 
     function renderRekapFan() {
@@ -3861,10 +4267,10 @@
       
       const titleEl = document.getElementById('fan-comp-chart-title');
       if (titleEl) {
-        titleEl.textContent = `Grafik Daya Serap Materi "${fanName}" (${modelKey} - ${kelasLabel} - ${rombelCount} Rombel)`;
+        titleEl.textContent = `Grafik Daya Serap Materi "${fanName}" (${modelKey} - ${kelasLabel} - ${rombelCount} Abjad)`;
       }
 
-      // Hitung agregat skor butir soal secara dinamis untuk rombel yang difilter
+      // Hitung agregat skor butir soal secara dinamis untuk abjad yang difilter
       const qStats = [];
       let totalBenarGabungan = 0;
       let totalPesertaGabungan = 0;
@@ -3882,7 +4288,7 @@
         const pct = p > 0 ? Math.round((b / p) * 1000) / 10 : 0;
         const meta = getQuestionLabelMeta(q, modelKey);
 
-        // Daya serap per rombel paralel pada butir ini -> cari tertinggi & terendah
+        // Daya serap per abjad paralel pada butir ini -> cari tertinggi & terendah
         const perRombel = [];
         rombelNames.forEach(r => {
           const c = fanObj.classes[r];
@@ -3955,7 +4361,7 @@
                 </div>
               </div>
               <div class="text-xs text-slate-600 font-medium bg-white px-2.5 py-1 rounded-lg border border-rose-200 shadow-2xs self-start sm:self-auto">
-                Filter: <strong>${rombelCount} Rombel</strong> (${modelKey})
+                Filter: <strong>${rombelCount} Abjad</strong> (${modelKey})
               </div>
             </div>
 
@@ -4030,7 +4436,7 @@
       const cardsEl = document.getElementById('fan-comp-cards');
       if (cardsEl) {
         if (rombelNames.length === 0) {
-          cardsEl.innerHTML = `<div class="col-span-3 p-4 bg-white rounded-xl border border-slate-200 text-center text-xs text-slate-500 dark:text-slate-400">Tidak ada rombel yang sesuai dengan filter ${kelasLabel}.</div>`;
+          cardsEl.innerHTML = `<div class="col-span-3 p-4 bg-white rounded-xl border border-slate-200 text-center text-xs text-slate-500 dark:text-slate-400">Tidak ada abjad yang sesuai dengan filter ${kelasLabel}.</div>`;
         } else {
           cardsEl.innerHTML = rombelNames.map(r => {
             const c = fanObj.classes[r];
@@ -4072,7 +4478,7 @@
             fill: true,
             borderWidth: 2
           }, {
-            label: 'Rombel Tertinggi (%)',
+            label: 'Abjad Tertinggi (%)',
             data: validQuestions.map(q => q.hi ? q.hi.pct : null),
             borderColor: '#16a34a',
             backgroundColor: '#16a34a',
@@ -4084,7 +4490,7 @@
             borderWidth: 1.5,
             _ext: 'hi'
           }, {
-            label: 'Rombel Terendah (%)',
+            label: 'Abjad Terendah (%)',
             data: validQuestions.map(q => q.lo ? q.lo.pct : null),
             borderColor: '#e11d48',
             backgroundColor: '#e11d48',
@@ -4150,7 +4556,7 @@
         }
       });
 
-      // 3b. Tabel Daya Serap Tertinggi & Terendah per Rombel Paralel di setiap butir soal
+      // 3b. Tabel Daya Serap Tertinggi & Terendah per Abjad Paralel di setiap butir soal
       const extWrap = document.getElementById('fan-extreme-wrap');
       if (extWrap) {
         const rowsSrc = validQuestions.filter(q => q.hi && q.lo);
@@ -4163,7 +4569,7 @@
               : 'bg-rose-100 text-rose-800 border-rose-300';
             const arr = ext.names;
             const shown = arr.length <= 4 ? arr : arr.slice(0, 3);
-            const more = arr.length <= 4 ? '' : `<span class="text-[10px] text-slate-500 font-semibold" title="${arr.map(escapeHtml).join(', ')}">+${arr.length - 3} rombel lain</span>`;
+            const more = arr.length <= 4 ? '' : `<span class="text-[10px] text-slate-500 font-semibold" title="${arr.map(escapeHtml).join(', ')}">+${arr.length - 3} abjad lain</span>`;
             return `<div class="flex flex-wrap items-center gap-1">
               <strong class="font-mono text-sm ${tone === 'hi' ? 'text-emerald-700' : 'text-rose-700'}">${ext.pct}%</strong>
               ${shown.map(n => `<span class="px-1.5 py-0.5 rounded border text-[10px] font-bold ${cls}">${escapeHtml(n)}</span>`).join('')}${more}
@@ -4171,8 +4577,8 @@
           };
           extWrap.innerHTML = `
             <div class="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
-              <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider">&#128202; Daya Serap Tertinggi &amp; Terendah per Rombel Paralel di Setiap Butir</h4>
-              <span class="text-[10px] text-slate-500 dark:text-slate-400">Dibandingkan antar ${rombelCount} rombel (${kelasLabel})</span>
+              <h4 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider">&#128202; Daya Serap Tertinggi &amp; Terendah per Abjad Paralel di Setiap Butir</h4>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400">Dibandingkan antar ${rombelCount} abjad (${kelasLabel})</span>
             </div>
             <div class="overflow-auto max-h-80 border border-slate-200 dark:border-[#1a3d52] rounded-lg bg-white dark:bg-[#0f2634] custom-scrollbar">
               <table class="w-full text-left text-xs border-collapse">
@@ -4180,8 +4586,8 @@
                   <tr>
                     <th class="p-2 border-r border-slate-200 dark:border-[#1a3d52]">Butir</th>
                     <th class="p-2 text-center border-r border-slate-200 dark:border-[#1a3d52]">Seluruh Kelas</th>
-                    <th class="p-2 border-r border-slate-200 dark:border-[#1a3d52] text-emerald-800">&#9650; Rombel Tertinggi</th>
-                    <th class="p-2 border-r border-slate-200 dark:border-[#1a3d52] text-rose-800">&#9660; Rombel Terendah</th>
+                    <th class="p-2 border-r border-slate-200 dark:border-[#1a3d52] text-emerald-800">&#9650; Abjad Tertinggi</th>
+                    <th class="p-2 border-r border-slate-200 dark:border-[#1a3d52] text-rose-800">&#9660; Abjad Terendah</th>
                     <th class="p-2 text-center">Selisih</th>
                   </tr>
                 </thead>
@@ -4205,7 +4611,7 @@
       if (table) {
         // Baris Header 1: Kolom Tetap + Grup Tipe Soal
         let theadRow1 = `<tr>
-          <th rowspan="2" class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Rombel</th>
+          <th rowspan="2" class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Abjad</th>
           <th rowspan="2" class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Peserta</th>
         `;
 
@@ -4253,7 +4659,7 @@
     }
     
     // ==========================================
-    // MODULE 4: SELURUH ROMBEL PARALEL
+    // MODULE 4: SELURUH ABJAD PARALEL
     // ==========================================
     function initSeluruhKelas() {
       const selectKelas = document.getElementById('select-sk-kelas');
@@ -4276,7 +4682,7 @@
         const countRombel = (APP_DATA.active_rombel || []).filter(r => getGradeFromRombel(r) === k).length;
         const selected = (state.seluruhKelas.kelas === k) ? 'selected' : '';
         const disabled = !isActive ? 'disabled' : '';
-        return `<option value="${k}" ${disabled} ${selected}>Kelas ${kelasName(k)} (${isActive ? 'Aktif - ' + countRombel + ' Rombel' : 'Menunggu Data'})</option>`;
+        return `<option value="${k}" ${disabled} ${selected}>Kelas ${kelasName(k)} (${isActive ? 'Aktif - ' + countRombel + ' Abjad' : 'Menunggu Data'})</option>`;
       }).join('');
     }
 
@@ -4287,7 +4693,7 @@
       // Update subtitle & label kelas
       const subtitleEl = document.getElementById('sk-subtitle');
       if (subtitleEl) {
-        subtitleEl.textContent = `Perbandingan capaian hasil ujian seluruh rombel paralel Kelas ${kelasName(currentK)}`;
+        subtitleEl.textContent = `Perbandingan capaian hasil ujian seluruh abjad paralel Kelas ${kelasName(currentK)}`;
       }
       const kelasLabelEl = document.getElementById('sk-fan-kelas-label');
       if (kelasLabelEl) {
@@ -4336,7 +4742,7 @@
         });
       }
 
-      // 3. Ambil data rombel untuk Fan yang dipilih di Kelas ini
+      // 3. Ambil data abjad untuk Fan yang dipilih di Kelas ini
       const fanObj = (APP_DATA.fans || {})[activeFan];
       if (!fanObj) return;
 
@@ -4355,7 +4761,7 @@
 
       if (rawRombels.length === 0) {
         const cardsCont = document.getElementById('sk-cards-container');
-        if (cardsCont) cardsCont.innerHTML = `<div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center text-xs text-slate-500 dark:text-slate-400">Tidak ada data rombel untuk Kelas ${kelasName(currentK)} pada Fan ${activeFan}.</div>`;
+        if (cardsCont) cardsCont.innerHTML = `<div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center text-xs text-slate-500 dark:text-slate-400">Tidak ada data abjad untuk Kelas ${kelasName(currentK)} pada Fan ${activeFan}.</div>`;
         const table = document.getElementById('table-seluruh-kelas');
         if (table) table.innerHTML = '<tbody><tr><td class="p-4 text-center text-xs text-slate-500 dark:text-slate-400">Tidak ada data.</td></tr></tbody>';
         return;
@@ -4395,14 +4801,14 @@
         ];
 
         let cardsHtml = `
-          <!-- Baris 1: 3 Rombel Daya Serap Tertinggi -->
+          <!-- Baris 1: 3 Abjad Daya Serap Tertinggi -->
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-sky-900 uppercase tracking-wider flex items-center gap-1.5">
                 <span>🏆</span>
-                <span>3 Rombel Terbaik (Daya Serap Tertinggi) &bull; Fan ${activeFan}</span>
+                <span>3 Abjad Terbaik (Daya Serap Tertinggi) &bull; Fan ${activeFan}</span>
               </span>
-              <span class="text-[11px] text-slate-500 font-medium">Berdasarkan ${totalRombels} Rombel Paralel</span>
+              <span class="text-[11px] text-slate-500 font-medium">Berdasarkan ${totalRombels} Abjad Paralel</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               ${top3.map((item, idx) => {
@@ -4430,12 +4836,12 @@
 
         if (bottom3.length > 0) {
           cardsHtml += `
-            <!-- Baris 2: 3 Rombel Daya Serap Terendah -->
+            <!-- Baris 2: 3 Abjad Daya Serap Terendah -->
             <div class="space-y-2 pt-2 border-t border-slate-200">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
                   <span>⚠️</span>
-                  <span>3 Rombel Terendah (Perlu Evaluasi & Remidi) &bull; Fan ${activeFan}</span>
+                  <span>3 Abjad Terendah (Perlu Evaluasi & Remidi) &bull; Fan ${activeFan}</span>
                 </span>
                 <span class="text-[11px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Prioritas Pembahasan</span>
               </div>
@@ -4467,12 +4873,12 @@
         cardsCont.innerHTML = cardsHtml;
       }
 
-      // 6. Urutkan Rombel Secara ALFABETIS (A-Z) untuk Tampilan Tabel
+      // 6. Urutkan Abjad Secara ALFABETIS (A-Z) untuk Tampilan Tabel
       const alphabeticalList = rankedList.slice().sort((a, b) => {
         return a.rombel.localeCompare(b.rombel, undefined, { numeric: true, sensitivity: 'base' });
       });
 
-      // 7. Render Tabel Rombel dengan Nomor Soal di Setiap Tipe
+      // 7. Render Tabel Abjad dengan Nomor Soal di Setiap Tipe
       const table = document.getElementById('table-seluruh-kelas');
       if (table) {
         const modelKey = getModelForFan(activeFan);
@@ -4493,7 +4899,7 @@
         // Baris Header 1: Kolom Tetap + Grup Tipe Soal
         let theadRow1 = `<tr>
           <th rowspan="2" class="p-2.5 text-center w-12 border-r border-slate-200 dark:border-[#1a3d52]">No</th>
-          <th rowspan="2" class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52] whitespace-nowrap">Rombel Kelas ${kelasName(currentK)} (A-Z)</th>
+          <th rowspan="2" class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52] whitespace-nowrap">Abjad Kelas ${kelasName(currentK)} (A-Z)</th>
           <th rowspan="2" class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52] whitespace-nowrap">Rangking</th>
           <th rowspan="2" class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52] whitespace-nowrap">Santri</th>
         `;
@@ -4676,7 +5082,7 @@
             return seed <= prob ? 1 : 0;
           });
         });
-        if (notify) showToast(`Data nilai rombel ${kelas} untuk Fan ${fan} berhasil dimuat dari spreadsheet!`, 'success');
+        if (notify) showToast(`Data nilai abjad ${kelas} untuk Fan ${fan} berhasil dimuat dari spreadsheet!`, 'success');
       }
       renderFormMatrix();
     }
@@ -5118,7 +5524,7 @@
         });
       }
 
-      // 2. Ekstrak rombel dari active_rombel / input
+      // 2. Ekstrak abjad dari active_rombel / input
       const rombelMap = {};
       if (Array.isArray(dataObj.active_rombel)) {
         dataObj.active_rombel.forEach(r => {
@@ -5191,7 +5597,7 @@
       const elFans = document.getElementById('stat-md-fans');
       if (elFans) elFans.textContent = `${fansCount} Fan`;
       const elRombels = document.getElementById('stat-md-rombels');
-      if (elRombels) elRombels.textContent = `${rombelsCount} Rombel`;
+      if (elRombels) elRombels.textContent = `${rombelsCount} Abjad`;
 
       // 2. Open specific subtab if requested
       if (subTabKey) {
@@ -5233,7 +5639,7 @@
           <tr>
             <th class="p-2.5 text-center w-12 border-r border-slate-200 dark:border-[#1a3d52]">No</th>
             <th class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52]">Mata Pelajaran (Fan)</th>
-            <th class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52]">Kelas / Rombel</th>
+            <th class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52]">Kelas / Abjad</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Santri (N)</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Total Benar</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Daya Serap</th>
@@ -5261,9 +5667,9 @@
         tbody += `
           <tr class="hover:bg-sky-50/40 transition">
             <td class="p-2.5 text-center text-slate-500 font-bold border-r border-slate-200 dark:border-[#1a3d52]">${idx + 1}</td>
-            <td class="p-2.5 font-bold text-slate-900 border-r border-slate-200 dark:border-[#1a3d52] flex items-center gap-1.5">
+            <td class="p-2.5 font-bold text-slate-900 border-r border-slate-200 dark:border-[#1a3d52]"><div class="flex items-center gap-1.5">
               <span>📖</span> <span>${r.fan}</span>
-            </td>
+            </div></td>
             <td class="p-2.5 font-bold text-sky-800 border-r border-slate-200 dark:border-[#1a3d52]">
               <span class="px-2 py-0.5 rounded bg-sky-50 border border-sky-200">Kelas ${r.kelas}</span>
             </td>
@@ -5417,9 +5823,9 @@
         tbody += `
           <tr class="hover:bg-slate-50 dark:hover:bg-[#133042]/70 transition">
             <td class="p-2.5 text-center text-slate-500 font-bold border-r border-slate-200 dark:border-[#1a3d52]">${idx + 1}</td>
-            <td class="p-2.5 font-bold text-slate-900 border-r border-slate-200 dark:border-[#1a3d52] flex items-center gap-1.5">
+            <td class="p-2.5 font-bold text-slate-900 border-r border-slate-200 dark:border-[#1a3d52]"><div class="flex items-center gap-1.5">
               <span>📖</span> <span class="text-sm">${f.name}</span>
-            </td>
+            </div></td>
             <td class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52] space-x-1">${clsBadges}</td>
             <td class="p-2.5 text-center font-bold text-slate-700 border-r border-slate-200 dark:border-[#1a3d52]">
               <span class="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200">${f.defaultModel || 'FAN 1'}</span>
@@ -5558,7 +5964,7 @@
         <thead class="bg-slate-100 dark:bg-[#133042] text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-[#1a3d52] dark:border-[#1a3d52] sticky top-0 z-10">
           <tr>
             <th class="p-2.5 text-center w-12 border-r border-slate-200 dark:border-[#1a3d52]">No</th>
-            <th class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52]">Nama Kelas / Rombel</th>
+            <th class="p-2.5 border-r border-slate-200 dark:border-[#1a3d52]">Nama Kelas / Abjad</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Jenjang Kelas</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Kapasitas Standar (N)</th>
             <th class="p-2.5 text-center border-r border-slate-200 dark:border-[#1a3d52]">Status Data</th>
@@ -5569,7 +5975,7 @@
       `;
 
       if (filtered.length === 0) {
-        table.innerHTML = thead + `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">Tidak ada rombel pada kelas yang dipilih.</td></tr></tbody>`;
+        table.innerHTML = thead + `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">Tidak ada abjad pada kelas yang dipilih.</td></tr></tbody>`;
         return;
       }
 
@@ -5590,10 +5996,10 @@
               </span>
             </td>
             <td class="p-2 text-center space-x-1">
-              <button type="button" data-rombel="${safeRombel}" class="btn-edit-master-rombel p-2 rounded-lg text-blue-700 hover:bg-blue-100 active:bg-blue-200 transition cursor-pointer" title="Edit Rombel Ini">
+              <button type="button" data-rombel="${safeRombel}" class="btn-edit-master-rombel p-2 rounded-lg text-blue-700 hover:bg-blue-100 active:bg-blue-200 transition cursor-pointer" title="Edit Abjad Ini">
                 <span>✏️</span>
               </button>
-              <button type="button" data-rombel="${safeRombel}" class="btn-delete-master-rombel p-2 rounded-lg text-rose-700 hover:bg-rose-100 active:bg-rose-200 transition cursor-pointer" title="Hapus Rombel">
+              <button type="button" data-rombel="${safeRombel}" class="btn-delete-master-rombel p-2 rounded-lg text-rose-700 hover:bg-rose-100 active:bg-rose-200 transition cursor-pointer" title="Hapus Abjad">
                 <span>🗑️</span>
               </button>
             </td>
@@ -5604,7 +6010,7 @@
       tbody += '</tbody>';
       table.innerHTML = thead + tbody;
 
-      // Event listeners terpercaya untuk tombol Edit & Hapus Rombel
+      // Event listeners terpercaya untuk tombol Edit & Hapus Abjad
       table.querySelectorAll('.btn-edit-master-rombel').forEach(btn => {
         btn.onclick = (e) => {
           e.preventDefault();
@@ -5621,7 +6027,7 @@
       });
     }
 
-    // Modal Add / Edit Rombel
+    // Modal Add / Edit Abjad
     let editingRombelName = null;
     function openRombelManagerModal(rombelName = null) {
       const modal = document.getElementById('modal-rombel-manager');
@@ -5633,13 +6039,13 @@
       editingRombelName = rombelName;
       if (rombelName) {
         const item = MASTER_ROMBELS.find(r => r.rombel === rombelName) || { rombel: rombelName, kelas: getGradeFromRombel(rombelName), n: 45 };
-        title.textContent = `Edit Rombel: Kelas ${rombelName}`;
+        title.textContent = `Edit Abjad: Kelas ${rombelName}`;
         if (kelasSelect) kelasSelect.value = String(item.kelas);
         const parts = item.rombel.split('-');
         if (hurufInput) hurufInput.value = parts[1] || '';
         if (nInput) nInput.value = item.n || 45;
       } else {
-        title.textContent = 'Tambah Rombel Paralel Baru';
+        title.textContent = 'Tambah Abjad Paralel Baru';
         if (kelasSelect) kelasSelect.value = '1';
         if (hurufInput) hurufInput.value = '';
         if (nInput) nInput.value = 45;
@@ -5658,7 +6064,7 @@
       let huruf = hurufInput ? hurufInput.value.trim().toUpperCase() : '';
       huruf = huruf.replace(/[^A-Z0-9]/g, '');
       if (!huruf) {
-        showToast('Huruf rombel wajib diisi (contoh: A, B, G, X)!', 'error');
+        showToast('Huruf abjad wajib diisi (contoh: A, B, G, X)!', 'error');
         return;
       }
       const code = `${k}-${huruf}`;
@@ -5669,14 +6075,14 @@
         if (idx !== -1) {
           MASTER_ROMBELS[idx] = { rombel: code, kelas: k, n: n };
         }
-        showToast(`Rombel "${code}" berhasil diperbarui!`, 'success');
+        showToast(`Abjad "${code}" berhasil diperbarui!`, 'success');
       } else {
         if (MASTER_ROMBELS.some(r => r.rombel === code)) {
-          showToast(`Rombel "${code}" sudah terdaftar!`, 'error');
+          showToast(`Abjad "${code}" sudah terdaftar!`, 'error');
           return;
         }
         MASTER_ROMBELS.push({ rombel: code, kelas: k, n: n });
-        showToast(`Rombel "${code}" berhasil ditambahkan ke Master Data!`, 'success');
+        showToast(`Abjad "${code}" berhasil ditambahkan ke Master Data!`, 'success');
       }
 
       saveMasterRombels();
@@ -5685,12 +6091,12 @@
     }
 
     function deleteMasterRombel(rombelName) {
-      showConfirmModal(`Yakin ingin menghapus Rombel <strong>"Kelas ${rombelName}"</strong> dari Master Data?`, function() {
+      showConfirmModal(`Yakin ingin menghapus Abjad <strong>"Kelas ${rombelName}"</strong> dari Master Data?`, function() {
         MASTER_ROMBELS = MASTER_ROMBELS.filter(r => r.rombel !== rombelName);
         saveMasterRombels();
         renderMasterData('rombel');
-        showToast(`Rombel "${rombelName}" telah dihapus.`, 'info');
-      }, 'Hapus Rombel Paralel');
+        showToast(`Abjad "${rombelName}" telah dihapus.`, 'info');
+      }, 'Hapus Abjad Paralel');
     }
     window.deleteMasterRombel = deleteMasterRombel;
 
@@ -5707,7 +6113,7 @@
       const filterSSK = document.getElementById('md-filter-ss-kelas');
       if (filterSSK) filterSSK.onchange = () => renderMasterSpreadsheetTable();
 
-      // Filter in Rombel tab
+      // Filter in Abjad tab
       const filterRombelK = document.getElementById('md-rombel-filter-kelas');
       if (filterRombelK) filterRombelK.onchange = () => renderMasterRombelsTable();
 
@@ -5725,7 +6131,7 @@
       const btnSaveF = document.getElementById('btn-save-modal-fan');
       if (btnSaveF) btnSaveF.onclick = () => saveFanFromModal();
 
-      // Add Rombel Button & Modal
+      // Add Abjad Button & Modal
       const btnAddR = document.getElementById('md-btn-add-rombel');
       if (btnAddR) btnAddR.onclick = () => openRombelManagerModal();
       const btnCloseR = document.getElementById('btn-close-modal-rombel');
@@ -6092,7 +6498,7 @@
       // 2. Setup Fan Options (Murni Mengambil dari Master Data)
       updateInputFanDropdown();
 
-      // 3. Setup Rombel Options
+      // 3. Setup Abjad Options
       updateInputRombelDropdown();
 
       
@@ -6188,7 +6594,7 @@
         calculateInputLiveStats();
       };
 
-      // Button: Tambah Rombel Baru (Inline Box)
+      // Button: Tambah Abjad Baru (Inline Box)
       const boxAddRombel = document.getElementById('box-add-rombel');
       const inputNewRombel = document.getElementById('input-new-rombel-code');
       document.getElementById('btn-add-new-rombel').onclick = () => {
@@ -6215,9 +6621,9 @@
           checkAndLoadStoredData();
           renderInputQuestionGrid();
           calculateInputLiveStats();
-          showToast(`Rombel ${val} berhasil ditambahkan ke daftar pilihan.`, 'success');
+          showToast(`Abjad ${val} berhasil ditambahkan ke daftar pilihan.`, 'success');
         } else {
-          showToast('Masukkan kode rombel terlebih dahulu!', 'error');
+          showToast('Masukkan kode abjad terlebih dahulu!', 'error');
         }
       };
       document.getElementById('btn-confirm-add-rombel').onclick = saveNewRombel;
@@ -6762,13 +7168,13 @@
           ? 'Nilai asli (skor benar) otomatis dikonversi ke tampilan <strong>Jumlah Salah</strong>.'
           : 'Nilai asli spreadsheet berhasil dimuat ke seluruh butir soal untuk diedit atau diperbarui.';
         if (banner) banner.className = 'p-3 rounded-xl bg-sky-50 border border-sky-300 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-all';
-        if (text) text.innerHTML = `📌 Data Rombel <strong>${rombel}</strong> Fan <strong>${fan}</strong> <strong>SUDAH TERCATAT</strong> di Spreadsheet. ${modeNote}`;
+        if (text) text.innerHTML = `📌 Data Abjad <strong>${rombel}</strong> Fan <strong>${fan}</strong> <strong>SUDAH TERCATAT</strong> di Spreadsheet. ${modeNote}`;
         if (savedInd) {
           savedInd.className = 'text-xs px-2.5 py-1 rounded-full font-bold bg-sky-100 text-sky-800 border border-sky-300';
           savedInd.textContent = '🟢 Data Terdaftar di Spreadsheet';
         }
 
-        if (forceToast) showToast(`Data tersimpan untuk Fan ${fan} Rombel ${rombel} berhasil dimuat ulang!`, 'success');
+        if (forceToast) showToast(`Data tersimpan untuk Fan ${fan} Abjad ${rombel} berhasil dimuat ulang!`, 'success');
       } else {
         // BELUM ADA DATA DI SPREADSHEET: KOSONGKAN SELURUH SKOR!
         // INSTRUKSI USER: "kalau fan itu di kelas tersebut belum ada data maka kolom di setiap soal tidak terisi angka"
@@ -6788,14 +7194,14 @@
         }
 
         if (banner) banner.className = 'p-3 rounded-xl bg-amber-50/90 border border-amber-300 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-all';
-        if (text) text.innerHTML = `✨ Rombel <strong>${rombel}</strong> Fan <strong>${fan}</strong> <strong>BELUM MEMILIKI DATA</strong> di Spreadsheet. Seluruh kolom soal dikosongkan (siap input nilai baru).`;
+        if (text) text.innerHTML = `✨ Abjad <strong>${rombel}</strong> Fan <strong>${fan}</strong> <strong>BELUM MEMILIKI DATA</strong> di Spreadsheet. Seluruh kolom soal dikosongkan (siap input nilai baru).`;
         if (savedInd) {
           savedInd.className = 'text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-300';
           savedInd.textContent = '⚪ Belum Ada Data (Kolom Kosong)';
         }
 
         if (forceToast) {
-          showToast(`Formulir dikosongkan. Rombel ${rombel} Fan ${fan} belum ada data di spreadsheet.`, 'info');
+          showToast(`Formulir dikosongkan. Abjad ${rombel} Fan ${fan} belum ada data di spreadsheet.`, 'info');
         }
       }
     }
@@ -7891,7 +8297,7 @@
         return;
       }
       if (!rombel) {
-        showToast('Pilih Rombel terlebih dahulu!', 'error');
+        showToast('Pilih Abjad terlebih dahulu!', 'error');
         return;
       }
       if (n <= 0) {
@@ -8020,7 +8426,7 @@
         if (customUrl) {
           const okMsg = isSalah
             ? `Analisa tersimpan ke Google Sheets! (${totalSalahInput} salah dikonversi ke ${totalBenarSent} benar).`
-            : `Analisa Fan [${fan}] Rombel [${rombel}] berhasil disimpan ke Google Sheets!`;
+            : `Analisa Fan [${fan}] Abjad [${rombel}] berhasil disimpan ke Google Sheets!`;
           const afterOk = (res, unverified) => {
             resetBtns();
             updateLocalAppDataWithInput(payload);
@@ -8064,7 +8470,7 @@
           updateLocalAppDataWithInput(payload);
           const successMsg = isSalah 
             ? `Ditampilkan sementara, BELUM tersimpan permanen! (${totalSalahInput} salah dikonversi ke ${totalBenarSent} benar).`
-            : `Analisa Fan [${fan}] Rombel [${rombel}] hanya ditampilkan sementara (hilang saat halaman dimuat ulang).`;
+            : `Analisa Fan [${fan}] Abjad [${rombel}] hanya ditampilkan sementara (hilang saat halaman dimuat ulang).`;
           showToast(successMsg, 'info');
           showToast('💡 Tips: Klik tombol "Koneksi API" di header atas untuk menghubungkan langsung ke Google Spreadsheet.', 'info');
           
@@ -8201,14 +8607,25 @@
     }
 
     
+    // Kelas tombol menu samping. Kelas hak akses (perm-write / perm-admin) WAJIB dipertahankan
+    // agar menu yang tidak boleh dibuka suatu peran tetap tersembunyi setelah pindah menu.
+    function setNavTabClass(b, active) {
+      if (!b) return;
+      if (active && typeof updateBottomNav === 'function') setTimeout(() => updateBottomNav(b.dataset.tab), 0);
+      const perm = ['perm-write', 'perm-admin'].filter(c => b.classList.contains(c)).join(' ');
+      b.className = (perm ? perm + ' ' : '') + (active
+        ? 'nav-tab active w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-white bg-gradient-to-r from-cyan-600 to-teal-700 shadow-sm border border-cyan-500/40 font-bold text-xs sm:text-sm text-left cursor-pointer'
+        : 'nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#133042] transition text-xs sm:text-sm font-semibold text-left cursor-pointer');
+    }
+
     function switchTab(tabKey, subTabKey = null) {
       state.currentTab = tabKey;
       document.querySelectorAll('.nav-tab').forEach(b => {
-        b.className = 'nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/90 transition text-xs sm:text-sm font-medium text-left cursor-pointer';
+        setNavTabClass(b, false);
       });
       const activeBtn = document.querySelector(`.nav-tab[data-tab="${tabKey}"]`);
       if (activeBtn) {
-        activeBtn.className = 'nav-tab active w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-white bg-sky-600 dark:bg-sky-700 shadow-sm border border-sky-500/60 font-semibold text-xs sm:text-sm text-left cursor-pointer';
+        setNavTabClass(activeBtn, true);
       }
 
       document.querySelectorAll('.tab-content').forEach(content => {
@@ -8250,6 +8667,42 @@
       const b = document.querySelector('#main-nav-tabs [data-tab="pengguna"]');
       if (b) b.addEventListener('click', () => { if (isAdmin()) loadUsers(); });
     })();
+
+    // ---------- Navigasi bawah (HP) ----------
+    function updateBottomNav(tabKey) {
+      document.querySelectorAll('#mobile-bottom-nav [data-bnav]').forEach(b => {
+        const k = b.dataset.bnav;
+        const sidebarOpen = (document.getElementById('app-sidebar') || { classList: { contains: () => false } }).classList.contains('mobile-open');
+        b.classList.toggle('is-active', k === 'akun' ? sidebarOpen : (!sidebarOpen && k === tabKey));
+        if (k !== 'akun') b.setAttribute('aria-current', k === tabKey ? 'page' : 'false');
+      });
+    }
+    (function () {
+      document.querySelectorAll('#mobile-bottom-nav [data-bnav]').forEach(b => {
+        b.addEventListener('click', () => {
+          const k = b.dataset.bnav;
+          const sidebar = document.getElementById('app-sidebar');
+          if (k === 'akun') {
+            const t = document.getElementById('btn-toggle-sidebar');
+            if (t) t.click();
+            setTimeout(() => updateBottomNav(state.currentTab), 30);
+            return;
+          }
+          if (sidebar && sidebar.classList.contains('mobile-open')) {
+            sidebar.classList.remove('mobile-open');
+            const bd = document.getElementById('sidebar-backdrop');
+            if (bd) bd.classList.add('hidden');
+          }
+          const navBtn = document.querySelector('#main-nav-tabs .nav-tab[data-tab="' + k + '"]');
+          if (navBtn) navBtn.click();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          updateBottomNav(k);
+        });
+      });
+      // Tandai "Akun" aktif setiap kali panel samping dibuka/ditutup (dari mana pun)
+      const sb = document.getElementById('app-sidebar');
+      if (sb) { try { new MutationObserver(() => updateBottomNav(state.currentTab)).observe(sb, { attributes: true, attributeFilter: ['class'] }); } catch (e) {} }
+    })();
     // TAB SWITCHING (VERTICAL SIDEBAR)
     document.querySelectorAll('.nav-tab').forEach(tabBtn => {
       tabBtn.onclick = () => {
@@ -8257,9 +8710,9 @@
         state.currentTab = tabKey;
 
         document.querySelectorAll('.nav-tab').forEach(b => {
-          b.className = 'nav-tab w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/90 transition text-xs sm:text-sm font-medium text-left cursor-pointer';
+          setNavTabClass(b, false);
         });
-        tabBtn.className = 'nav-tab active w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-white bg-sky-600 dark:bg-sky-700 shadow-sm border border-sky-500/60 font-semibold text-xs sm:text-sm text-left cursor-pointer';
+        setNavTabClass(tabBtn, true);
 
         document.querySelectorAll('.tab-content').forEach(content => {
           content.classList.add('hidden');
@@ -8895,7 +9348,7 @@
       tutupPopupNarasiSoal();
       quickNaskahCtx = null;
       try { renderRekapFan(); } catch (e) { console.warn('Gagal memuat ulang Rekap Fan:', e); }
-      try { renderSeluruhKelas(); } catch (e) { console.warn('Gagal memuat ulang Seluruh Rombel:', e); }
+      try { renderSeluruhKelas(); } catch (e) { console.warn('Gagal memuat ulang Seluruh Abjad:', e); }
     }
 
     function bukaPopupDiMenuSoal() {
@@ -9817,15 +10270,15 @@ Kaidah Keshahihan Sanad`;
     </div>
   </div>
 
-  <!-- MODAL: KELOLA & TAMBAH KELAS / ROMBEL -->
+  <!-- MODAL: KELOLA & TAMBAH KELAS / ABJAD -->
   <div id="modal-rombel-manager" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white dark:bg-[#0f2634] rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-[#1a3d52] flex flex-col overflow-hidden">
       <div class="p-4 border-b border-slate-200 dark:border-[#1a3d52] dark:border-[#1a3d52] flex items-center justify-between bg-slate-50 dark:bg-[#0b1d28]">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-sm">🏫</div>
           <div>
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white" id="modal-rombel-title">Tambah / Edit Rombel Paralel</h3>
-            <p class="text-[11px] text-slate-500">Atur rombel kelas dan jumlah kapasitas santri N</p>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white" id="modal-rombel-title">Tambah / Edit Abjad Paralel</h3>
+            <p class="text-[11px] text-slate-500">Atur abjad kelas dan jumlah kapasitas santri N</p>
           </div>
         </div>
         <button type="button" id="btn-close-modal-rombel" onclick="closeRombelManagerModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition cursor-pointer" title="Tutup Modal (X)">
@@ -9844,7 +10297,7 @@ Kaidah Keshahihan Sanad`;
             </select>
           </div>
           <div class="space-y-1">
-            <label for="rombel-input-huruf" class="block font-bold text-slate-700">Huruf Rombel:</label>
+            <label for="rombel-input-huruf" class="block font-bold text-slate-700">Huruf Abjad:</label>
             <input type="text" id="rombel-input-huruf" placeholder="Contoh: A, B, G, X..." class="w-full p-2 border border-slate-300 rounded-lg font-bold text-slate-900 uppercase focus:ring-2 focus:ring-sky-500">
           </div>
         </div>
@@ -9852,13 +10305,13 @@ Kaidah Keshahihan Sanad`;
         <div class="space-y-1">
           <label for="rombel-input-n" class="block font-bold text-slate-700">Kapasitas Murid / Santri Hadir (N):</label>
           <input type="number" id="rombel-input-n" min="1" max="150" value="45" class="w-full p-2 border border-slate-300 rounded-lg font-bold text-slate-900 focus:ring-2 focus:ring-sky-500">
-          <p class="text-[10px] text-slate-500">Jumlah santri standar saat form input dibuka untuk rombel ini</p>
+          <p class="text-[10px] text-slate-500">Jumlah santri standar saat form input dibuka untuk abjad ini</p>
         </div>
       </div>
 
       <div class="p-4 border-t border-slate-200 dark:border-[#1a3d52] bg-slate-50 dark:bg-[#0b1d28] flex items-center justify-end gap-2 text-xs">
         <button type="button" id="btn-cancel-modal-rombel" onclick="closeRombelManagerModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition cursor-pointer">Batal</button>
-        <button type="button" id="btn-save-modal-rombel" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-600 text-white font-bold transition shadow-sm cursor-pointer">Simpan Rombel</button>
+        <button type="button" id="btn-save-modal-rombel" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-600 text-white font-bold transition shadow-sm cursor-pointer">Simpan Abjad</button>
       </div>
     </div>
   </div>
@@ -10045,7 +10498,7 @@ Kaidah Keshahihan Sanad`;
         <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-800">🔐 Penyimpanan kini dilindungi <strong>login akun</strong>. Token manual tidak diperlukan lagi.</div>
 
         <div class="space-y-1.5">
-          <div class="perm-write block font-bold text-slate-700">Master Data (Model Fan, Nama Fan, Rombel):</div>
+          <div class="perm-write block font-bold text-slate-700">Master Data (Model Fan, Nama Fan, Abjad):</div>
           <div class="perm-write flex flex-wrap gap-2">
             <button type="button" onclick="forcePushMaster()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300">☁️ Kirim dari perangkat ini ke Spreadsheet</button>
             <button type="button" onclick="forcePullMaster()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300">⬇️ Ambil dari Spreadsheet</button>
