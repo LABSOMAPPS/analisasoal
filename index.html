@@ -3346,11 +3346,19 @@
 
     // Helper: Difficulty Badges
     
-    // Helper: Normalisasi Kode Abjad & Ekstrak Tingkat Kelas
+    // Urutan abjad: per kelas, lalu A..Z, lalu AA, AB, ... (huruf dobel setelah huruf tunggal)
+    function compareAbjad(a, b) {
+      const pa = String(a).match(/^(\d+)-?([A-Za-z]*)(.*)$/), pb = String(b).match(/^(\d+)-?([A-Za-z]*)(.*)$/);
+      if (!pa || !pb) return String(a).localeCompare(String(b));
+      return (parseInt(pa[1], 10) - parseInt(pb[1], 10)) || (pa[2].length - pb[2].length) ||
+        pa[2].localeCompare(pb[2]) || pa[3].localeCompare(pb[3]);
+    }
+
+    // Helper: Normalisasi Kode Abjad & Ekstrak Tingkat Kelas (huruf dobel seperti 1-AA didukung)
     function normalizeRombel(rombelStr) {
       if (!rombelStr) return '';
       const s = String(rombelStr).trim();
-      const m = s.match(/([1-9])\s*[-_]?\s*([A-Za-z])/);
+      const m = s.match(/([1-9])\s*[-_]?\s*([A-Za-z]{1,3})(?![A-Za-z])/);
       if (m) return m[1] + '-' + m[2].toUpperCase();
       return s;
     }
@@ -4255,7 +4263,7 @@
       const totalQuestionsInModel = getModelTotal(currModel);
 
       const selectedK = state.rekapFan.selectedKelas || 'all';
-      const allRombels = Object.keys(fanObj.classes || {}).sort();
+      const allRombels = Object.keys(fanObj.classes || {}).sort(compareAbjad);
       
       const rombelNames = selectedK === 'all'
         ? allRombels
@@ -4875,7 +4883,7 @@
 
       // 6. Urutkan Abjad Secara ALFABETIS (A-Z) untuk Tampilan Tabel
       const alphabeticalList = rankedList.slice().sort((a, b) => {
-        return a.rombel.localeCompare(b.rombel, undefined, { numeric: true, sensitivity: 'base' });
+        return compareAbjad(a.rombel, b.rombel);
       });
 
       // 7. Render Tabel Abjad dengan Nomor Soal di Setiap Tipe
@@ -6064,7 +6072,7 @@
       let huruf = hurufInput ? hurufInput.value.trim().toUpperCase() : '';
       huruf = huruf.replace(/[^A-Z0-9]/g, '');
       if (!huruf) {
-        showToast('Huruf abjad wajib diisi (contoh: A, B, G, X)!', 'error');
+        showToast('Huruf abjad wajib diisi (contoh: A, B, X, AA)!', 'error');
         return;
       }
       const code = `${k}-${huruf}`;
@@ -10298,7 +10306,7 @@ Kaidah Keshahihan Sanad`;
           </div>
           <div class="space-y-1">
             <label for="rombel-input-huruf" class="block font-bold text-slate-700">Huruf Abjad:</label>
-            <input type="text" id="rombel-input-huruf" placeholder="Contoh: A, B, G, X..." class="w-full p-2 border border-slate-300 rounded-lg font-bold text-slate-900 uppercase focus:ring-2 focus:ring-sky-500">
+            <input type="text" id="rombel-input-huruf" placeholder="Contoh: A, B, X, AA, AB..." class="w-full p-2 border border-slate-300 rounded-lg font-bold text-slate-900 uppercase focus:ring-2 focus:ring-sky-500">
           </div>
         </div>
 
