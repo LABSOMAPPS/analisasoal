@@ -191,6 +191,7 @@
       .dark .tab-content .overflow-x-auto > table tbody td:nth-child(2) { background-color: #0f2634; box-shadow: 1px 0 0 #1a3d52; }
       /* tombol & area sentuh lebih nyaman */
       .tab-content button { min-height: 2rem; }
+      .tab-content label button, .tab-content label + button, .tab-content .space-y-1 > .flex > button { min-height: 0; }
       /* judul besar sedikit diperkecil */
       .tab-content h2.text-2xl, .tab-content h2.text-3xl { font-size: 1.25rem !important; line-height: 1.6rem !important; }
     }
@@ -1138,59 +1139,60 @@
             <span class="w-6 h-6 rounded-md bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-xs">🎯</span>
             <h4 class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">Pilihan Butir Ujian & Identitas Abjad</h4>
           </div>
-          <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Pilih model fan, nama pelajaran, abjad, dan jumlah murid hadir</span>
+          <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Pilih kelas, abjad, model fan, nama fan, lalu jumlah murid hadir</span>
         </div>
 
-        <!-- Filter Controls Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-          <!-- 1. MODEL FAN (DENGAN EDIT & TAMBAH MODEL) -->
+        <!-- Filter Controls Grid: Kelas -> Abjad -> Model -> Fan (pilihan sebelumnya menyaring pilihan berikutnya) -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+          <!-- 1. KELAS -->
           <div class="space-y-1">
-            <div class="flex items-center justify-between">
-              <label for="input-filter-model" class="font-bold text-slate-700 flex items-center gap-1">
-                <span>Model Fan</span>
-                <span class="text-sky-600 text-[10px] font-normal">(Struktur Soal)</span>
-              </label>
-              <button type="button" onclick="switchTab('master-data', 'model')" class="text-[10px] text-sky-700 font-bold hover:underline flex items-center gap-0.5 cursor-pointer" title="Kelola Model Fan di Menu Data">
-                <span>⚙️ Kelola di Menu Data ↗</span>
-              </button>
-            </div>
-            <select id="input-filter-model" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition">
-              <!-- Populated dynamically via JS -->
+            <label for="input-filter-kelas" class="block font-bold text-slate-700">1. Kelas</label>
+            <select id="input-filter-kelas" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition disabled:opacity-60">
+              <!-- Diisi otomatis -->
             </select>
           </div>
 
-          <!-- 2. NAMA FAN (MENGACU KE MENU DATA) -->
-          <div class="space-y-1">
-            <div class="flex items-center justify-between">
-              <label for="input-filter-fan" class="block font-bold text-slate-700">Nama Fan (Mapel)</label>
-              <button type="button" onclick="switchTab('master-data', 'fan')" class="text-[10px] text-sky-700 font-bold hover:underline flex items-center gap-0.5 cursor-pointer" title="Kelola Daftar Fan di Menu Data">
-                <span>⚙️ Kelola Fan ↗</span>
-              </button>
-            </div>
-            <select id="input-filter-fan" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition">
-              <!-- Populated dynamically from Master Data via JS -->
-            </select>
-          </div>
-
-          <!-- 3. KELAS & ABJAD -->
+          <!-- 2. ABJAD (sesuai kelas) -->
           <div class="space-y-1">
             <label for="input-filter-rombel" class="block font-bold text-slate-700 flex items-center justify-between">
-              <span>Kelas / Abjad</span>
+              <span>2. Abjad</span>
               <button type="button" id="btn-add-new-rombel" class="text-[10px] text-sky-700 font-bold hover:underline">+ Baru</button>
             </label>
-            <select id="input-filter-rombel" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition">
-              <!-- Populated dynamically via JS -->
+            <select id="input-filter-rombel" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition disabled:opacity-60">
+              <!-- Diisi otomatis -->
             </select>
             <div id="box-add-rombel" class="hidden mt-1.5 flex items-center gap-1">
-              <input type="text" id="input-new-rombel-code" placeholder="Misal: 2-A / 3-B" class="w-full p-1.5 text-xs bg-white border border-sky-400 rounded-lg font-bold text-slate-900 focus:ring-2 focus:ring-sky-500">
+              <input type="text" id="input-new-rombel-code" placeholder="Misal: B / AA" class="w-full p-1.5 text-xs bg-white border border-sky-400 rounded-lg font-bold text-slate-900 uppercase focus:ring-2 focus:ring-sky-500">
               <button type="button" id="btn-confirm-add-rombel" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-800 text-white rounded-lg text-xs font-bold transition">Simpan</button>
               <button type="button" id="btn-cancel-add-rombel" class="px-2 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition">✕</button>
             </div>
           </div>
 
-          <!-- 4. JUMLAH SANTRI (N) -->
+          <!-- 3. MODEL FAN (hanya model yang punya fan di kelas ini) -->
           <div class="space-y-1">
-            <label for="input-filter-n" class="block font-bold text-slate-700">Jumlah Murid (Total Hadir N)</label>
+            <div class="flex items-center justify-between">
+              <label for="input-filter-model" class="font-bold text-slate-700">3. Model Fan</label>
+              <button type="button" onclick="switchTab('master-data', 'model')" class="text-[10px] text-sky-700 font-bold hover:underline cursor-pointer" title="Kelola Model Fan di Menu Data">⚙️ Kelola ↗</button>
+            </div>
+            <select id="input-filter-model" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition disabled:opacity-60">
+              <!-- Diisi otomatis -->
+            </select>
+          </div>
+
+          <!-- 4. NAMA FAN (sesuai kelas & model) -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <label for="input-filter-fan" class="font-bold text-slate-700">4. Nama Fan</label>
+              <button type="button" onclick="switchTab('master-data', 'fan')" class="text-[10px] text-sky-700 font-bold hover:underline cursor-pointer" title="Kelola Daftar Fan di Menu Data">⚙️ Kelola ↗</button>
+            </div>
+            <select id="input-filter-fan" class="w-full bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white rounded-lg p-2 font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 transition disabled:opacity-60">
+              <!-- Diisi otomatis -->
+            </select>
+          </div>
+
+          <!-- 5. JUMLAH SANTRI (N) -->
+          <div class="space-y-1 col-span-2 md:col-span-1">
+            <label for="input-filter-n" class="block font-bold text-slate-700">5. Jumlah Murid Hadir (N)</label>
             <div class="flex items-center">
               <button type="button" id="btn-stepper-n-minus" class="w-8 h-8 rounded-l-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm flex items-center justify-center transition">-</button>
               <input type="number" id="input-filter-n" min="1" max="150" value="43" class="w-full text-center bg-white border-y border-slate-300 h-8 font-extrabold text-sm text-slate-900 focus:outline-none">
@@ -1412,6 +1414,9 @@
             <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-2xl">
               Seluruh data acuan model fan, nama fan (mapel), kelas, abjad paralel, dan arsip data spreadsheet terpusat di sini. Menu Input Nilai mengambil data resmi dari menu ini.
             </p>
+            <p class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20 text-[11px] text-sky-50">
+              <span>🗂️</span><span>Data master ini khusus <strong><span data-ctx="tingkat">Tsanawiyah</span> &bull; <span data-ctx="tahap">Imda 2</span></strong>. Tingkat &amp; tahap lain punya data master sendiri.</span>
+            </p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <button type="button" onclick="switchTab('input-analisa')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-sky-950 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
@@ -1587,24 +1592,32 @@
 
         <!-- Filter Kelas & Fan -->
         <div class="bg-slate-50/90 dark:bg-[#133042]/90 p-4 rounded-xl border border-slate-200 dark:border-[#1a3d52] space-y-3">
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-            <!-- Filter Tingkat Kelas -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+            <!-- 1. Kelas -->
             <div class="md:col-span-4 space-y-1">
-              <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">1. Pilih Tingkat Kelas:</label>
+              <label class="text-xs font-bold text-slate-700 dark:text-slate-300 block">1. Pilih Kelas:</label>
               <div class="flex gap-1.5" id="soal-kelas-pills">
-                              </div>
+              </div>
             </div>
 
-            <!-- Filter Mata Pelajaran / Fan -->
-            <div class="md:col-span-5 space-y-1">
-              <label for="select-soal-fan" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">2. Pilih Mata Pelajaran (Fan):</label>
-              <select id="select-soal-fan" onchange="onSoalFanChange(this.value)" class="w-full bg-white dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg p-2 font-bold focus:ring-sky-500 focus:border-sky-500 cursor-pointer">
-                <!-- Populated dynamically via JS -->
+            <!-- 2. Model Soal (hanya model yang punya fan di kelas ini) -->
+            <div class="md:col-span-3 space-y-1">
+              <label for="select-soal-model" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">2. Pilih Model Soal:</label>
+              <select id="select-soal-model" onchange="onSoalModelChange(this.value)" class="w-full bg-white dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg p-2 font-bold focus:ring-sky-500 focus:border-sky-500 cursor-pointer disabled:opacity-60">
+                <!-- Diisi otomatis -->
+              </select>
+            </div>
+
+            <!-- 3. Fan (sesuai kelas & model) -->
+            <div class="md:col-span-3 space-y-1">
+              <label for="select-soal-fan" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">3. Pilih Mata Pelajaran (Fan):</label>
+              <select id="select-soal-fan" onchange="onSoalFanChange(this.value)" class="w-full bg-white dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg p-2 font-bold focus:ring-sky-500 focus:border-sky-500 cursor-pointer disabled:opacity-60">
+                <!-- Diisi otomatis -->
               </select>
             </div>
 
             <!-- Quick Status Badge -->
-            <div class="md:col-span-3 flex md:flex-col justify-between md:justify-center items-end md:items-start bg-white p-2.5 rounded-lg border border-slate-200 text-xs shadow-2xs">
+            <div class="md:col-span-2 flex md:flex-col justify-between md:justify-center items-end md:items-start bg-white p-2.5 rounded-lg border border-slate-200 text-xs shadow-2xs">
               <span class="text-slate-500 text-[11px] font-semibold">Status Narasi Soal:</span>
               <span id="soal-status-badge" class="font-bold text-sky-700 font-mono text-xs">Memuat data...</span>
             </div>
@@ -2546,7 +2559,9 @@
           if (k.startsWith('IMDA_SOAL_NARRATIVE_') && !localStorage.getItem('IMDA_SOAL_PENDING_' + k)) localStorage.removeItem(k);
           if (k.startsWith('IMDA_CATATAN_') && !k.startsWith('IMDA_CATATAN_PENDING_') && !localStorage.getItem('IMDA_CATATAN_PENDING_' + k)) localStorage.removeItem(k);
         });
-        if (localStorage.getItem('IMDA_MASTER_DIRTY') !== '1') localStorage.removeItem('IMDA_MASTER_CACHE');
+        keys.forEach(k => {
+          if (k && k.startsWith('IMDA_MASTER_CACHE') && localStorage.getItem(k.replace('IMDA_MASTER_CACHE', 'IMDA_MASTER_DIRTY')) !== '1') localStorage.removeItem(k);
+        });
         localStorage.removeItem('IMDA_API_TOKEN');
       } catch (e) {}
     }
@@ -3145,8 +3160,10 @@
     let MASTER_ROMBELS = [];
     let masterReady = false;      // true setelah master data berhasil dicocokkan dengan Spreadsheet
     let masterPushTimer = null;
-    // Master data dipisah per TINGKAT (fan & rombel tiap tingkat berbeda); model fan bersifat global.
-    function masterScopeSuffix() { return CTX.tingkat === DEFAULT_CTX.tingkat ? '' : '_' + slugify(CTX.tingkat); }
+    // Master data (model fan, nama fan, abjad) dipisah per TINGKAT + TAHAP UJIAN.
+    // Konteks bawaan (Tsanawiyah • Imda 2) memakai kunci lama agar cadangan lokal yang ada tetap terbaca.
+    function masterScopeSuffix() { return ctxIsDefault() ? '' : '_' + slugify(CTX.tingkat + '-' + CTX.tahap); }
+    function modelsStorageKey() { return 'IMDA_FAN_MODELS' + masterScopeSuffix(); }
     function masterCacheKey() { return 'IMDA_MASTER_CACHE' + masterScopeSuffix(); }
     function masterDirtyKey() { return 'IMDA_MASTER_DIRTY' + masterScopeSuffix(); }
 
@@ -3158,6 +3175,7 @@
         if (c && Array.isArray(c.fans)) MASTER_FANS = c.fans;
         if (c && Array.isArray(c.rombels)) MASTER_ROMBELS = c.rombels;
       } catch (e) {}
+      try { loadScopedModels(); } catch (e) {}   // saat halaman baru dimuat, FAN_MODELS belum siap: dimuat di bawah
       masterReady = false;
       clearTimeout(masterPushTimer);
     }
@@ -3166,6 +3184,7 @@
     function masterPayload() {
       return {
         tingkat: CTX.tingkat,
+        tahap: CTX.tahap,
         fans: MASTER_FANS.map(f => ({ name: f.name, classes: (f.classes || []).map(Number).sort(), defaultModel: f.defaultModel || 'FAN 1' })),
         rombels: MASTER_ROMBELS.map(r => ({ rombel: r.rombel, kelas: Number(r.kelas), n: Number(r.n) || 0 })),
         models: (typeof FAN_MODELS !== 'undefined') ? FAN_MODELS : {}
@@ -3236,15 +3255,16 @@
       ['FAN 1', 'FAN 2', 'FAN 3'].forEach(k => { merged[k] = JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS[k])); });
       Object.keys(models).forEach(k => { merged[k] = models[k]; });
       FAN_MODELS = merged;
-      try { localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS)); } catch (e) {}
+      try { localStorage.setItem(modelsStorageKey(), JSON.stringify(FAN_MODELS)); } catch (e) {}
     }
     function adoptMasterFromServer(serverData) {
       const m = serverData && serverData.master;
       if (!m) return null;
       if ((m.tingkat || DEFAULT_CTX.tingkat) !== CTX.tingkat) return null;   // respons untuk tingkat lain
+      if ((m.tahap || DEFAULT_CTX.tahap) !== CTX.tahap) return null;         // respons untuk tahap lain
       const dirty = isMasterDirty();
       if (m.exists) {
-        const serverNorm = JSON.stringify({ tingkat: CTX.tingkat, fans: m.fans || [], rombels: m.rombels || [], models: m.models || {} });
+        const serverNorm = JSON.stringify({ tingkat: CTX.tingkat, tahap: CTX.tahap, fans: m.fans || [], rombels: m.rombels || [], models: m.models || {} });
         if (dirty && JSON.stringify(masterPayload()) !== serverNorm) {
           // Ada perubahan di perangkat ini yang belum terkirim: kirim dulu, jangan ditimpa
           masterReady = true;
@@ -3259,7 +3279,8 @@
         masterReady = true;
         return 'adopted';
       }
-      // Tingkat ini belum punya master di Spreadsheet: model (global) tetap diambil; fan & rombel diisi dari data
+      // Tingkat + tahap ini belum punya master: mulai data baru. Fan & abjad diisi dari data nilai konteks ini;
+      // model fan diawali dari salinan model konteks bawaan (bisa diubah tanpa memengaruhi konteks lain).
       if (!dirty) applyServerModels(m.models);
       return 'seed'; // perangkat ini yang mengisi pertama kali
     }
@@ -5380,7 +5401,7 @@
         try { masterMode = adoptMasterFromServer(serverData); } catch (e) { console.warn('adoptMaster:', e); }
         try { syncMasterDataWithSpreadsheet(serverData); } catch(e) { console.warn('syncMaster:', e); }
         if (masterMode === 'seed') { masterReady = true; if (MASTER_FANS.length || MASTER_ROMBELS.length) { try { doPushMaster(); } catch (e) {} } }
-        try { if (typeof updateModelDropdownOptions === 'function') updateModelDropdownOptions(); } catch (e) {}
+        try { if (typeof refreshInputCascade === 'function') refreshInputCascade(); } catch (e) {}
         setupFanAliases(APP_DATA);
         const isGas = (typeof google !== 'undefined' && google.script && google.script.run);
         const statusEl = document.getElementById('sync-status-text');
@@ -5706,16 +5727,8 @@
       inputState.model = modelKey;
       inputState.fan = fanName;
       inputState.rombel = rombelName;
-
-      const selectModel = document.getElementById('input-filter-model');
-      if (selectModel) selectModel.value = modelKey;
-
-      updateInputFanDropdown();
-      const selectFan = document.getElementById('input-filter-fan');
-      if (selectFan) selectFan.value = fanName;
-
-      const selectRombel = document.getElementById('input-filter-rombel');
-      if (selectRombel) selectRombel.value = rombelName;
+      inputState.kelas = String(getGradeFromRombel(rombelName));
+      refreshInputCascade();
 
       switchTab('input-analisa');
       updateModelQuestionCount();
@@ -6151,28 +6164,44 @@
     }
 
     
+    // ---- Input Nilai: urutan Kelas -> Abjad -> Model -> Fan (pilihan sebelumnya menyaring berikutnya) ----
+    function inputKelas() {
+      const ks = getKelasNumbers().map(String);
+      if (!ks.includes(String(inputState.kelas))) {
+        const g = inputState.rombel ? String(getGradeFromRombel(inputState.rombel)) : '';
+        inputState.kelas = ks.includes(g) ? g : (ks[0] || '1');
+      }
+      return inputState.kelas;
+    }
+    function updateInputKelasDropdown() {
+      const sel = document.getElementById('input-filter-kelas');
+      const k = inputKelas();
+      if (!sel) return;
+      sel.innerHTML = getKelasNumbers().map(n => `<option value="${n}">Kelas ${escapeHtml(kelasName(n))}</option>`).join('');
+      sel.value = k;
+    }
     function updateInputFanDropdown() {
       const fanSelect = document.getElementById('input-filter-fan');
+      const list = inputState.model ? soalFansFor(inputState.model, inputKelas()) : [];
+      if (!list.includes(inputState.fan)) inputState.fan = list[0] || '';
       if (!fanSelect) return;
-
-      const currentModel = inputState.model || 'FAN 1';
-      let eligibleFans = getFansForModel(currentModel);
-
-      // Jika belum ada fan yang terdaftar di model ini, ambil seluruh MASTER_FANS sebagai fallback
-      if (eligibleFans.length === 0 && typeof MASTER_FANS !== 'undefined') {
-        eligibleFans = MASTER_FANS.map(f => f.name);
+      if (!list.length) {
+        fanSelect.innerHTML = '<option value="">— Belum ada fan —</option>';
+        fanSelect.disabled = true;
+        return;
       }
-
-      fanSelect.innerHTML = eligibleFans.map(f => `<option value="${f}">${f}</option>`).join('');
-
-      // Jika fan saat ini cocok dengan salah satu di model ini, pertahankan. Jika tidak, pilih yang pertama!
-      if (eligibleFans.includes(inputState.fan)) {
-        fanSelect.value = inputState.fan;
-      } else if (eligibleFans.length > 0) {
-        inputState.fan = eligibleFans[0];
-        fanSelect.value = eligibleFans[0];
-      }
+      fanSelect.disabled = false;
+      fanSelect.innerHTML = list.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
+      fanSelect.value = inputState.fan;
     }
+    // Isi ulang seluruh pilihan sesuai urutan bertingkat
+    function refreshInputCascade() {
+      updateInputKelasDropdown();
+      updateInputRombelDropdown();
+      updateModelDropdownOptions();
+      updateInputFanDropdown();
+    }
+    window.refreshInputCascade = refreshInputCascade;
 
     // MODULE: INPUT NILAI & ANALISA BUTIR SOAL
     // DENGAN MANAJEMEN MODEL FAN & TIPE SOAL DINAMIS
@@ -6212,17 +6241,16 @@
     };
 
     let FAN_MODELS = {};
-    try {
-      const storedModels = localStorage.getItem('IMDA_FAN_MODELS');
-      if (storedModels) {
-        FAN_MODELS = JSON.parse(storedModels);
-      }
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
+    // Model fan per tingkat + tahap (cadangan lokal); jika belum ada, pakai model standar
+    function loadScopedModels() {
+      let loaded = null;
+      try {
+        const stored = localStorage.getItem(modelsStorageKey());
+        if (stored) loaded = JSON.parse(stored);
+      } catch (e) { console.warn('LocalStorage error:', e); }
+      FAN_MODELS = (loaded && Object.keys(loaded).length) ? loaded : JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS));
     }
-    if (!FAN_MODELS || Object.keys(FAN_MODELS).length === 0) {
-      FAN_MODELS = JSON.parse(JSON.stringify(DEFAULT_FAN_MODELS));
-    }
+    loadScopedModels();
 
     
     // Helper: Dapatkan Model Fan yang mengikat Fan tertentu
@@ -6346,7 +6374,7 @@
 
     function saveModelsToStorage() {
       try {
-        localStorage.setItem('IMDA_FAN_MODELS', JSON.stringify(FAN_MODELS));
+        localStorage.setItem(modelsStorageKey(), JSON.stringify(FAN_MODELS));
       } catch (e) {}
       try { pushMasterToSheet(); } catch (e) {}
     }
@@ -6390,15 +6418,23 @@
       const select = document.getElementById('input-filter-rombel');
       if (!select) return;
 
-      const rombelNames = MASTER_ROMBELS.map(r => r.rombel);
-      select.innerHTML = rombelNames.map(r => `<option value="${r}">Kelas ${r}</option>`).join('');
-
-      if (rombelNames.includes(inputState.rombel)) {
-        select.value = inputState.rombel;
-      } else if (rombelNames.length > 0) {
-        inputState.rombel = rombelNames[0];
-        select.value = rombelNames[0];
+      const k = Number(inputKelas());
+      const rombelNames = MASTER_ROMBELS
+        .filter(r => (Number(r.kelas) || getGradeFromRombel(r.rombel)) === k)
+        .map(r => r.rombel)
+        .sort(compareAbjad);
+      // abjad yang baru ditambah lewat "+ Baru" (belum ada di Menu Data) tetap ikut tampil
+      if (inputState.rombel && getGradeFromRombel(inputState.rombel) === k && !rombelNames.includes(inputState.rombel)) rombelNames.push(inputState.rombel);
+      if (!rombelNames.length) {
+        inputState.rombel = '';
+        select.innerHTML = '<option value="">— Belum ada abjad —</option>';
+        select.disabled = true;
+        return;
       }
+      select.disabled = false;
+      select.innerHTML = rombelNames.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+      if (!rombelNames.includes(inputState.rombel)) inputState.rombel = rombelNames[0];
+      select.value = inputState.rombel;
     }
 
     
@@ -6500,14 +6536,8 @@
     }
 
     function initInputAnalisa() {
-      // 1. Setup Model Dropdown
-      updateModelDropdownOptions();
-
-      // 2. Setup Fan Options (Murni Mengambil dari Master Data)
-      updateInputFanDropdown();
-
-      // 3. Setup Abjad Options
-      updateInputRombelDropdown();
+      // Kelas -> Abjad -> Model -> Fan
+      refreshInputCascade();
 
       
       // Pertahankan Mode Tampilan yang Dipilih Pengguna (Persistensi Mode Kisi Kolom / Fokus)
@@ -6549,9 +6579,22 @@
       updateInputModeUI();
 
       // 4. Event Listeners for Filters
+      document.getElementById('input-filter-kelas').onchange = (e) => {
+        inputState.kelas = e.target.value;
+        inputState.modelPinned = false;
+        updateInputRombelDropdown();       // abjad sesuai kelas
+        updateModelDropdownOptions();      // model yang punya fan di kelas ini
+        updateInputFanDropdown();          // fan sesuai kelas & model
+        updateModelQuestionCount();
+        checkAndLoadStoredData();
+        renderInputQuestionGrid();
+        calculateInputLiveStats();
+      };
       document.getElementById('input-filter-model').onchange = (e) => {
         inputState.model = e.target.value;
-        updateInputFanDropdown(); // Otomatis saring Fan sesuai kategori Model Fan yang dipilih!
+        inputState.modelPinned = false;
+        inputState.fan = '';               // pilih fan pertama milik model ini
+        updateInputFanDropdown(); // Otomatis saring Fan sesuai kelas & Model Fan yang dipilih!
         updateModelQuestionCount();
         checkAndLoadStoredData();
         renderInputQuestionGrid();
@@ -6589,6 +6632,7 @@
       if (fanSelectEl) {
         fanSelectEl.onchange = (e) => {
           inputState.fan = e.target.value;
+          inputState.modelPinned = false;
           checkAndLoadStoredData();
           renderInputQuestionGrid();
           calculateInputLiveStats();
@@ -6615,15 +6659,15 @@
         boxAddRombel.classList.add('hidden');
       };
       const saveNewRombel = () => {
-        const val = inputNewRombel.value.trim().toUpperCase();
+        let val = inputNewRombel.value.trim().toUpperCase().replace(/^KELAS\s*/, '');
         if (val) {
-          const rSelect = document.getElementById('input-filter-rombel');
-          const opt = document.createElement('option');
-          opt.value = val;
-          opt.textContent = val.startsWith('Kelas') ? val : `Kelas ${val}`;
-          rSelect.appendChild(opt);
-          rSelect.value = val;
+          // cukup ketik hurufnya (B / AA): kelas mengikuti pilihan Kelas
+          if (/^[A-Z]{1,3}$/.test(val)) val = inputKelas() + '-' + val;
+          val = normalizeRombel(val);
+          if (!/^[1-9]-[A-Z]{1,3}$/.test(val)) { showToast('Format abjad tidak dikenali. Contoh: B atau AA.', 'error'); return; }
           inputState.rombel = val;
+          inputState.kelas = String(getGradeFromRombel(val));
+          refreshInputCascade();
           inputNewRombel.value = '';
           boxAddRombel.classList.add('hidden');
           checkAndLoadStoredData();
@@ -6760,17 +6804,25 @@
       const select = document.getElementById('input-filter-model');
       if (!select) return;
 
-      const keys = Object.keys(FAN_MODELS);
+      const kelas = inputKelas();
+      // fan terpilih menentukan modelnya (mis. dibuka dari Audit / Menu Data)
+      if (!inputState.modelPinned && inputState.fan && fanTaughtInKelas(inputState.fan, kelas) && FAN_MODELS[getModelForFan(inputState.fan)]) inputState.model = getModelForFan(inputState.fan);
+      const keys = modelsForKelas(kelas, inputState.model && FAN_MODELS[inputState.model] && inputState.modelPinned ? inputState.model : undefined);
+      if (!keys.length) {
+        select.innerHTML = '<option value="">— Belum ada fan di kelas ini —</option>';
+        select.disabled = true;
+        if (!FAN_MODELS[inputState.model]) inputState.model = Object.keys(FAN_MODELS)[0] || 'FAN 1';
+        return;
+      }
+      select.disabled = false;
+      if (!keys.includes(inputState.model)) inputState.model = keys[0];
       select.innerHTML = keys.map(k => {
         const m = FAN_MODELS[k];
         const tot = getModelTotal(m);
-        return `<option value="${k}" ${k === inputState.model ? 'selected' : ''}>${k} (${tot} Butir Soal - ${m.types.length} Tipe)</option>`;
+        const n = soalFansFor(k, kelas).length;
+        return `<option value="${escapeHtml(k)}" title="${escapeHtml(m.description || '')}">${escapeHtml(k)} · ${tot} soal · ${n} fan</option>`;
       }).join('');
-
-      if (!FAN_MODELS[inputState.model]) {
-        inputState.model = keys[0] || 'FAN 1';
-        select.value = inputState.model;
-      }
+      select.value = inputState.model;
     }
 
     function openModelEditor(modelKey = null) {
@@ -7056,6 +7108,8 @@
 
       // Pilih model yang baru disimpan
       inputState.model = newName;
+      inputState.modelPinned = true;
+      refreshInputCascade();
       document.getElementById('input-filter-model').value = newName;
 
       closeModelEditor();
@@ -8643,9 +8697,7 @@
       if (activeView) activeView.classList.remove('hidden');
 
       if (tabKey === 'input-analisa') { 
-        updateModelDropdownOptions();
-        updateInputFanDropdown();
-        updateInputRombelDropdown(); 
+        refreshInputCascade();
         checkAndLoadStoredData(); 
         calculateInputLiveStats(); 
         if (inputState.viewMode === 'focus') setTimeout(focusAndSelectMainInput, 100);
@@ -8737,9 +8789,7 @@
         }
 
         if (tabKey === 'input-analisa') { 
-          updateModelDropdownOptions();
-          updateInputFanDropdown();
-          updateInputRombelDropdown(); 
+          refreshInputCascade();
           checkAndLoadStoredData(); 
           calculateInputLiveStats(); 
           if (inputState.viewMode === 'focus') {
@@ -9372,25 +9422,84 @@
 
     function initMenuSoal() {
       state.soalFilter = state.soalFilter || {
-        kelas: '1',
-        fan: 'Hadits Nabawy'
+        kelas: String(getKelasNumbers()[0] || '1'),
+        fan: '',
+        model: ''
       };
+      updateSoalModelDropdown();
       updateSoalFanDropdown();
+    }
+
+    // ---- Menu Soal: urutan pilihan Model -> Kelas -> Fan ----
+    // Apakah fan diajarkan di kelas tsb (dari Menu Data; jika belum ada, dari data nilai)
+    function fanTaughtInKelas(fanName, kelas) {
+      const k = Number(kelas);
+      const mf = (MASTER_FANS || []).find(f => String(f.name).toLowerCase() === String(fanName).toLowerCase());
+      if (mf && Array.isArray(mf.classes) && mf.classes.length) return mf.classes.map(Number).includes(k);
+      const df = APP_DATA && APP_DATA.fans && APP_DATA.fans[fanName];
+      if (df && df.classes && Object.keys(df.classes).length) return Object.keys(df.classes).some(r => getGradeFromRombel(r) === k);
+      return false;
+    }
+    function soalAllFanNames() {
+      const names = [];
+      const add = n => { if (n && !names.some(x => x.toLowerCase() === String(n).toLowerCase())) names.push(String(n)); };
+      (MASTER_FANS || []).forEach(f => add(f.name));
+      if (APP_DATA && APP_DATA.fans) Object.keys(APP_DATA.fans).forEach(add);
+      return names;
+    }
+    // Fan milik model tertentu yang diajarkan di kelas tertentu (model fan = pengaturan di Menu Data)
+    function soalFansFor(model, kelas) {
+      return soalAllFanNames().filter(f => getModelForFan(f) === model && fanTaughtInKelas(f, kelas));
+    }
+    function soalModelKeys() {
+      return Object.keys(FAN_MODELS || {}).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    }
+    // Model yang punya minimal satu fan di kelas tsb (model 'keep' tetap ikut ditampilkan, mis. model baru dibuat)
+    function modelsForKelas(kelas, keep) {
+      return soalModelKeys().filter(k => k === keep || soalFansFor(k, kelas).length > 0);
+    }
+
+    function updateSoalModelDropdown() {
+      const sel = document.getElementById('select-soal-model');
+      state.soalFilter = state.soalFilter || {};
+      const keys = soalModelKeys();
+      const kelas = state.soalFilter.kelas || String(getKelasNumbers()[0] || '1');
+      // model mengikuti fan yang sedang dipilih (mis. dibuka dari Rekap Fan)
+      if (state.soalFilter.fan && soalAllFanNames().includes(state.soalFilter.fan) && fanTaughtInKelas(state.soalFilter.fan, kelas)) state.soalFilter.model = getModelForFan(state.soalFilter.fan);
+      // Kelas menyaring model: hanya model yang punya fan di kelas terpilih
+      const avail = modelsForKelas(kelas);
+      if (!avail.includes(state.soalFilter.model)) state.soalFilter.model = avail[0] || '';
+      if (!sel) return;
+      if (!avail.length) {
+        sel.innerHTML = '<option value="">— Belum ada fan di kelas ini —</option>';
+        sel.disabled = true;
+        return;
+      }
+      sel.disabled = false;
+      sel.innerHTML = avail.map(k => {
+        const m = FAN_MODELS[k] || {};
+        const n = soalFansFor(k, kelas).length;
+        return `<option value="${escapeHtml(k)}" title="${escapeHtml(m.description || '')}">${escapeHtml(k)} · ${getModelTotal(m)} soal · ${n} fan</option>`;
+      }).join('');
+      sel.value = state.soalFilter.model;
+    }
+
+    function onSoalModelChange(modelKey) {
+      state.soalFilter = state.soalFilter || {};
+      state.soalFilter.model = modelKey;
+      const list = soalFansFor(modelKey, state.soalFilter.kelas);
+      state.soalFilter.fan = list.includes(state.soalFilter.fan) ? state.soalFilter.fan : (list[0] || '');
+      renderDaftarSoalPerFan();
     }
 
     function setSoalFilterKelas(k) {
       state.soalFilter = state.soalFilter || {};
       state.soalFilter.kelas = String(k);
-      
-      document.querySelectorAll('.soal-k-btn').forEach(btn => {
-        btn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer';
-      });
-      const activeBtn = document.getElementById(`btn-soal-k${k}`);
-      if (activeBtn) {
-        activeBtn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-sky-600 text-white border-sky-600 shadow-2xs cursor-pointer';
-      }
-      
-      updateSoalFanDropdown();
+      // Kelas berubah: model & fan disaring ulang. Fan yang sama dipertahankan jika masih ada di kelas ini.
+      const avail = modelsForKelas(state.soalFilter.kelas);
+      if (!avail.includes(state.soalFilter.model)) state.soalFilter.model = avail[0] || '';
+      const list = soalFansFor(state.soalFilter.model, state.soalFilter.kelas);
+      if (!list.includes(state.soalFilter.fan)) state.soalFilter.fan = list[0] || '';
       renderDaftarSoalPerFan();
     }
 
@@ -9402,29 +9511,28 @@
 
     function updateSoalFanDropdown() {
       const select = document.getElementById('select-soal-fan');
-      if (!select || !APP_DATA.fans) return;
-      
-      const allFans = Object.keys(APP_DATA.fans);
-      const currKelas = state.soalFilter ? state.soalFilter.kelas : '1';
-      
-      select.innerHTML = allFans.map(f => {
-        const isSelected = (state.soalFilter && state.soalFilter.fan === f) ? 'selected' : '';
-        const model = getModelForFan(f);
-        return `<option value="${f}" ${isSelected}>${f} (${model})</option>`;
-      }).join('');
-      
-      if (!state.soalFilter.fan || !APP_DATA.fans[state.soalFilter.fan]) {
-        state.soalFilter.fan = allFans.includes('Hadits Nabawy') ? 'Hadits Nabawy' : (allFans[0] || 'Fikih');
-        select.value = state.soalFilter.fan;
-      } else {
-        select.value = state.soalFilter.fan;
+      state.soalFilter = state.soalFilter || {};
+      const list = soalFansFor(state.soalFilter.model, state.soalFilter.kelas);
+      if (!list.includes(state.soalFilter.fan)) state.soalFilter.fan = list[0] || '';
+      if (!select) return;
+      if (!list.length) {
+        select.innerHTML = '<option value="">— Belum ada fan untuk model & kelas ini —</option>';
+        select.disabled = true;
+        return;
       }
+      select.disabled = false;
+      select.innerHTML = list.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
+      select.value = state.soalFilter.fan;
     }
+    Object.assign(window, { onSoalModelChange, setSoalFilterKelas, onSoalFanChange });
 
     function renderDaftarSoalPerFan() {
-      state.soalFilter = state.soalFilter || { kelas: '1', fan: 'Hadits Nabawy' };
+      state.soalFilter = state.soalFilter || { kelas: String(getKelasNumbers()[0] || '1'), fan: '', model: '' };
+      if (!getKelasNumbers().map(String).includes(String(state.soalFilter.kelas))) state.soalFilter.kelas = String(getKelasNumbers()[0] || '1');
+      updateSoalModelDropdown();
+      updateSoalFanDropdown();
       const kelas = state.soalFilter.kelas || '1';
-      const fanName = state.soalFilter.fan || 'Hadits Nabawy';
+      const fanName = state.soalFilter.fan || '';
       
       document.querySelectorAll('.soal-k-btn').forEach(btn => {
         btn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-100 cursor-pointer';
@@ -9434,10 +9542,23 @@
         activeBtn.className = 'soal-k-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold border transition bg-sky-600 text-white border-sky-600 shadow-2xs cursor-pointer';
       }
       
-      updateSoalFanDropdown();
-      const selectFan = document.getElementById('select-soal-fan');
-      if (selectFan) selectFan.value = fanName;
-      
+      if (!fanName) {
+        const mk = state.soalFilter.model || '';
+        const badge = document.getElementById('soal-status-badge');
+        if (badge) { badge.textContent = '—'; badge.className = 'font-bold text-slate-500 font-mono text-xs'; }
+        const banner = document.getElementById('soal-model-banner');
+        if (banner) banner.innerHTML = mk
+          ? `<div class="text-xs text-slate-600">Model <strong>${escapeHtml(mk)}</strong> belum punya fan di <strong>Kelas ${escapeHtml(kelasName(kelas))}</strong>.</div>`
+          : `<div class="text-xs text-slate-600">Belum ada mata pelajaran di <strong>Kelas ${escapeHtml(kelasName(kelas))}</strong>.</div>`;
+        const cont = document.getElementById('soal-cards-container');
+        if (cont) cont.innerHTML = `<div class="p-8 text-center rounded-xl border border-dashed border-slate-300 text-sm text-slate-500">
+            <div class="text-3xl mb-2">📭</div>
+            Tidak ada mata pelajaran${mk ? ` dengan model <strong>${escapeHtml(mk)}</strong>` : ''} di <strong>Kelas ${escapeHtml(kelasName(kelas))}</strong>.<br>
+            <span class="text-xs">Pilih model atau kelas lain, atau atur model tiap fan di <strong>Menu Data → Nama Fan</strong>.</span>
+          </div>`;
+        return;
+      }
+
       const modelKey = getModelForFan(fanName);
       const currModel = (typeof FAN_MODELS !== 'undefined' && FAN_MODELS[modelKey])
         ? FAN_MODELS[modelKey]
