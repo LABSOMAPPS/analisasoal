@@ -3086,6 +3086,7 @@
       run('initRekapFan', () => initRekapFan());
       run('renderSeluruhKelas', () => renderSeluruhKelas());
       run('updateFormKelasDropdown', () => updateFormKelasDropdown());
+      run('updateFormFanDropdown', () => { updateFormFanDropdown(); loadFormData(); });
       run('initAudit', () => initAudit());
       run('initMenuSoal', () => initMenuSoal());
       run('renderMasterData', () => { if (typeof renderMasterData === 'function') renderMasterData(); });
@@ -4088,7 +4089,26 @@
         </div>`;
     }
 
-    function printRekapFanDoc(html, orientation) {
+    // Nama file hasil cetak/unduh PDF = judul halaman saat mencetak.
+    // Format: "Jenis Form - Fan - Kelas - Tahap Tingkat" (karakter terlarang di nama file dibuang)
+    function printFileName(jenis, fan, kelas) {
+      return [jenis, fan, kelas, CTX.tahap + ' ' + CTX.tingkat]
+        .filter(Boolean)
+        .map(x => String(x).replace(/&/g, 'dan').replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim())
+        .join(' - ');
+    }
+    function withPrintTitle(fileName) {
+      const old = document.title;
+      document.title = fileName;
+      const restore = () => { document.title = old; window.removeEventListener('afterprint', restore); };
+      window.addEventListener('afterprint', restore);
+    }
+    function rekapFanKelasFileLabel(snap) {
+      return snap.selectedK === 'all' ? 'Semua Kelas' : 'Kelas ' + kelasName(snap.selectedK);
+    }
+
+    function printRekapFanDoc(html, orientation, fileName) {
+      if (fileName) withPrintTitle(fileName);
       let area = document.getElementById('print-rekapfan-area');
       if (!area) {
         area = document.createElement('div');
@@ -4157,7 +4177,7 @@
           </table>
           ${rekapFanSignature(snap)}
         </div>`;
-      printRekapFanDoc(html, 'landscape');
+      printRekapFanDoc(html, 'landscape', printFileName('Form Daya Serap per Abjad', snap.fanName, rekapFanKelasFileLabel(snap)));
     }
 
     // ---- FORM 2: ANALISA (tabel per tipe soal + 3 butir terendah + tindak lanjut) ----
@@ -4226,13 +4246,13 @@
           ${lines(4)}
           ${rekapFanSignature(snap)}
         </div>`;
-      printRekapFanDoc(html, 'portrait');
+      printRekapFanDoc(html, 'portrait', printFileName('Form Analisis dan Tindak Lanjut', snap.fanName, rekapFanKelasFileLabel(snap)));
     }
     window.cetakFormRekapFanRombel = cetakFormRekapFanRombel;
     window.cetakFormRekapFanAnalisa = cetakFormRekapFanAnalisa;
 
     // ---- FORM 3: DAYA SERAP TERTINGGI & TERENDAH PER ABJAD PARALEL DI SETIAP BUTIR ----
-    const REKAPFAN_GAP_PERHATIAN = 30;   // selisih (poin %) antar abjad yang perlu perhatian
+    const REKAPFAN_BATAS_RERATA = 60;    // butir dengan rerata kelas di bawah batas ini ditandai merah
     function cetakFormRekapFanTertinggiTerendah() {
       const snap = getRekapFanPrintSnapshot();
       if (!snap) return;
@@ -4258,7 +4278,7 @@
         if (abjads.length < 2) return title + `<p>Kelas ${esc(kelasName(k))} hanya memiliki satu abjad (${esc(abjads.join(', '))}); perbandingan antar abjad paralel tidak tersedia.</p>`;
         const tally = {};
         abjads.forEach(r => { tally[r] = { tinggi: 0, rendah: 0 }; });
-        let gapCount = 0;
+        let rendahCount = 0;
         const tables = groups.map(g => {
           let rows = '';
           for (let qi = g.start; qi < g.start + g.count; qi++) {
@@ -4275,18 +4295,18 @@
             const sama = Math.abs(mx - mn) < 1e-9;
             if (!sama) { top.forEach(x => tally[x.r].tinggi++); low.forEach(x => tally[x.r].rendah++); }
             const gap = mx - mn;
-            const perhatian = gap >= REKAPFAN_GAP_PERHATIAN;
-            if (perhatian) gapCount++;
             const rata = vals.reduce((s, x) => s + x.benar, 0) / vals.reduce((s, x) => s + x.n, 0) * 100;
+            const rendah = rata < REKAPFAN_BATAS_RERATA;
+            if (rendah) rendahCount++;
             rows += `
-              <tr${perhatian ? ' class="low"' : ''}>
+              <tr${rendah ? ' class="low"' : ''}>
                 <td class="c">${esc(q.typeNo)}</td>
-                <td class="c">${fmt(rata)}%</td>
+                <td class="c">${rendah ? '<b>' + fmt(rata) + '%</b>' : fmt(rata) + '%'}</td>
                 <td class="c"><b>${sama ? 'Semua sama' : esc(top.map(x => x.r).join(', '))}</b></td>
                 <td class="c">${fmt(mx)}%</td>
                 <td class="c"><b>${sama ? 'Semua sama' : esc(low.map(x => x.r).join(', '))}</b></td>
                 <td class="c">${fmt(mn)}%</td>
-                <td class="c">${perhatian ? '<b>' + fmt(gap) + '</b>' : fmt(gap)}</td>
+                <td class="c">${fmt(gap)}</td>
               </tr>`;
           }
           if (!rows) return '';
@@ -4310,7 +4330,7 @@
             <thead><tr><th>Abjad</th><th>Peserta</th><th>Rerata Daya Serap</th><th>Jumlah Butir Tertinggi</th><th>Jumlah Butir Terendah</th></tr></thead>
             <tbody>${ringkas}</tbody>
           </table>
-          <p style="font-size:9pt">Butir berlatar merah: selisih daya serap antar abjad &ge; ${REKAPFAN_GAP_PERHATIAN} poin (${gapCount} butir) &mdash; perlu penyamaan pembelajaran antar abjad paralel.
+          <p style="font-size:9pt">Butir berlatar merah: rerata kelas di bawah ${REKAPFAN_BATAS_RERATA}% (${rendahCount} butir) &mdash; perlu pembahasan ulang.
           Jika beberapa abjad bernilai sama, semuanya dicantumkan.</p>`;
       }).join('');
 
@@ -4322,7 +4342,7 @@
           <div class="ln"></div><div class="ln"></div><div class="ln"></div>
           ${rekapFanSignature(snap)}
         </div>`;
-      printRekapFanDoc(html, 'portrait');
+      printRekapFanDoc(html, 'portrait', printFileName('Daya Serap Tertinggi dan Terendah per Abjad', snap.fanName, rekapFanKelasFileLabel(snap)));
     }
 
     // Satu tombol Cetak dengan 3 pilihan
@@ -5244,13 +5264,21 @@
       }
     }
 
+    // Daftar fan Form Nilai Per Santri: diisi ulang setiap data dimuat (setelah login / ganti konteks)
+    function updateFormFanDropdown() {
+      const selectFan = document.getElementById('select-form-fan');
+      if (!selectFan) return;
+      const fans = Object.keys(APP_DATA.fans || {});
+      const cur = selectFan.value || state.formData.fan;
+      selectFan.innerHTML = fans.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
+      selectFan.value = fans.includes(cur) ? cur : (fans.includes('Fikih') ? 'Fikih' : (fans[0] || ''));
+    }
+
     function initFormAnalisa() {
       const selectKelas = document.getElementById('select-form-kelas');
       const selectFan = document.getElementById('select-form-fan');
 
-      selectFan.innerHTML = Object.keys(APP_DATA.fans || {}).map(f => `<option value="${f}">${f}</option>`).join('');
-      selectFan.value = 'Fikih';
-
+      updateFormFanDropdown();
       updateFormKelasDropdown();
 
       selectKelas.onchange = loadFormData;
@@ -5259,7 +5287,12 @@
       document.getElementById('btn-form-fill-sample').onclick = () => fillFormWithExcelData(true);
       document.getElementById('btn-form-random').onclick = fillFormWithRandomSimulation;
       document.getElementById('btn-form-reset').onclick = resetFormMatrix;
-      document.getElementById('btn-print-form').onclick = () => window.print();
+      document.getElementById('btn-print-form').onclick = () => {
+        const fan = (document.getElementById('select-form-fan') || {}).value || '';
+        const abjad = (document.getElementById('select-form-kelas') || {}).value || '';
+        withPrintTitle(printFileName('Form Nilai Per Santri', fan, abjad ? 'Kelas ' + abjad : ''));
+        window.print();
+      };
 
       loadFormData();
     }
