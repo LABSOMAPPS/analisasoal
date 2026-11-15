@@ -78,6 +78,7 @@
       body.printing-rekapfan #print-rekapfan-area { display: block !important; }
       .no-print { display: none !important; }
       .print-only { display: block !important; }
+      html, body { background: white !important; }
       body { background: white !important; color: black !important; font-size: 11pt; }
       .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl { box-shadow: none !important; }
       .border { border-color: #000 !important; }
@@ -1734,14 +1735,28 @@
                 <!-- Populated via JS -->
               </select>
             </div>
-            <button id="btn-print-rekap-rombel" type="button" onclick="cetakFormRekapFanRombel()" class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-white flex items-center gap-1.5 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-              <span>Cetak Form Per Abjad</span>
-            </button>
-            <button id="btn-print-rekap-analisa" type="button" onclick="cetakFormRekapFanAnalisa()" class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-white flex items-center gap-1.5 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-              <span>Cetak Form Analisa</span>
-            </button>
+            <div class="relative" id="rekapfan-print-wrap">
+              <button id="btn-print-rekapfan" type="button" onclick="toggleRekapFanPrintMenu(event)" aria-haspopup="true" aria-expanded="false" class="px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white flex items-center gap-1.5 transition cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                <span>Cetak</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div id="rekapfan-print-menu" role="menu" class="hidden absolute left-0 mt-1.5 z-30 w-[19rem] max-w-[calc(100vw-2rem)] bg-white dark:bg-[#0f2634] rounded-xl shadow-xl border border-slate-200 dark:border-[#1a3d52] p-1.5 space-y-1">
+                <div class="px-2.5 pt-1 pb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400">Pilih jenis cetakan</div>
+                <button type="button" role="menuitem" onclick="pilihCetakRekapFan(1)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">1. Form Daya Serap per Abjad</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Jumlah benar tiap abjad di setiap butir (A4 mendatar)</div>
+                </button>
+                <button type="button" role="menuitem" onclick="pilihCetakRekapFan(2)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">2. Form Analisis &amp; Tindak Lanjut</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Daya serap per tipe soal + 3 butir terendah (A4 tegak)</div>
+                </button>
+                <button type="button" role="menuitem" onclick="pilihCetakRekapFan(3)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">3. Daya Serap Tertinggi &amp; Terendah per Abjad</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Abjad paralel tertinggi &amp; terendah di setiap butir (A4 tegak)</div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -2262,7 +2277,7 @@
             <span>⚡ Ujian <span data-ctx="tahapTingkat">IMDA 2 Tsanawiyah</span></span>
             <span class="text-[10px] bg-cyan-200 dark:bg-cyan-800 text-cyan-900 dark:text-cyan-100 px-1.5 py-0.5 rounded">Agenda</span>
           </div>
-          <p class="text-[11px] text-slate-600 dark:text-slate-300" data-ctx-only="default">Ujian IMDA 2 semester gasal Tsanawiyah Sidogiri dijadwalkan pada Kamis, 31 Desember 2026 / 22 Rajab 1448 H.</p>
+          <p class="text-[11px] text-slate-600 dark:text-slate-300" data-ctx-only="default">Ujian IMDA 2 semester gasal Tsanawiyah Sidogiri dijadwalkan pada Kamis, 22 Rajab 1448 H.</p>
           <p class="text-[11px] text-slate-600 dark:text-slate-300 hidden" data-ctx-only="other">Pastikan nilai ujian <strong data-ctx="tahapTingkat"></strong> sudah diinput dan disinkronkan ke Spreadsheet.</p>
         </div>
         <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0e2736] border border-slate-200 dark:border-slate-800 space-y-1">
@@ -2673,14 +2688,14 @@
               <div class="min-w-0">
                 <div class="font-bold text-slate-900 dark:text-white truncate">${escapeHtml(u.nama || u.username)}${self ? ' <span class="text-[10px] font-semibold text-cyan-600">(Anda)</span>' : ''}</div>
                 <div class="font-mono text-[11px] text-slate-500">${escapeHtml(u.username)}</div>
-                <div class="sm:hidden text-[10px] mt-0.5">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.lastLogin ? ' <span class="text-slate-400">· ' + escapeHtml(u.lastLogin) + '</span>' : ''}</div>
+                <div class="sm:hidden text-[10px] mt-0.5">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.lastLogin ? ' <span class="text-slate-400">· ' + escapeHtml(formatHijri(u.lastLogin, { time: true })) + '</span>' : ''}</div>
               </div>
             </div>
           </td>
           <td class="p-3"><span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${info.cls}">${info.label}</span></td>
           <td class="p-3 hidden sm:table-cell">${u.aktif ? '<span class="text-emerald-700 dark:text-emerald-400 font-bold">● Aktif</span>' : '<span class="text-slate-400 font-bold">○ Nonaktif</span>'}${u.mustChange ? '<div class="text-[10px] text-amber-600">wajib ganti password</div>' : ''}</td>
-          <td class="p-3 text-slate-500 font-mono text-[11px] hidden sm:table-cell">${escapeHtml(u.lastLogin || '—')}</td>
-          <td class="p-3 text-slate-500 font-mono text-[11px] hidden md:table-cell">${escapeHtml(u.created || '—')}</td>
+          <td class="p-3 text-slate-500 font-mono text-[11px] hidden sm:table-cell">${escapeHtml(u.lastLogin ? formatHijri(u.lastLogin, { time: true }) : '—')}</td>
+          <td class="p-3 text-slate-500 font-mono text-[11px] hidden md:table-cell">${escapeHtml(u.created ? formatHijri(u.created) : '—')}</td>
           <td class="p-3 text-right whitespace-nowrap">
             <button type="button" onclick="openUserModal('${jsq(u.username)}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 hover:bg-slate-200 dark:bg-[#133042] dark:hover:bg-[#1a3d52] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#244e68] cursor-pointer" title="Ubah" aria-label="Ubah pengguna">✏️<span class="hidden sm:inline"> Ubah</span></button>
             ${self ? '' : `<button type="button" onclick="confirmDeleteUser('${jsq(u.username)}')" class="ml-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900 cursor-pointer" title="Hapus" aria-label="Hapus pengguna">🗑️<span class="hidden sm:inline"> Hapus</span></button>`}
@@ -2773,6 +2788,68 @@
     }
     Object.assign(window, { submitLogin, toggleLoginPassword, logoutUser, openChangePasswordModal, closeChangePasswordModal, submitChangePassword,
       loadUsers, renderUsers, openUserModal, closeUserModal, submitUserModal, confirmDeleteUser, updateRoleHint });
+
+    // ==============================================================================
+    // TANGGAL HIJRIAH: semua tanggal yang tampil memakai kalender Hijriah (Ummul Qura).
+    // Jika browser tidak mendukung kalender Islam, dipakai perhitungan tabular sebagai cadangan.
+    // ==============================================================================
+    const HIJRI_BULAN = ['Muharam', 'Safar', 'Rabiulawal', 'Rabiulakhir', 'Jumadilawal', 'Jumadilakhir', 'Rajab', 'Syakban', 'Ramadan', 'Syawal', 'Zulkaidah', 'Zulhijah'];
+    const HARI_ID = ['Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    function jakartaParts(d) {
+      // tanggal & jam menurut WIB (Asia/Jakarta)
+      const t = new Date(d.getTime() + 7 * 3600000);
+      return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate(), wd: t.getUTCDay(), hh: t.getUTCHours(), mi: t.getUTCMinutes() };
+    }
+    function hijriTabular(y, m, d) {
+      const a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3;
+      const jd = d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+      let l = jd - 1948440 + 10632;
+      const n = Math.floor((l - 1) / 10631);
+      l = l - 10631 * n + 354;
+      const j = Math.floor((10985 - l) / 5316) * Math.floor((50 * l) / 17719) + Math.floor(l / 5670) * Math.floor((43 * l) / 15238);
+      l = l - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
+      const hm = Math.floor((24 * l) / 709);
+      return { d: l - Math.floor((709 * hm) / 24), m: hm, y: 30 * n + j - 30 };
+    }
+    let HIJRI_FMT = null;
+    try {
+      const f = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: 'Asia/Jakarta' });
+      const p = f.formatToParts(new Date(Date.UTC(2026, 11, 31, 5)));   // = 22 Rajab 1448
+      const g = t => Number((p.find(x => x.type === t) || {}).value);
+      if (g('day') === 22 && g('month') === 7 && g('year') === 1448) HIJRI_FMT = f;
+    } catch (e) {}
+    function hijriParts(date) {
+      if (HIJRI_FMT) {
+        const p = HIJRI_FMT.formatToParts(date);
+        const g = t => Number((p.find(x => x.type === t) || {}).value);
+        return { d: g('day'), m: g('month'), y: g('year') };
+      }
+      const j = jakartaParts(date);
+      return hijriTabular(j.y, j.m, j.d);
+    }
+    // Ubah Date / teks "yyyy-MM-dd HH:mm" / ISO menjadi Date (teks tanpa zona dianggap WIB)
+    function toDateObj(v) {
+      if (v instanceof Date) return isNaN(v) ? null : v;
+      const s = String(v || '').trim();
+      if (!s) return null;
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?$/);
+      if (m) return new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4] || '00'}:${m[5] || '00'}:00+07:00`);
+      const d = new Date(s);
+      return isNaN(d) ? null : d;
+    }
+    // formatHijri(new Date()) -> "5 Jumadilakhir 1448 H"; opsi: { weekday: true, time: true }
+    function formatHijri(v, opts) {
+      opts = opts || {};
+      const date = toDateObj(v);
+      if (!date) return String(v || '');
+      const h = hijriParts(date);
+      const j = jakartaParts(date);
+      let out = `${h.d} ${HIJRI_BULAN[h.m - 1] || ''} ${h.y} H`;
+      if (opts.weekday) out = HARI_ID[j.wd] + ', ' + out;
+      if (opts.time && /\d{1,2}:\d{2}|T\d/.test(String(v instanceof Date ? 'T0' : v))) out += ' · ' + String(j.hh).padStart(2, '0') + ':' + String(j.mi).padStart(2, '0');
+      return out;
+    }
+    window.formatHijri = formatHijri;
 
     // Escape string untuk dipakai di dalam onclick="fn('...')"
     function jsq(s) {
@@ -3984,7 +4061,7 @@
       const fanObj = APP_DATA.fans[snap.fanName] || { classes: {} };
       let totalSantri = 0;
       snap.rombelNames.forEach(r => { const c = fanObj.classes[r]; totalSantri += c ? Number(c.n) || 0 : 0; });
-      const tgl = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      const tgl = formatHijri(new Date());
       return {
         totalSantri,
         html: `
@@ -4007,7 +4084,7 @@
       return `
         <div class="sig">
           <div>Mengetahui,<br>Kepala Madrasah / Bagian Kurikulum<div class="sp"></div>( ______________________ )</div>
-          <div>Sidogiri, ____ / ____ / ________<br>Pengajar Fan ${escapeHtml(snap.fanName)}<div class="sp"></div>( ______________________ )</div>
+          <div>Sidogiri, ____ ________________ 14____ H.<br>Pengajar Fan ${escapeHtml(snap.fanName)}<div class="sp"></div>( ______________________ )</div>
         </div>`;
     }
 
@@ -4153,6 +4230,128 @@
     }
     window.cetakFormRekapFanRombel = cetakFormRekapFanRombel;
     window.cetakFormRekapFanAnalisa = cetakFormRekapFanAnalisa;
+
+    // ---- FORM 3: DAYA SERAP TERTINGGI & TERENDAH PER ABJAD PARALEL DI SETIAP BUTIR ----
+    const REKAPFAN_GAP_PERHATIAN = 30;   // selisih (poin %) antar abjad yang perlu perhatian
+    function cetakFormRekapFanTertinggiTerendah() {
+      const snap = getRekapFanPrintSnapshot();
+      if (!snap) return;
+      const esc = escapeHtml;
+      const fanObj = APP_DATA.fans[snap.fanName] || { classes: {} };
+      const groups = rekapFanTypeGroups(snap);
+      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP TERTINGGI &amp; TERENDAH PER ABJAD PARALEL ' + escapeHtml(CTX.tahap.toUpperCase()));
+      const fmt = v => (Math.round(v * 10) / 10).toLocaleString('id-ID');
+
+      // Abjad paralel dibandingkan dalam kelas yang sama
+      const perKelas = {};
+      snap.rombelNames.forEach(r => {
+        const c = fanObj.classes[r];
+        if (!c || !(Number(c.n) > 0)) return;
+        const k = getGradeFromRombel(r);
+        (perKelas[k] = perKelas[k] || []).push(r);
+      });
+      const kelasKeys = Object.keys(perKelas).map(Number).sort((a, b) => a - b);
+
+      const sections = kelasKeys.map(k => {
+        const abjads = perKelas[k].slice().sort(compareAbjad);
+        const title = kelasKeys.length > 1 ? `<h2>Kelas ${esc(kelasName(k))} &bull; ${abjads.length} abjad paralel (${esc(abjads.join(', '))})</h2>` : '';
+        if (abjads.length < 2) return title + `<p>Kelas ${esc(kelasName(k))} hanya memiliki satu abjad (${esc(abjads.join(', '))}); perbandingan antar abjad paralel tidak tersedia.</p>`;
+        const tally = {};
+        abjads.forEach(r => { tally[r] = { tinggi: 0, rendah: 0 }; });
+        let gapCount = 0;
+        const tables = groups.map(g => {
+          let rows = '';
+          for (let qi = g.start; qi < g.start + g.count; qi++) {
+            const q = snap.qStats[qi];
+            if (!q) continue;
+            const vals = abjads.map(r => {
+              const c = fanObj.classes[r];
+              const sc = (c.scores && qi < c.scores.length) ? c.scores[qi] : null;
+              return (sc === null || sc === undefined || sc === '') ? null : { r, v: (Number(sc) / Number(c.n)) * 100, benar: Number(sc), n: Number(c.n) };
+            }).filter(Boolean);
+            if (vals.length < 2) continue;
+            const mx = Math.max.apply(null, vals.map(x => x.v)), mn = Math.min.apply(null, vals.map(x => x.v));
+            const top = vals.filter(x => Math.abs(x.v - mx) < 1e-9), low = vals.filter(x => Math.abs(x.v - mn) < 1e-9);
+            const sama = Math.abs(mx - mn) < 1e-9;
+            if (!sama) { top.forEach(x => tally[x.r].tinggi++); low.forEach(x => tally[x.r].rendah++); }
+            const gap = mx - mn;
+            const perhatian = gap >= REKAPFAN_GAP_PERHATIAN;
+            if (perhatian) gapCount++;
+            const rata = vals.reduce((s, x) => s + x.benar, 0) / vals.reduce((s, x) => s + x.n, 0) * 100;
+            rows += `
+              <tr${perhatian ? ' class="low"' : ''}>
+                <td class="c">${esc(q.typeNo)}</td>
+                <td class="c">${fmt(rata)}%</td>
+                <td class="c"><b>${sama ? 'Semua sama' : esc(top.map(x => x.r).join(', '))}</b></td>
+                <td class="c">${fmt(mx)}%</td>
+                <td class="c"><b>${sama ? 'Semua sama' : esc(low.map(x => x.r).join(', '))}</b></td>
+                <td class="c">${fmt(mn)}%</td>
+                <td class="c">${perhatian ? '<b>' + fmt(gap) + '</b>' : fmt(gap)}</td>
+              </tr>`;
+          }
+          if (!rows) return '';
+          return `
+            <div class="tipe">Tipe Soal: ${esc(g.name)} (${g.count} butir)</div>
+            <table>
+              <thead>
+                <tr><th rowspan="2" style="width:9%">No.</th><th rowspan="2" style="width:13%">Rerata Kelas</th><th colspan="2">Tertinggi</th><th colspan="2">Terendah</th><th rowspan="2" style="width:11%">Selisih (poin)</th></tr>
+                <tr><th style="width:18%">Abjad</th><th style="width:11%">Daya Serap</th><th style="width:18%">Abjad</th><th style="width:11%">Daya Serap</th></tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>`;
+        }).join('');
+        const ringkas = abjads.map(r => {
+          const c = fanObj.classes[r];
+          return `<tr><td class="c"><b>${esc(r)}</b></td><td class="c">${c.n}</td><td class="c">${fmt(Number(c.pct) || 0)}%</td><td class="c">${tally[r].tinggi}</td><td class="c">${tally[r].rendah}</td></tr>`;
+        }).join('');
+        return title + tables + `
+          <div class="tipe">Ringkasan per Abjad${kelasKeys.length > 1 ? ' &bull; Kelas ' + esc(kelasName(k)) : ''}</div>
+          <table>
+            <thead><tr><th>Abjad</th><th>Peserta</th><th>Rerata Daya Serap</th><th>Jumlah Butir Tertinggi</th><th>Jumlah Butir Terendah</th></tr></thead>
+            <tbody>${ringkas}</tbody>
+          </table>
+          <p style="font-size:9pt">Butir berlatar merah: selisih daya serap antar abjad &ge; ${REKAPFAN_GAP_PERHATIAN} poin (${gapCount} butir) &mdash; perlu penyamaan pembelajaran antar abjad paralel.
+          Jika beberapa abjad bernilai sama, semuanya dicantumkan.</p>`;
+      }).join('');
+
+      const html = REKAPFAN_PRINT_CSS + `
+        <div class="prf">
+          ${head.html}
+          ${sections || '<p>Tidak ada data abjad untuk dibandingkan.</p>'}
+          <h2>Catatan / Tindak Lanjut</h2>
+          <div class="ln"></div><div class="ln"></div><div class="ln"></div>
+          ${rekapFanSignature(snap)}
+        </div>`;
+      printRekapFanDoc(html, 'portrait');
+    }
+
+    // Satu tombol Cetak dengan 3 pilihan
+    function toggleRekapFanPrintMenu(ev) {
+      if (ev) ev.stopPropagation();
+      const menu = document.getElementById('rekapfan-print-menu');
+      const btn = document.getElementById('btn-print-rekapfan');
+      if (!menu) return;
+      const open = menu.classList.contains('hidden');
+      menu.classList.toggle('hidden', !open);
+      if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    function closeRekapFanPrintMenu() {
+      const menu = document.getElementById('rekapfan-print-menu');
+      if (menu) menu.classList.add('hidden');
+      const btn = document.getElementById('btn-print-rekapfan');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('click', e => { if (!e.target.closest || !e.target.closest('#rekapfan-print-wrap')) closeRekapFanPrintMenu(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRekapFanPrintMenu(); });
+    function pilihCetakRekapFan(n) {
+      closeRekapFanPrintMenu();
+      if (n === 1) cetakFormRekapFanRombel();
+      else if (n === 2) cetakFormRekapFanAnalisa();
+      else cetakFormRekapFanTertinggiTerendah();
+    }
+    window.cetakFormRekapFanTertinggiTerendah = cetakFormRekapFanTertinggiTerendah;
+    window.toggleRekapFanPrintMenu = toggleRekapFanPrintMenu;
+    window.pilihCetakRekapFan = pilihCetakRekapFan;
 
     // ==========================================
     // REKAP KLASIFIKASI KESUKARAN (jumlah & persen butir per kategori) untuk Fan + Kelas yang dipilih
