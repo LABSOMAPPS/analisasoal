@@ -2862,7 +2862,8 @@
     // ==========================================
     const TINGKAT_LIST = ['Idadiyah Reguler', 'Idadiyah Program Khusus', 'Ibtidaiyah', 'Tsanawiyah', 'Aliyah'];
     // Kelas pada tiap tingkat (tetap). Kode abjad selalu "<no kelas>-<huruf>", mis. 5-A.
-    // Idadiyah Program Khusus memakai kelas bernama: no 1 = Fikih, 2 = Hadits, 3 = Adab (rombel 1-A = Fikih A).
+    // Idadiyah Program Khusus memakai kelas bernama: no 1 = Fikih, 2 = Adab, 3 = Hadits.
+    // Abjad boleh ditulis "1-A" atau langsung nama kelasnya (FIKIH / ADAB / HADITS).
     const KELAS_DEF = {
       'Idadiyah Reguler': [5, 6, 7],
       'Idadiyah Program Khusus': [1, 2, 3],
@@ -2870,7 +2871,7 @@
       'Tsanawiyah': [1, 2, 3],
       'Aliyah': [1, 2, 3]
     };
-    const KELAS_LABELS = { 'Idadiyah Program Khusus': { 1: 'Fikih', 2: 'Hadits', 3: 'Adab' } };
+    const KELAS_LABELS = { 'Idadiyah Program Khusus': { 1: 'Fikih', 2: 'Adab', 3: 'Hadits' } };
     function getKelasNumbers(t) { return (KELAS_DEF[t || CTX.tingkat] || [1, 2, 3]).slice(); }
     function kelasName(no, t) { const l = (KELAS_LABELS[t || CTX.tingkat] || {})[Number(no)]; return l ? l : String(no); }
     const TAHAP_LIST = ['Semester Ganjil', 'Semester Genap', 'Imda 1', 'Imda 2', 'Imda 3', 'Imni'];
@@ -3252,6 +3253,7 @@
         const c = JSON.parse(localStorage.getItem(masterCacheKey()) || 'null');
         if (c && Array.isArray(c.fans)) MASTER_FANS = c.fans;
         if (c && Array.isArray(c.rombels)) MASTER_ROMBELS = c.rombels;
+        fixMasterRombelKelas();
       } catch (e) {}
       try { loadScopedModels(); } catch (e) {}   // saat halaman baru dimuat, FAN_MODELS belum siap: dimuat di bawah
       masterReady = false;
@@ -3351,6 +3353,7 @@
         }
         MASTER_FANS = m.fans || [];
         MASTER_ROMBELS = m.rombels || [];
+        fixMasterRombelKelas();
         applyServerModels(m.models);
         persistMasterLocal();
         markMasterDirty(false);
@@ -3447,6 +3450,8 @@
     
     // Urutan abjad: per kelas, lalu A..Z, lalu AA, AB, ... (huruf dobel setelah huruf tunggal)
     function compareAbjad(a, b) {
+      const ga = getGradeFromRombel(a), gb = getGradeFromRombel(b);
+      if (ga !== gb) return ga - gb;
       const pa = String(a).match(/^(\d+)-?([A-Za-z]*)(.*)$/), pb = String(b).match(/^(\d+)-?([A-Za-z]*)(.*)$/);
       if (!pa || !pb) return String(a).localeCompare(String(b));
       return (parseInt(pa[1], 10) - parseInt(pb[1], 10)) || (pa[2].length - pb[2].length) ||
@@ -3462,12 +3467,41 @@
       return s;
     }
 
-    function getGradeFromRombel(rombelStr) {
-      if (!rombelStr) return 1;
-      const s = String(rombelStr).trim();
+    // Kelas dari kode abjad SAJA (tanpa data lain): "1-A" -> 1; "FIKIH"/"Fikih B" -> kelas bernama Fikih; selain itu 0
+    function gradeFromAbjadCode(code) {
+      const s = String(code || '').trim();
       const m = s.match(/([1-9])/);
       if (m) return parseInt(m[1], 10);
-      return parseInt(s.replace(/[^0-9]/g, ''), 10) || 1;
+      const ck = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const labels = KELAS_LABELS[CTX.tingkat] || {};
+      for (const no in labels) {
+        const lk = String(labels[no]).toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (lk && (ck === lk || ck.startsWith(lk))) return Number(no);
+      }
+      return 0;
+    }
+    function getGradeFromRombel(rombelStr) {
+      if (!rombelStr) return getKelasNumbers()[0] || 1;
+      const g = gradeFromAbjadCode(rombelStr);
+      if (g) return g;
+      // abjad bernama lain: ikuti pengaturan server / Menu Data
+      const sk = APP_DATA && APP_DATA.rombel_kelas && APP_DATA.rombel_kelas[rombelStr];
+      if (sk) return Number(sk);
+      const mr = (typeof MASTER_ROMBELS !== 'undefined' ? MASTER_ROMBELS : []).find(r => r.rombel === rombelStr);
+      if (mr && Number(mr.kelas)) return Number(mr.kelas);
+      return getKelasNumbers()[0] || 1;
+    }
+    // Abjad master: kelas dari kode lebih diutamakan (memperbaiki data lama yang semua tercatat kelas 1)
+    function fixMasterRombelKelas() {
+      try {
+        (MASTER_ROMBELS || []).forEach(r => { const g = gradeFromAbjadCode(r.rombel); if (g) r.kelas = g; });
+      } catch (e) {}
+    }
+    // Jumlah kolom soal = nomor soal terakhir yang berisi data (cadangan 28)
+    function lastFilledQ(scoresList) {
+      let m = 0;
+      (scoresList || []).forEach(sc => (sc || []).forEach((v, i) => { if (v !== null && v !== undefined && v !== '') m = Math.max(m, i + 1); }));
+      return m;
     }
 
     function getDifficultyBadge(kategori) {
@@ -3863,7 +3897,9 @@
             <th class="p-2.5 min-w-[170px] border-r border-slate-200 dark:border-[#1a3d52]">Mata Pelajaran (Fan)</th>
             <th class="p-2.5 text-center w-16 border-r border-slate-200 dark:border-[#1a3d52]">Peserta</th>
       `;
-      for (let i = 1; i <= 28; i++) {
+      // jumlah kolom = nomor soal terakhir yang terisi di kelas ini (mengikuti jumlah kolom soal di sheet)
+      const QN = lastFilledQ(fans.flatMap(f => Object.entries(f.classes || {}).filter(([r]) => getGradeFromRombel(r) === kelas).map(([, c]) => c.scores))) || 28;
+      for (let i = 1; i <= QN; i++) {
         thead += `<th class="p-1.5 text-center w-11 border-r border-slate-200 dark:border-[#1a3d52]">${i}</th>`;
       }
       thead += `<th class="p-2.5 text-center w-16">Rerata</th></tr></thead>`;
@@ -3876,7 +3912,7 @@
         let sumMaxTotal = 0;
 
         const qStats = [];
-        for (let q = 0; q < 28; q++) {
+        for (let q = 0; q < QN; q++) {
           let bSum = 0;
           let pSum = 0;
           rombelEntries.forEach(([r, c]) => {
@@ -3913,7 +3949,7 @@
                   </div></td>`;
         tbody += `<td class="p-2 text-center text-slate-600 border-r border-slate-200 dark:border-[#1a3d52] font-mono">${totalSantriKelas || 255}</td>`;
 
-        for (let q = 0; q < 28; q++) {
+        for (let q = 0; q < QN; q++) {
           const qData = qStats[q];
           let cellContent = '';
           if (qData.peserta === 0) {
@@ -5321,8 +5357,19 @@
       document.getElementById('form-info-fan').textContent = `FAN : ${fan.toUpperCase()}`;
       document.getElementById('form-info-total').textContent = `JUMLAH SANTRI : ${n}`;
 
-      state.formData.matrix = Array.from({ length: n }, () => Array(28).fill(1));
+      state.formData.matrix = Array.from({ length: n }, () => Array(formQCount()).fill(1));
       fillFormWithExcelData(false);
+    }
+
+    // Jumlah kolom soal Form Nilai: data fan ini atau jumlah soal modelnya (yang terbesar)
+    function formQCount() {
+      const fan = state.formData.fan;
+      const fo = APP_DATA.fans && APP_DATA.fans[fan];
+      const fromData = lastFilledQ(Object.values((fo && fo.classes) || {}).map(c => c.scores));
+      let fromModel = 0;
+      try { fromModel = getModelTotal(FAN_MODELS[getModelForFan(fan)]) || 0; } catch (e) {}
+      if (APP_DATA.max_q) fromModel = Math.min(fromModel, APP_DATA.max_q);
+      return Math.max(fromData, fromModel) || 28;
     }
 
     function fillFormWithExcelData(notify = true) {
@@ -5333,7 +5380,8 @@
       if (fanObj && fanObj.classes[kelas]) {
         const c = fanObj.classes[kelas];
         const n = c.n;
-        const qScores = c.scores;
+        const qScores = (c.scores || []).slice(0, formQCount());
+        while (qScores.length < formQCount()) qScores.push(null);
 
         state.formData.matrix = Array.from({ length: n }, (_, sIdx) => {
           return qScores.map(count => {
@@ -5351,7 +5399,7 @@
     function fillFormWithRandomSimulation() {
       const n = state.formData.santriCount;
       state.formData.matrix = Array.from({ length: n }, () => {
-        return Array.from({ length: 28 }, () => Math.random() > 0.3 ? 1 : 0);
+        return Array.from({ length: formQCount() }, () => Math.random() > 0.3 ? 1 : 0);
       });
       showToast('Simulasi nilai santri acak dibuat', 'info');
       renderFormMatrix();
@@ -5359,7 +5407,7 @@
 
     function resetFormMatrix() {
       const n = state.formData.santriCount;
-      state.formData.matrix = Array.from({ length: n }, () => Array(28).fill(0));
+      state.formData.matrix = Array.from({ length: n }, () => Array(formQCount()).fill(0));
       showToast('Matriks nilai direset ke 0', 'info');
       renderFormMatrix();
     }
@@ -5374,10 +5422,11 @@
       const matrix = state.formData.matrix;
       const table = document.getElementById('table-form-matrix');
 
-      const totalBenar = Array(28).fill(0);
+      const QN = formQCount();
+      const totalBenar = Array(QN).fill(0);
       matrix.forEach(row => {
         row.forEach((val, q) => {
-          if (val === 1) totalBenar[q]++;
+          if (q < QN && val === 1) totalBenar[q]++;
         });
       });
       const totalSalah = totalBenar.map(b => n - b);
@@ -5413,7 +5462,7 @@
             <th class="p-2 min-w-[150px] border-r border-slate-300">Nama Santri</th>
             <th class="p-2 text-center w-10 border-r border-slate-300">Abs</th>
       `;
-      for (let i = 1; i <= 28; i++) thead += `<th class="p-1 text-center w-8 border-r border-slate-300">${i}</th>`;
+      for (let i = 1; i <= QN; i++) thead += `<th class="p-1 text-center w-8 border-r border-slate-300">${i}</th>`;
       thead += `<th class="p-2 text-center w-12">Skor</th></tr></thead><tbody class="divide-y divide-slate-200 dark:divide-[#1a3d52]">`;
 
       let tbody = '';
@@ -5425,7 +5474,7 @@
           <td class="p-1.5 font-bold text-slate-900 border-r border-slate-300">Santri #${sIdx + 1}</td>
           <td class="p-1.5 text-center font-mono text-slate-600 border-r border-slate-300">${sIdx + 1}</td>`;
 
-        for (let q = 0; q < 28; q++) {
+        for (let q = 0; q < QN; q++) {
           const val = row[q];
           const colorClass = val === 1 ? 'text-sky-700 bg-sky-50/70 font-bold' : 'text-slate-300 font-normal';
           tbody += `<td class="p-1 text-center border-r border-slate-300 font-mono text-xs cursor-pointer select-none ${colorClass}" onclick="toggleCell(${sIdx}, ${q})">${val}</td>`;
@@ -5436,12 +5485,12 @@
       let tfoot = `<tfoot class="border-t-2 border-slate-400 bg-slate-50 font-bold text-xs sticky bottom-0 z-10 shadow-xs">
         <tr class="border-b border-slate-300 bg-sky-50/70">
           <td colspan="3" class="p-2 text-right uppercase tracking-wider text-sky-950 font-extrabold border-r border-slate-300">TOTAL BENAR</td>`;
-      for (let q = 0; q < 28; q++) tfoot += `<td class="p-1 text-center font-mono font-extrabold text-sky-800 border-r border-slate-300">${totalBenar[q]}</td>`;
+      for (let q = 0; q < QN; q++) tfoot += `<td class="p-1 text-center font-mono font-extrabold text-sky-800 border-r border-slate-300">${totalBenar[q]}</td>`;
       tfoot += `<td class="p-2 text-center text-sky-900">${totalBenar.reduce((a,b)=>a+b,0)}</td></tr>
         <tr class="border-b border-slate-300 bg-slate-100">
           <td colspan="3" class="p-2 text-right uppercase tracking-wider text-slate-800 font-extrabold border-r border-slate-300">PERSENTASE (%)</td>`;
-      for (let q = 0; q < 28; q++) tfoot += `<td class="p-1 text-center font-mono text-[11px] font-black border-r border-slate-300 ${getPctColor(persentase[q])}">${persentase[q]}%</td>`;
-      const overallAvg = (persentase.reduce((a, b) => a + b, 0) / 28).toFixed(1);
+      for (let q = 0; q < QN; q++) tfoot += `<td class="p-1 text-center font-mono text-[11px] font-black border-r border-slate-300 ${getPctColor(persentase[q])}">${persentase[q]}%</td>`;
+      const overallAvg = (persentase.reduce((a, b) => a + b, 0) / QN).toFixed(1);
       tfoot += `<td class="p-2 text-center font-black text-sky-800 bg-sky-100">${overallAvg}%</td></tr></tfoot>`;
 
       table.innerHTML = thead + tbody + tfoot;
@@ -6656,7 +6705,8 @@
         .map(r => r.rombel)
         .sort(compareAbjad);
       // abjad yang baru ditambah lewat "+ Baru" (belum ada di Menu Data) tetap ikut tampil
-      if (inputState.rombel && getGradeFromRombel(inputState.rombel) === k && !rombelNames.includes(inputState.rombel)) rombelNames.push(inputState.rombel);
+      if (inputState.rombel && inputState.newRombelCtx === CTX.tingkat + '|' + CTX.tahap &&
+          getGradeFromRombel(inputState.rombel) === k && !rombelNames.includes(inputState.rombel)) rombelNames.push(inputState.rombel);
       if (!rombelNames.length) {
         inputState.rombel = '';
         select.innerHTML = '<option value="">— Belum ada abjad —</option>';
@@ -6898,6 +6948,7 @@
           val = normalizeRombel(val);
           if (!/^[1-9]-[A-Z]{1,3}$/.test(val)) { showToast('Format abjad tidak dikenali. Contoh: B atau AA.', 'error'); return; }
           inputState.rombel = val;
+          inputState.newRombelCtx = CTX.tingkat + '|' + CTX.tahap;   // hanya berlaku di tingkat & tahap ini
           inputState.kelas = String(getGradeFromRombel(val));
           refreshInputCascade();
           inputNewRombel.value = '';
