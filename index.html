@@ -477,6 +477,44 @@
     .dark .tab-content .overflow-x-auto > table thead tr:first-child > th:nth-child(2):not([colspan]) { background-color: #18405a !important; }
     .dark .tab-content .overflow-x-auto > table tbody tr:not(:has(> td[colspan])) > td:nth-child(2) { background-color: #0f2a3b !important; box-shadow: 1px 0 0 #2a5873 !important; }
     .dark .tab-content > div, .dark .tab-content > section { box-shadow: 0 1px 0 rgba(255,255,255,.03), 0 4px 14px rgba(0,0,0,.25); }
+    /* ===== Rekap Fan: ukuran teks (--rf-fs) & ukuran tampilan (--rf-zoom) ===== */
+    #rekapfan-zoom-area { --rf-fs: 1; font-size: calc(1rem * var(--rf-fs)); }
+    /* zoom untuk semua isi KECUALI kanvas grafik (kanvas diatur lewat tinggi & ukuran huruf agar tetap muat di layar) */
+    #rekapfan-zoom-area > *:not(#rf-chart-box), #rf-chart-box > *:not(.rf-chart-canvas) { zoom: var(--rf-zoom, 1); }
+    #rf-chart-box .rf-chart-canvas { height: calc(18rem * var(--rf-zoom, 1)); max-width: 100%; }
+    #rf-chart-box .rf-chart-canvas canvas { max-width: 100% !important; }
+    /* HP: rapatkan bingkai berlapis agar naskah soal yang diperbesar tetap lebar */
+    @media (max-width: 640px) {
+      #fan-lowest-analysis-card { padding: .6rem !important; }
+      #fan-lowest-analysis-card .p-4 { padding: .55rem; }
+      #fan-lowest-analysis-card .p-3 { padding: .45rem; }
+      #rekapfan-zoom-area .narasi-arab { padding: .35rem .45rem; }
+    }
+    /* ukuran tulisan naskah soal (--rf-soal) */
+    #rekapfan-zoom-area .narasi-arab { font-size: calc(1.6rem * var(--rf-fs) * var(--rf-soal, 1)); line-height: 2.1; }
+    #rekapfan-zoom-area .kunci-arab { font-size: calc(1.45rem * var(--rf-fs) * var(--rf-soal, 1)); line-height: 2; }
+    #modal-quick-naskah textarea.naskah-input-arab { font-size: max(16px, calc(1.4rem * var(--rf-soal, 1))) !important; }
+    #modal-quick-naskah textarea.naskah-input-arab-sm { font-size: max(16px, calc(1.1rem * var(--rf-soal, 1))) !important; }
+    #rekapfan-zoom-area .text-xs { font-size: calc(.75rem * var(--rf-fs)); line-height: calc(1rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-sm { font-size: calc(.875rem * var(--rf-fs)); line-height: calc(1.25rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-base { font-size: calc(1rem * var(--rf-fs)); line-height: calc(1.5rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-lg { font-size: calc(1.125rem * var(--rf-fs)); line-height: calc(1.75rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-xl { font-size: calc(1.25rem * var(--rf-fs)); line-height: calc(1.75rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-2xl { font-size: calc(1.5rem * var(--rf-fs)); line-height: calc(2rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-3xl { font-size: calc(1.875rem * var(--rf-fs)); line-height: calc(2.25rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-4xl { font-size: calc(2.25rem * var(--rf-fs)); line-height: calc(2.5rem * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[8\.5px\] { font-size: calc(8.5px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[9px\] { font-size: calc(9px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[9\.5px\] { font-size: calc(9.5px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[10px\] { font-size: calc(10px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[10\.5px\] { font-size: calc(10.5px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[11px\] { font-size: calc(11px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[12px\] { font-size: calc(12px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[13px\] { font-size: calc(13px * var(--rf-fs)); }
+    #rekapfan-zoom-area .text-\[15px\] { font-size: calc(15px * var(--rf-fs)); }
+    #rekapfan-zoom-area table { font-size: calc(.75rem * var(--rf-fs)); }
+    .rf-zbtn { min-width: 2rem; height: 2rem; padding: 0 .45rem; font-weight: 800; border-radius: .5rem; cursor: pointer; }
+    .rf-zbtn:disabled { opacity: .35; cursor: not-allowed; }
     /* ===== NAVIGASI BAWAH (HP) ===== */
     #mobile-bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
     .bnav-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; padding: 0 2px 8px;
@@ -544,7 +582,7 @@
           <button id="login-conn-link" type="button" onclick="openApiConfigModal()" class="font-bold text-cyan-700 dark:text-cyan-400 hover:underline cursor-pointer">🌐 Pengaturan Koneksi</button>
         </div>
       </form>
-      <p class="text-center text-[10px] text-cyan-100/60 mt-4">Pondok Pesantren Sidogiri &bull; v2.6</p>
+      <p class="text-center text-[10px] text-cyan-100/60 mt-4">Pondok Pesantren Sidogiri &bull; v2.7</p>
     </div>
   </div>
 
@@ -759,13 +797,16 @@
           <div class="font-extrabold text-slate-700 dark:text-slate-200 text-xs">SI-<span data-ctx="tahapUpper">IMDA 2</span> &bull; <span data-ctx="tingkat">Tsanawiyah</span></div>
           <div class="text-[10px] text-slate-400 dark:text-slate-500">Pondok Pesantren Sidogiri</div>
         </div>
-        <span class="px-2 py-0.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/70 text-cyan-700 dark:text-cyan-400 text-[10px] border border-cyan-200 dark:border-cyan-800/60 font-mono font-bold">v2.5</span>
+        <span class="px-2 py-0.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/70 text-cyan-700 dark:text-cyan-400 text-[10px] border border-cyan-200 dark:border-cyan-800/60 font-mono font-bold">v2.7</span>
       </div>
 
     </aside>
 
     <!-- MAIN VIEW CONTAINER -->
     <main id="main-content-container" class="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 transition-all duration-300">
+      <div id="version-mismatch-banner" class="hidden no-print rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 px-4 py-2.5 text-xs flex items-center gap-2">
+        <span>⚠️</span><span></span>
+      </div>
       <div id="readonly-banner" class="hidden no-print rounded-xl border border-sky-200 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/40 text-sky-900 dark:text-sky-200 px-4 py-2.5 text-xs flex items-center gap-2">
         <span>👁️</span><span><strong>Mode Lihat Saja.</strong> Akun Guru dapat melihat seluruh analisis, tetapi tidak dapat menambah atau mengubah data.</span>
       </div>
@@ -1730,6 +1771,12 @@
               </select>
             </div>
             <div class="flex items-center gap-1.5">
+              <label for="select-rekap-abjad-filter" class="text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Pilih Abjad:</label>
+              <select id="select-rekap-abjad-filter" class="bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg focus:ring-sky-500 focus:border-sky-500 block p-2 font-semibold">
+                <option value="all">Semua Abjad</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
               <label for="select-fan-komparasi" class="text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap">Pilih Fan:</label>
               <select id="select-fan-komparasi" class="bg-slate-50 dark:bg-[#133042] border border-slate-300 dark:border-[#244e68] dark:text-white text-slate-800 text-xs rounded-lg focus:ring-sky-500 focus:border-sky-500 block p-2 font-semibold">
                 <!-- Populated via JS -->
@@ -1749,23 +1796,54 @@
                 </button>
                 <button type="button" role="menuitem" onclick="pilihCetakRekapFan(2)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
                   <div class="text-xs font-bold text-slate-800 dark:text-white">2. Form Analisis &amp; Tindak Lanjut</div>
-                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Daya serap per tipe soal + 3 butir terendah (A4 tegak)</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Rekap klasifikasi, analisis 3 butir terendah, catatan umum / kesimpulan (A4 tegak)</div>
                 </button>
                 <button type="button" role="menuitem" onclick="pilihCetakRekapFan(3)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
-                  <div class="text-xs font-bold text-slate-800 dark:text-white">3. Daya Serap Tertinggi &amp; Terendah per Abjad</div>
-                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Abjad paralel tertinggi &amp; terendah di setiap butir (A4 tegak)</div>
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">3. Form Daya Serap per Butir Soal</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Benar, salah, daya serap &amp; kategori tiap butir per tipe soal (A4 tegak)</div>
+                </button>
+                <button type="button" role="menuitem" id="rekapfan-print-opt4" onclick="pilihCetakRekapFan(4)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">4. Daya Serap Tertinggi &amp; Terendah per Abjad</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Abjad paralel tertinggi &amp; terendah di setiap butir (A4 tegak) &bull; perlu lebih dari satu abjad</div>
+                </button>
+              </div>
+            </div>
+            <!-- Ukuran teks & ukuran tampilan -->
+            <div class="flex flex-wrap items-center gap-2" id="rekapfan-zoom-controls">
+              <div class="flex items-center gap-0.5 p-0.5 rounded-lg bg-amber-50 dark:bg-[#2a2410] border border-amber-200 dark:border-amber-800/60" role="group" aria-label="Ukuran tulisan soal">
+                <span class="px-1.5 text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wide">Soal</span>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', -1)" data-rf="soal-minus" title="Perkecil tulisan soal" aria-label="Perkecil tulisan soal"><span class="text-[11px]">ع</span>−</button>
+                <button type="button" class="rf-zbtn text-[11px] font-mono text-amber-800 dark:text-amber-300 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', 0)" data-rf="soal-val" title="Kembalikan ukuran tulisan soal ke 100%">100%</button>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', 1)" data-rf="soal-plus" title="Perbesar tulisan soal" aria-label="Perbesar tulisan soal"><span class="text-[15px]">ع</span>+</button>
+              </div>
+              <div class="flex items-center gap-0.5 p-0.5 rounded-lg bg-slate-100 dark:bg-[#133042] border border-slate-200 dark:border-[#244e68]" role="group" aria-label="Ukuran teks">
+                <span class="px-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide hidden lg:inline">Teks</span>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('fs', -1)" id="rf-fs-minus" title="Perkecil teks" aria-label="Perkecil teks"><span class="text-[11px]">A</span>−</button>
+                <button type="button" class="rf-zbtn text-[11px] font-mono text-sky-700 dark:text-cyan-300 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('fs', 0)" id="rf-fs-val" title="Kembalikan ukuran teks ke 100%">100%</button>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('fs', 1)" id="rf-fs-plus" title="Perbesar teks" aria-label="Perbesar teks"><span class="text-[15px]">A</span>+</button>
+              </div>
+              <div class="flex items-center gap-0.5 p-0.5 rounded-lg bg-slate-100 dark:bg-[#133042] border border-slate-200 dark:border-[#244e68]" role="group" aria-label="Ukuran tampilan">
+                <span class="px-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide hidden lg:inline">Tampilan</span>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('zoom', -1)" id="rf-zoom-minus" title="Perkecil tampilan" aria-label="Perkecil tampilan">
+                  <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM7 10h6"></path></svg>
+                </button>
+                <button type="button" class="rf-zbtn text-[11px] font-mono text-sky-700 dark:text-cyan-300 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('zoom', 0)" id="rf-zoom-val" title="Kembalikan ukuran tampilan ke 100%">100%</button>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('zoom', 1)" id="rf-zoom-plus" title="Perbesar tampilan" aria-label="Perbesar tampilan">
+                  <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Area yang ikut diperbesar / diperkecil -->
+        <div id="rekapfan-zoom-area" class="space-y-4">
         <!-- Fan Chart -->
-        <div class="bg-slate-50 dark:bg-[#133042] p-4 rounded-xl border border-slate-200 dark:border-[#1a3d52]">
+        <div id="rf-chart-box" class="bg-slate-50 dark:bg-[#133042] p-4 rounded-xl border border-slate-200 dark:border-[#1a3d52] min-w-0">
           <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2" id="fan-comp-chart-title">
             Grafik Persentase Daya Serap Soal
           </h3>
-          <div class="relative h-72">
+          <div class="relative h-72 rf-chart-canvas">
             <canvas id="chart-fan-komparasi"></canvas>
           </div>
           <!-- Daya serap tertinggi & terendah per abjad paralel di setiap butir (diisi JS renderRekapFan) -->
@@ -1791,6 +1869,7 @@
             <!-- Populated via JS -->
           </table>
         </div>
+        </div><!-- /rekapfan-zoom-area -->
       </div>
     </section>
 
@@ -3988,12 +4067,24 @@
         selectKelas.value = state.rekapFan.selectedKelas || 'all';
         selectKelas.onchange = (e) => {
           state.rekapFan.selectedKelas = e.target.value;
+          updateRekapAbjadDropdown();
           updateRekapFanDropdown();
           renderRekapFan();
         };
       }
 
-      // 2. Populate Fan Dropdown sesuai filter kelas yang aktif
+      // 2. Abjad sesuai kelas yang dipilih
+      const selectAbjad = document.getElementById('select-rekap-abjad-filter');
+      updateRekapAbjadDropdown();
+      if (selectAbjad) {
+        selectAbjad.onchange = (e) => {
+          state.rekapFan.selectedAbjad = e.target.value;
+          updateRekapFanDropdown();
+          renderRekapFan();
+        };
+      }
+
+      // 3. Populate Fan Dropdown sesuai kelas & abjad yang aktif
       updateRekapFanDropdown();
 
       selectFan.onchange = (e) => {
@@ -4140,6 +4231,7 @@
       window.addEventListener('afterprint', restore);
     }
     function rekapFanKelasFileLabel(snap) {
+      if (snap.selectedAbjad && snap.selectedAbjad !== 'all') return 'Abjad ' + snap.selectedAbjad;
       return snap.selectedK === 'all' ? 'Semua Kelas' : 'Kelas ' + kelasName(snap.selectedK);
     }
 
@@ -4225,31 +4317,10 @@
       const lowest3 = valid.slice().sort((a, b) => a.pct - b.pct).slice(0, 3);
       const rankOf = {};
       lowest3.forEach((q, i) => { rankOf[q.q_num] = i + 1; });
-      const narKelas = snap.selectedK === 'all' ? String(getKelasNumbers()[0]) : snap.selectedK;
-      const groups = rekapFanTypeGroups(snap);
+      const narKelas = snap.naskahKelas || (snap.selectedK === 'all' ? String(getKelasNumbers()[0]) : snap.selectedK);
       const head = rekapFanPrintHeader(snap, 'FORM ANALISIS BUTIR SOAL &amp; TINDAK LANJUT ' + escapeHtml(CTX.tahap.toUpperCase()),
-        `<tr><td>Jumlah Peserta</td><td>: ${head_placeholder()} santri</td></tr>`);
-      function head_placeholder() { return Math.max.apply(null, valid.map(q => q.peserta)); }
+        `<tr><td>Jumlah Peserta</td><td>: ${Math.max.apply(null, valid.map(q => q.peserta))} santri</td></tr>`);
 
-      const tipeTables = groups.map(g => {
-        const qs = snap.qStats.slice(g.start, g.start + g.count).filter(q => q.peserta > 0);
-        if (qs.length === 0) return '';
-        const pes = qs.map(q => q.peserta);
-        const pMin = Math.min.apply(null, pes), pMax = Math.max.apply(null, pes);
-        const pesTxt = pMin === pMax ? String(pMax) : `${pMin} &ndash; ${pMax}`;
-        const rows = qs.map(q => `
-          <tr${rankOf[q.q_num] ? ' class="low"' : ''}>
-            <td class="c">${esc(q.typeNo)}</td>
-            <td class="c">${q.benar}</td>
-            <td class="c">${q.peserta - q.benar}</td>
-            <td class="c"><b>${q.pct}%</b></td>
-            <td class="c">${esc(q.kategori)}</td>
-            <td class="c">${rankOf[q.q_num] ? 'Terendah #' + rankOf[q.q_num] : ''}</td>
-          </tr>`).join('');
-        return `
-          <div class="tipe">Tipe Soal: ${esc(g.name)} (${qs.length} butir) &bull; Jumlah Peserta: ${pesTxt} santri</div>
-          <table><thead><tr><th style="width:15%">Nomor Soal</th><th style="width:13%">Benar</th><th style="width:13%">Salah</th><th style="width:16%">Daya Serap</th><th style="width:23%">Kategori</th><th>Ket.</th></tr></thead><tbody>${rows}</tbody></table>`;
-      }).join('');
 
       const lines = (n) => Array.from({ length: n }, () => '<div class="ln"></div>').join('');
       const lowBlocks = lowest3.map((q, i) => {
@@ -4274,11 +4345,9 @@
           ${head.html}
           <h2>A. Rekap Klasifikasi Kesukaran Butir Soal</h2>
           ${rekapFanKlasifikasiPrintHtml(snap)}
-          <h2>B. Daya Serap per Butir Soal</h2>
-          ${tipeTables}
-          <h2>C. Analisis 3 Butir Soal Terendah (Prioritas Pembahasan)</h2>
+          <h2>B. Analisis 3 Butir Soal Terendah (Prioritas Pembahasan)</h2>
           ${lowBlocks}
-          <h2>D. Catatan Umum / Kesimpulan</h2>
+          <h2>C. Catatan Umum / Kesimpulan</h2>
           ${lines(4)}
           ${rekapFanSignature(snap)}
         </div>`;
@@ -4286,6 +4355,50 @@
     }
     window.cetakFormRekapFanRombel = cetakFormRekapFanRombel;
     window.cetakFormRekapFanAnalisa = cetakFormRekapFanAnalisa;
+
+    // ---- FORM 3: DAYA SERAP PER BUTIR SOAL (per tipe soal) ----
+    function cetakFormRekapFanPerButir() {
+      const snap = getRekapFanPrintSnapshot();
+      if (!snap) return;
+      const esc = escapeHtml;
+      const valid = snap.qStats.filter(q => q.peserta > 0);
+      const lowest3 = valid.slice().sort((a, b) => a.pct - b.pct).slice(0, 3);
+      const rankOf = {};
+      lowest3.forEach((q, i) => { rankOf[q.q_num] = i + 1; });
+      const groups = rekapFanTypeGroups(snap);
+      const head = rekapFanPrintHeader(snap, 'FORM DAYA SERAP PER BUTIR SOAL ' + escapeHtml(CTX.tahap.toUpperCase()),
+        `<tr><td>Jumlah Peserta</td><td>: ${Math.max.apply(null, valid.map(q => q.peserta))} santri</td></tr>`);
+      const tipeTables = groups.map(g => {
+        const qs = snap.qStats.slice(g.start, g.start + g.count).filter(q => q.peserta > 0);
+        if (qs.length === 0) return '';
+        const pes = qs.map(q => q.peserta);
+        const pMin = Math.min.apply(null, pes), pMax = Math.max.apply(null, pes);
+        const pesTxt = pMin === pMax ? String(pMax) : `${pMin} &ndash; ${pMax}`;
+        const rows = qs.map(q => `
+          <tr${rankOf[q.q_num] ? ' class="low"' : ''}>
+            <td class="c">${esc(q.typeNo)}</td>
+            <td class="c">${q.benar}</td>
+            <td class="c">${q.peserta - q.benar}</td>
+            <td class="c"><b>${q.pct}%</b></td>
+            <td class="c">${esc(q.kategori)}</td>
+            <td class="c">${rankOf[q.q_num] ? 'Terendah #' + rankOf[q.q_num] : ''}</td>
+          </tr>`).join('');
+        return `
+          <div class="tipe">Tipe Soal: ${esc(g.name)} (${qs.length} butir) &bull; Jumlah Peserta: ${pesTxt} santri</div>
+          <table><thead><tr><th style="width:15%">Nomor Soal</th><th style="width:13%">Benar</th><th style="width:13%">Salah</th><th style="width:16%">Daya Serap</th><th style="width:23%">Kategori</th><th>Ket.</th></tr></thead><tbody>${rows}</tbody></table>`;
+      }).join('');
+
+      const html = REKAPFAN_PRINT_CSS + `
+        <div class="prf">
+          ${head.html}
+          <h2>Daya Serap per Butir Soal</h2>
+          ${tipeTables}
+          <p style="font-size:9pt">Butir berlatar merah: 3 butir dengan daya serap terendah (prioritas pembahasan).</p>
+          ${rekapFanSignature(snap)}
+        </div>`;
+      printRekapFanDoc(html, 'portrait', printFileName('Form Daya Serap per Butir Soal', snap.fanName, rekapFanKelasFileLabel(snap)));
+    }
+    window.cetakFormRekapFanPerButir = cetakFormRekapFanPerButir;
 
     // ---- FORM 3: DAYA SERAP TERTINGGI & TERENDAH PER ABJAD PARALEL DI SETIAP BUTIR ----
     const REKAPFAN_BATAS_RERATA = 60;    // butir dengan rerata kelas di bawah batas ini ditandai merah
@@ -4381,7 +4494,7 @@
       printRekapFanDoc(html, 'portrait', printFileName('Daya Serap Tertinggi dan Terendah per Abjad', snap.fanName, rekapFanKelasFileLabel(snap)));
     }
 
-    // Satu tombol Cetak dengan 3 pilihan
+    // Satu tombol Cetak dengan 4 pilihan
     function toggleRekapFanPrintMenu(ev) {
       if (ev) ev.stopPropagation();
       const menu = document.getElementById('rekapfan-print-menu');
@@ -4403,9 +4516,75 @@
       closeRekapFanPrintMenu();
       if (n === 1) cetakFormRekapFanRombel();
       else if (n === 2) cetakFormRekapFanAnalisa();
-      else cetakFormRekapFanTertinggiTerendah();
+      else if (n === 3) cetakFormRekapFanPerButir();
+      else {
+        const snap = state.rekapFan && state.rekapFan.snapshot;
+        if (snap && !snap.multiAbjad) { showToast('Daya serap tertinggi & terendah membutuhkan lebih dari satu abjad. Pilih "Semua Abjad".', 'warning'); return; }
+        cetakFormRekapFanTertinggiTerendah();
+      }
     }
     window.cetakFormRekapFanTertinggiTerendah = cetakFormRekapFanTertinggiTerendah;
+    // ---- Rekap Fan: perbesar / perkecil ukuran teks & ukuran tampilan (tersimpan di perangkat ini) ----
+    const RF_FS_STEPS = [0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.65];
+    const RF_ZOOM_STEPS = [0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.4, 1.5];
+    const RF_SOAL_STEPS = [0.8, 0.9, 1, 1.15, 1.3, 1.5, 1.75, 2, 2.5, 3];
+    function rekapFanSoal() { return rfGet('IMDA_REKAPFAN_SOAL', RF_SOAL_STEPS); }
+    function rfGet(key, steps) {
+      let v = 1;
+      try { v = parseFloat(localStorage.getItem(key)) || 1; } catch (e) {}
+      return steps.includes(v) ? v : 1;
+    }
+    function rekapFanFs() { return rfGet('IMDA_REKAPFAN_FS', RF_FS_STEPS); }
+    function rekapFanZoomVal() { return rfGet('IMDA_REKAPFAN_ZOOM', RF_ZOOM_STEPS); }
+    function applyRekapFanChartFont() {
+      const ch = state.charts && state.charts.fanComp;
+      if (!ch || !ch.options) return;
+      const f = rekapFanFs() * rekapFanZoomVal();
+      const sz = Math.round(11 * f);
+      try {
+        ch.options.scales = ch.options.scales || {};
+        ['x', 'y'].forEach(ax => {
+          ch.options.scales[ax] = ch.options.scales[ax] || {};
+          ch.options.scales[ax].ticks = Object.assign({}, ch.options.scales[ax].ticks, { font: { size: sz } });
+        });
+        ch.options.plugins = ch.options.plugins || {};
+        ch.options.plugins.legend = Object.assign({}, ch.options.plugins.legend, { labels: Object.assign({}, (ch.options.plugins.legend || {}).labels, { font: { size: Math.round(12 * f) } }) });
+        ch.options.plugins.tooltip = Object.assign({}, ch.options.plugins.tooltip, { bodyFont: { size: Math.round(12 * f) }, titleFont: { size: Math.round(12 * f), weight: 'bold' } });
+        ch.update('none');
+      } catch (e) {}
+    }
+    function applyRekapFanZoom() {
+      const area = document.getElementById('rekapfan-zoom-area');
+      const fs = rekapFanFs(), zm = rekapFanZoomVal();
+      if (area) { area.style.setProperty('--rf-fs', fs); area.style.setProperty('--rf-zoom', zm); }
+      const sl = rekapFanSoal();
+      document.documentElement.style.setProperty('--rf-soal', sl);
+      document.querySelectorAll('[data-rf="soal-val"]').forEach(el => { el.textContent = Math.round(sl * 100) + '%'; });
+      document.querySelectorAll('[data-rf="soal-minus"]').forEach(el => { el.disabled = sl === RF_SOAL_STEPS[0]; });
+      document.querySelectorAll('[data-rf="soal-plus"]').forEach(el => { el.disabled = sl === RF_SOAL_STEPS[RF_SOAL_STEPS.length - 1]; });
+      const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+      set('rf-fs-val', Math.round(fs * 100) + '%');
+      set('rf-zoom-val', Math.round(zm * 100) + '%');
+      const dis = (id, d) => { const el = document.getElementById(id); if (el) el.disabled = d; };
+      dis('rf-fs-minus', fs === RF_FS_STEPS[0]); dis('rf-fs-plus', fs === RF_FS_STEPS[RF_FS_STEPS.length - 1]);
+      dis('rf-zoom-minus', zm === RF_ZOOM_STEPS[0]); dis('rf-zoom-plus', zm === RF_ZOOM_STEPS[RF_ZOOM_STEPS.length - 1]);
+      applyRekapFanChartFont();
+      // ukuran grafik dihitung ulang setelah tampilan berubah
+      try { const ch = state.charts && state.charts.fanComp; if (ch) setTimeout(() => ch.resize(), 30); } catch (e) {}
+    }
+    // kind: 'fs' (teks) / 'zoom' (tampilan); dir: -1 perkecil, +1 perbesar, 0 kembali ke 100%
+    function rekapFanZoom(kind, dir) {
+      const steps = kind === 'fs' ? RF_FS_STEPS : kind === 'soal' ? RF_SOAL_STEPS : RF_ZOOM_STEPS;
+      const key = kind === 'fs' ? 'IMDA_REKAPFAN_FS' : kind === 'soal' ? 'IMDA_REKAPFAN_SOAL' : 'IMDA_REKAPFAN_ZOOM';
+      const cur = kind === 'fs' ? rekapFanFs() : kind === 'soal' ? rekapFanSoal() : rekapFanZoomVal();
+      let idx = steps.indexOf(cur);
+      idx = dir === 0 ? steps.indexOf(1) : Math.max(0, Math.min(steps.length - 1, idx + dir));
+      try { localStorage.setItem(key, String(steps[idx])); } catch (e) {}
+      applyRekapFanZoom();
+    }
+    window.rekapFanZoom = rekapFanZoom;
+    try { applyRekapFanZoom(); } catch (e) {}
+
     window.toggleRekapFanPrintMenu = toggleRekapFanPrintMenu;
     window.pilihCetakRekapFan = pilihCetakRekapFan;
 
@@ -4465,9 +4644,32 @@
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2.5">${tiles}</div>`;
     }
 
+    // Daftar abjad yang tersedia di kelas terpilih (gabungan dari seluruh fan)
+    function rekapFanAbjadList(selKelas) {
+      const set = new Set();
+      Object.values(APP_DATA.fans || {}).forEach(f => Object.keys((f && f.classes) || {}).forEach(r => set.add(r)));
+      let list = [...set];
+      if (selKelas && selKelas !== 'all') list = list.filter(r => getGradeFromRombel(r) === parseInt(selKelas, 10));
+      return list.sort(compareAbjad);
+    }
+    function updateRekapAbjadDropdown() {
+      const sel = document.getElementById('select-rekap-abjad-filter');
+      if (!state.rekapFan) state.rekapFan = { selectedKelas: 'all', selectedFan: '' };
+      const list = rekapFanAbjadList(state.rekapFan.selectedKelas || 'all');
+      let cur = state.rekapFan.selectedAbjad || 'all';
+      if (cur !== 'all' && !list.includes(cur)) cur = 'all';
+      state.rekapFan.selectedAbjad = cur;
+      if (!sel) return;
+      sel.innerHTML = `<option value="all">Semua Abjad (${list.length})</option>` + list.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+      sel.value = cur;
+    }
+    window.updateRekapAbjadDropdown = updateRekapAbjadDropdown;
+
     function updateRekapFanDropdown() {
       const selectFan = document.getElementById('select-fan-komparasi');
       if (!selectFan || !APP_DATA.fans) return;
+      if (!state.rekapFan.selectedAbjad || (state.rekapFan.selectedAbjad !== 'all' && !rekapFanAbjadList(state.rekapFan.selectedKelas || 'all').includes(state.rekapFan.selectedAbjad))) updateRekapAbjadDropdown();
+      const selAbjad = state.rekapFan.selectedAbjad || 'all';
 
       const selKelas = state.rekapFan.selectedKelas || 'all';
       const allFans = Object.keys(APP_DATA.fans);
@@ -4481,6 +4683,10 @@
           return Object.keys(fanObj.classes).some(r => getGradeFromRombel(r) === kNum);
         });
         if (eligibleFans.length === 0) eligibleFans = allFans;
+      }
+      if (selAbjad !== 'all') {
+        const withAbjad = eligibleFans.filter(f => APP_DATA.fans[f] && APP_DATA.fans[f].classes && APP_DATA.fans[f].classes[selAbjad]);
+        if (withAbjad.length) eligibleFans = withAbjad;
       }
 
       selectFan.innerHTML = eligibleFans.map(f => `<option value="${f}">${f}</option>`).join('');
@@ -4541,17 +4747,27 @@
       const selectedK = state.rekapFan.selectedKelas || 'all';
       const allRombels = Object.keys(fanObj.classes || {}).sort(compareAbjad);
       
-      const rombelNames = selectedK === 'all'
-        ? allRombels
-        : allRombels.filter(r => getGradeFromRombel(r) === parseInt(selectedK, 10));
+      const selectedAbjad = (state.rekapFan.selectedAbjad && state.rekapFan.selectedAbjad !== 'all' && allRombels.includes(state.rekapFan.selectedAbjad)) ? state.rekapFan.selectedAbjad : 'all';
+      const rombelNames = selectedAbjad !== 'all'
+        ? [selectedAbjad]
+        : selectedK === 'all'
+          ? allRombels
+          : allRombels.filter(r => getGradeFromRombel(r) === parseInt(selectedK, 10));
 
       const rombelCount = rombelNames.length;
-      const naskahKelas = selectedK === 'all' ? String(getKelasNumbers()[0]) : String(selectedK);
-      const kelasLabel = selectedK === 'all' ? `Seluruh Kelas (${getKelasNumbers().map(k => kelasName(k)).join(', ')})` : `Kelas ${kelasName(selectedK)}`;
+      // Daya serap tertinggi & terendah antar abjad hanya bermakna bila ada lebih dari satu abjad
+      const multiAbjad = rombelCount > 1;
+      const abjadGrade = selectedAbjad !== 'all' ? getGradeFromRombel(selectedAbjad) : null;
+      const naskahKelas = abjadGrade ? String(abjadGrade) : (selectedK === 'all' ? String(getKelasNumbers()[0]) : String(selectedK));
+      const kelasLabel = selectedAbjad !== 'all'
+        ? `Kelas ${kelasName(abjadGrade || selectedK)} • Abjad ${selectedAbjad}`
+        : selectedK === 'all' ? `Seluruh Kelas (${getKelasNumbers().map(k => kelasName(k)).join(', ')})` : `Kelas ${kelasName(selectedK)}`;
+      const opt4 = document.getElementById('rekapfan-print-opt4');
+      if (opt4) opt4.classList.toggle('hidden', !multiAbjad);
       
       const titleEl = document.getElementById('fan-comp-chart-title');
       if (titleEl) {
-        titleEl.textContent = `Grafik Daya Serap Materi "${fanName}" (${modelKey} - ${kelasLabel} - ${rombelCount} Abjad)`;
+        titleEl.textContent = `Grafik Daya Serap Materi "${fanName}" (${modelKey} - ${kelasLabel}${selectedAbjad !== 'all' ? '' : ' - ' + rombelCount + ' Abjad'})`;
       }
 
       // Hitung agregat skor butir soal secara dinamis untuk abjad yang difilter
@@ -4607,7 +4823,7 @@
 
       // Simpan snapshot untuk fitur Cetak Form
       state.rekapFan.snapshot = {
-        fanName, modelKey, kelasLabel, selectedK, rombelNames, qStats, types, total: totalQuestionsInModel,
+        fanName, modelKey, kelasLabel, selectedK, selectedAbjad, naskahKelas, multiAbjad, rombelNames, qStats, types, total: totalQuestionsInModel,
         rerata: totalPesertaGabungan > 0 ? Math.round((totalBenarGabungan / totalPesertaGabungan) * 1000) / 10 : 0
       };
 
@@ -4691,7 +4907,7 @@
                       <p class="text-[11px] text-slate-500 leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
                         ${note}
                       </p>
-                      ${renderSoalNarrativeSnippet(selectedK === 'all' ? String(getKelasNumbers()[0]) : selectedK, fanName, q)}
+                      ${renderSoalNarrativeSnippet(naskahKelas, fanName, q)}
                       ${renderCatatanFields(selectedK, fanName, q)}
                     </div>
                   </div>
@@ -4785,7 +5001,7 @@
             fill: false,
             borderWidth: 1.5,
             _ext: 'lo'
-          }]
+          }].filter(ds => multiAbjad || !ds._ext)
         },
         options: {
           responsive: true,
@@ -4831,19 +5047,21 @@
             }
           },
           scales: {
+            x: { ticks: { font: { size: Math.round(11 * rekapFanFs() * rekapFanZoomVal()) } } },
             y: {
               beginAtZero: true,
               max: 100,
-              ticks: { callback: (v) => v + '%' }
+              ticks: { callback: (v) => v + '%', font: { size: Math.round(11 * rekapFanFs() * rekapFanZoomVal()) } }
             }
           }
         }
       });
+      applyRekapFanChartFont();
 
       // 3b. Tabel Daya Serap Tertinggi & Terendah per Abjad Paralel di setiap butir soal
       const extWrap = document.getElementById('fan-extreme-wrap');
       if (extWrap) {
-        const rowsSrc = validQuestions.filter(q => q.hi && q.lo);
+        const rowsSrc = multiAbjad ? validQuestions.filter(q => q.hi && q.lo) : [];
         if (rowsSrc.length === 0) {
           extWrap.innerHTML = '';
         } else {
@@ -5655,8 +5873,32 @@
     // ==========================================
     // SINKRONISASI LIVE DARI GOOGLE SPREADSHEET
     // ==========================================
+    // Versi halaman. Harus sama dengan APP_VERSION di Code.gs; jika beda, pengguna diberi tahu.
+    const APP_VERSION = '2.7';
+    let versionWarned = false;
+    function verCmp(a, b) {
+      const pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) { const d = (pa[i] || 0) - (pb[i] || 0); if (d) return d; }
+      return 0;
+    }
+    function checkServerVersion(serverData) {
+      if (versionWarned || !serverData || !serverData.success) return;
+      const sv = serverData.app_version || '';
+      if (sv === APP_VERSION) return;
+      versionWarned = true;
+      const msg = !sv
+        ? `Code.gs di Apps Script belum diperbarui (halaman v${APP_VERSION}). Tempel Code.gs terbaru lalu Deploy → New version.`
+        : (verCmp(sv, APP_VERSION) > 0
+          ? `Halaman ini versi lama (v${APP_VERSION}), server sudah v${sv}. Perbarui index.html, lalu tekan Ctrl+Shift+R.`
+          : `Code.gs di server versi lama (v${sv}), halaman v${APP_VERSION}. Tempel Code.gs terbaru lalu Deploy → New version.`);
+      showToast('⚠️ ' + msg, 'warning');
+      const b = document.getElementById('version-mismatch-banner');
+      if (b) { b.querySelector('span:last-child').textContent = msg; b.classList.remove('hidden'); }
+    }
+
     function handleSyncSuccess(serverData) {
       if (serverData && serverData.authError) { onAuthExpired(serverData.error); return; }
+      checkServerVersion(serverData);
       if (serverData && serverData.mustChange) { openChangePasswordModal(true); return; }
       if (serverData && serverData.success) {
         // Server lama (belum diperbarui) tidak mengenal Tahap Ujian: hanya cocok untuk konteks bawaan
@@ -10645,9 +10887,17 @@ Kaidah Keshahihan Sanad`;
             <p class="text-[11px] text-slate-500 truncate" id="modal-quick-naskah-sub">-</p>
           </div>
         </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+        <div class="flex items-center gap-0.5 p-0.5 rounded-lg bg-amber-50 dark:bg-[#2a2410] border border-amber-200 dark:border-amber-800/60" role="group" aria-label="Ukuran tulisan soal">
+                <span class="px-1.5 text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wide">Soal</span>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', -1)" data-rf="soal-minus" title="Perkecil tulisan soal" aria-label="Perkecil tulisan soal"><span class="text-[11px]">ع</span>−</button>
+                <button type="button" class="rf-zbtn text-[11px] font-mono text-amber-800 dark:text-amber-300 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', 0)" data-rf="soal-val" title="Kembalikan ukuran tulisan soal ke 100%">100%</button>
+                <button type="button" class="rf-zbtn text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-[#1a3d52]" onclick="rekapFanZoom('soal', 1)" data-rf="soal-plus" title="Perbesar tulisan soal" aria-label="Perbesar tulisan soal"><span class="text-[15px]">ع</span>+</button>
+              </div>
         <button type="button" onclick="tutupPopupNarasiSoal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition cursor-pointer" title="Tutup (Esc)">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
+        </div>
       </div>
 
       <div class="p-5 space-y-3 text-xs overflow-y-auto">
