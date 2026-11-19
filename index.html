@@ -515,6 +515,10 @@
     #rekapfan-zoom-area table { font-size: calc(.75rem * var(--rf-fs)); }
     .rf-zbtn { min-width: 2rem; height: 2rem; padding: 0 .45rem; font-weight: 800; border-radius: .5rem; cursor: pointer; }
     .rf-zbtn:disabled { opacity: .35; cursor: not-allowed; }
+    .rf-scope { color: #475569; }
+    .rf-scope.on { background: #0369a1; color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+    .dark .rf-scope { color: #cbd5e1; }
+    .dark .rf-scope.on { background: #0891b2; color: #fff; }
     /* ===== NAVIGASI BAWAH (HP) ===== */
     #mobile-bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
     .bnav-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; padding: 0 2px 8px;
@@ -1788,8 +1792,15 @@
                 <span>Cetak</span>
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
               </button>
-              <div id="rekapfan-print-menu" role="menu" class="hidden absolute left-0 mt-1.5 z-30 w-[19rem] max-w-[calc(100vw-2rem)] bg-white dark:bg-[#0f2634] rounded-xl shadow-xl border border-slate-200 dark:border-[#1a3d52] p-1.5 space-y-1">
-                <div class="px-2.5 pt-1 pb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400">Pilih jenis cetakan</div>
+              <div id="rekapfan-print-menu" role="menu" class="hidden absolute left-0 mt-1.5 z-30 w-[21rem] max-w-[calc(100vw-2rem)] bg-white dark:bg-[#0f2634] rounded-xl shadow-xl border border-slate-200 dark:border-[#1a3d52] p-1.5 space-y-1">
+                <div class="px-2.5 pt-1 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400">1) Cakupan cetak</div>
+                <div class="flex gap-1 p-1 rounded-lg bg-slate-100 dark:bg-[#133042]" role="group" aria-label="Cakupan cetak">
+                  <button type="button" data-scope="one" onclick="setRekapFanPrintScope('one', event)" class="rf-scope flex-1 px-1.5 py-1.5 rounded-md text-[10.5px] font-bold leading-tight cursor-pointer">Fan &amp; abjad<br>terpilih</button>
+                  <button type="button" data-scope="fans" onclick="setRekapFanPrintScope('fans', event)" class="rf-scope flex-1 px-1.5 py-1.5 rounded-md text-[10.5px] font-bold leading-tight cursor-pointer">Semua Fan<br><span class="font-semibold opacity-80">abjad ini</span></button>
+                  <button type="button" data-scope="abjads" onclick="setRekapFanPrintScope('abjads', event)" class="rf-scope flex-1 px-1.5 py-1.5 rounded-md text-[10.5px] font-bold leading-tight cursor-pointer">Semua Abjad<br><span class="font-semibold opacity-80">fan ini</span></button>
+                </div>
+                <div id="rekapfan-scope-info" class="px-2.5 text-[10.5px] text-sky-700 dark:text-cyan-300 font-semibold"></div>
+                <div class="px-2.5 pt-1.5 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-t border-slate-100 dark:border-[#1a3d52]">2) Pilih jenis cetakan</div>
                 <button type="button" role="menuitem" onclick="pilihCetakRekapFan(1)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
                   <div class="text-xs font-bold text-slate-800 dark:text-white">1. Form Daya Serap per Abjad</div>
                   <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Jumlah benar tiap abjad di setiap butir (A4 mendatar)</div>
@@ -1805,6 +1816,11 @@
                 <button type="button" role="menuitem" id="rekapfan-print-opt4" onclick="pilihCetakRekapFan(4)" class="w-full text-left px-2.5 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#133042] cursor-pointer">
                   <div class="text-xs font-bold text-slate-800 dark:text-white">4. Daya Serap Tertinggi &amp; Terendah per Abjad</div>
                   <div class="text-[10.5px] text-slate-500 dark:text-slate-400">Abjad paralel tertinggi &amp; terendah di setiap butir (A4 tegak) &bull; perlu lebih dari satu abjad</div>
+                </button>
+                <div class="px-2.5 pt-1.5 pb-1 text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 border-t border-slate-100 dark:border-[#1a3d52]">Hemat kertas</div>
+                <button type="button" role="menuitem" id="rekapfan-print-opt5" onclick="pilihCetakRekapFan(5)" class="w-full text-left px-2.5 py-2 rounded-lg bg-emerald-50/70 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">5. Ringkasan 3 Soal Terendah &mdash; Semua Fan</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400" id="rekapfan-opt5-desc">Satu kelas, seluruh fan + soal &amp; jawaban dalam satu tabel ringkas (A4 tegak)</div>
                 </button>
               </div>
             </div>
@@ -4098,8 +4114,11 @@
     // ==========================================
     // CETAK FORM REKAP FAN: (1) Per Abjad, (2) Analisa
     // ==========================================
+    // Mode kumpul (cetak massal): hasil tiap form ditampung dulu, lalu dicetak sekaligus
+    let RF_COLLECT = null;
     function getRekapFanPrintSnapshot() {
       const snap = state.rekapFan && state.rekapFan.snapshot;
+      if (RF_COLLECT) return (snap && snap.qStats && snap.qStats.some(q => q.peserta > 0)) ? snap : null;
       if (!snap || !snap.qStats || snap.qStats.length === 0) {
         showToast('Belum ada data untuk dicetak. Pilih Kelas dan Fan terlebih dahulu.', 'warning');
         return null;
@@ -4236,6 +4255,7 @@
     }
 
     function printRekapFanDoc(html, orientation, fileName) {
+      if (RF_COLLECT) { RF_COLLECT.push({ html, orientation }); return; }
       if (fileName) withPrintTitle(fileName);
       let area = document.getElementById('print-rekapfan-area');
       if (!area) {
@@ -4501,6 +4521,7 @@
       const btn = document.getElementById('btn-print-rekapfan');
       if (!menu) return;
       const open = menu.classList.contains('hidden');
+      if (open) { try { updateRekapFanScopeUI(); } catch (e) {} }
       menu.classList.toggle('hidden', !open);
       if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
@@ -4512,8 +4533,200 @@
     }
     document.addEventListener('click', e => { if (!e.target.closest || !e.target.closest('#rekapfan-print-wrap')) closeRekapFanPrintMenu(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRekapFanPrintMenu(); });
+    // ---- CETAK MASSAL: satu abjad untuk semua fan / satu fan untuk semua abjad ----
+    const RF_JENIS_CETAK = { 1: 'Form Daya Serap per Abjad', 2: 'Form Analisis dan Tindak Lanjut', 3: 'Form Daya Serap per Butir Soal', 4: 'Daya Serap Tertinggi dan Terendah per Abjad' };
+    function rekapFanPrintScope() { return (state.rekapFan && state.rekapFan.printScope) || 'one'; }
+    // Daftar fan / abjad yang akan dicetak pada cakupan massal
+    function rekapFanBatchTargets(scope) {
+      const rf = state.rekapFan || {};
+      if (scope === 'fans') {
+        const sel = document.getElementById('select-fan-komparasi');
+        const fans = sel ? [...sel.options].map(o => o.value) : Object.keys(APP_DATA.fans || {});
+        const ab = rf.selectedAbjad || 'all';
+        return fans.filter(f => APP_DATA.fans[f] && (ab === 'all' || (APP_DATA.fans[f].classes || {})[ab]));
+      }
+      if (scope === 'abjads') {
+        const fanObj = APP_DATA.fans[rf.selectedFan] || { classes: {} };
+        return rekapFanAbjadList(rf.selectedKelas || 'all').filter(r => fanObj.classes && fanObj.classes[r]);
+      }
+      return [];
+    }
+    function updateRekapFanScopeUI() {
+      const scope = rekapFanPrintScope();
+      document.querySelectorAll('#rekapfan-print-menu .rf-scope').forEach(b => b.classList.toggle('on', b.dataset.scope === scope));
+      const rf = state.rekapFan || {};
+      const ab = rf.selectedAbjad || 'all';
+      const kLbl = (rf.selectedKelas || 'all') === 'all' ? 'semua kelas' : 'Kelas ' + kelasName(rf.selectedKelas);
+      const info = document.getElementById('rekapfan-scope-info');
+      if (info) {
+        if (scope === 'fans') info.textContent = `${rekapFanBatchTargets('fans').length} fan • ${ab === 'all' ? 'semua abjad ' + kLbl : 'Abjad ' + ab} — tiap fan di halaman baru`;
+        else if (scope === 'abjads') info.textContent = `Fan ${rf.selectedFan || '-'} • ${rekapFanBatchTargets('abjads').length} abjad (${kLbl}) — tiap abjad di halaman baru`;
+        else info.textContent = `Fan ${rf.selectedFan || '-'} • ${ab === 'all' ? kLbl : 'Abjad ' + ab}`;
+      }
+      // Form 4 (perbandingan antar abjad) tidak berlaku bila tiap lembar hanya satu abjad
+      const snap = rf.snapshot;
+      const opt4 = document.getElementById('rekapfan-print-opt4');
+      if (opt4) opt4.classList.toggle('hidden', scope === 'abjads' || ab !== 'all' || !(snap && snap.multiAbjad));
+      const d5 = document.getElementById('rekapfan-opt5-desc');
+      if (d5) d5.textContent = (ab !== 'all' ? 'Abjad ' + ab : (rf.selectedKelas || 'all') === 'all' ? 'Tiap kelas' : 'Kelas ' + kelasName(rf.selectedKelas)) + ' • seluruh fan + soal & jawaban, tabel ringkas (A4 tegak) • tidak terpengaruh cakupan';
+    }
+    function setRekapFanPrintScope(scope, ev) {
+      if (ev) ev.stopPropagation();
+      state.rekapFan = state.rekapFan || {};
+      state.rekapFan.printScope = scope;
+      updateRekapFanScopeUI();
+    }
+    window.setRekapFanPrintScope = setRekapFanPrintScope;
+
+    function cetakRekapFanMassal(n, scope) {
+      const rf = state.rekapFan;
+      const targets = rekapFanBatchTargets(scope);
+      if (!targets.length) { showToast(scope === 'fans' ? 'Tidak ada fan untuk abjad ini.' : 'Tidak ada abjad untuk fan ini.', 'warning'); return; }
+      const fn = { 1: cetakFormRekapFanRombel, 2: cetakFormRekapFanAnalisa, 3: cetakFormRekapFanPerButir, 4: cetakFormRekapFanTertinggiTerendah }[n];
+      const saved = { fan: rf.selectedFan, abjad: rf.selectedAbjad };
+      const pages = [];
+      try {
+        targets.forEach(tg => {
+          if (scope === 'fans') rf.selectedFan = tg; else rf.selectedAbjad = tg;
+          renderRekapFan();
+          RF_COLLECT = [];
+          try { fn(); } finally { pages.push.apply(pages, RF_COLLECT); RF_COLLECT = null; }
+        });
+      } finally {
+        rf.selectedFan = saved.fan; rf.selectedAbjad = saved.abjad;
+        renderRekapFan();
+      }
+      if (!pages.length) { showToast('Tidak ada nilai butir soal untuk dicetak pada cakupan ini.', 'warning'); return; }
+      const brk = '<div style="break-before:page;page-break-before:always"></div>';
+      const html = pages.map(p => p.html).join(brk);
+      const ab = saved.abjad || 'all';
+      const kLbl = (rf.selectedKelas || 'all') === 'all' ? 'Semua Kelas' : 'Kelas ' + kelasName(rf.selectedKelas);
+      const fileName = scope === 'fans'
+        ? printFileName(RF_JENIS_CETAK[n], 'Semua Fan', ab === 'all' ? kLbl : 'Abjad ' + ab)
+        : printFileName(RF_JENIS_CETAK[n], saved.fan, 'Semua Abjad ' + kLbl);
+      showToast(`Menyiapkan ${pages.length} lembar ${scope === 'fans' ? 'fan' : 'abjad'} untuk dicetak...`, 'info');
+      printRekapFanDoc(html, pages[0].orientation, fileName);
+    }
+    window.cetakRekapFanMassal = cetakRekapFanMassal;
+
+
+    // ---- FORM 5 (HEMAT KERTAS): 3 butir soal terendah untuk SEMUA FAN dalam satu kelas / abjad ----
+    function rekapFanSnapshotFor(fan, kelas, abjad) {
+      const rf = state.rekapFan;
+      const saved = { fan: rf.selectedFan, kelas: rf.selectedKelas, abjad: rf.selectedAbjad };
+      try {
+        rf.selectedFan = fan; rf.selectedKelas = kelas; rf.selectedAbjad = abjad;
+        renderRekapFan();
+        return rf.snapshot;
+      } finally {
+        rf.selectedFan = saved.fan; rf.selectedKelas = saved.kelas; rf.selectedAbjad = saved.abjad;
+      }
+    }
+    function cetakRingkasan3TerendahSemuaFan() {
+      const rf = state.rekapFan;
+      const esc = escapeHtml;
+      const ab = rf.selectedAbjad || 'all';
+      const selK = rf.selectedKelas || 'all';
+      // Cakupan: abjad terpilih, atau kelas terpilih, atau (jika "Semua Kelas") tiap kelas berurutan
+      const scopes = ab !== 'all'
+        ? [{ kelas: String(getGradeFromRombel(ab) || selK), abjad: ab, label: `Kelas ${kelasName(getGradeFromRombel(ab) || selK)} • Abjad ${ab}` }]
+        : (selK !== 'all' ? [selK] : getKelasNumbers().map(String)).map(k => ({ kelas: k, abjad: 'all', label: `Kelas ${kelasName(k)}` }));
+      const fmtPct = v => (Math.round(v * 10) / 10).toLocaleString('id-ID') + '%';
+      const fanNames = Object.keys(APP_DATA.fans || {});
+      let totalFan = 0;
+      const sections = [];
+      try {
+        scopes.forEach(sc => {
+          const rows = [];
+          fanNames.forEach(fan => {
+            const fo = APP_DATA.fans[fan];
+            const rombels = Object.keys((fo && fo.classes) || {}).filter(r => sc.abjad !== 'all' ? r === sc.abjad : getGradeFromRombel(r) === parseInt(sc.kelas, 10));
+            if (!rombels.length) return;
+            const snap = rekapFanSnapshotFor(fan, sc.kelas, sc.abjad);
+            if (!snap) return;
+            const valid = snap.qStats.filter(q => q.peserta > 0);
+            if (!valid.length) return;
+            const low = valid.slice().sort((a, b) => a.pct - b.pct).slice(0, 3);
+            rows.push({ fan, snap, low, peserta: Math.max.apply(null, valid.map(q => q.peserta)) });
+          });
+          if (!rows.length) return;
+          totalFan += rows.length;
+          const cell = q => {
+            if (!q) return '<td class="c">&ndash;</td>';
+            const nar = getSoalNarrative(sc.kelas, q._fan, q);
+            const materi = nar && nar.materi ? `<div class="mt">${esc(String(nar.materi).slice(0, 60))}</div>` : '';
+            const soal = nar && nar.soal && String(nar.soal).trim()
+              ? `<div class="${/[\u0600-\u06FF]/.test(String(nar.soal).replace(/[\x00-\x7F]/g, '').slice(0, 40)) && (String(nar.soal).match(/[\u0600-\u06FF]/g) || []).length > String(nar.soal).length * 0.3 ? 'sq' : 'sq sl'}" dir="auto">${esc(String(nar.soal).trim())}</div>`
+              : '<div class="sm" style="font-style:italic">(naskah soal belum diinput)</div>';
+            const isAr = t => (String(t).match(/[\u0600-\u06FF]/g) || []).length > String(t).length * 0.3;
+            const kunci = nar && nar.kunci && String(nar.kunci).trim()
+              ? `<div class="kj"><span class="kl">Jawaban:</span> <span class="${isAr(nar.kunci) ? 'ka' : ''}" dir="auto">${esc(String(nar.kunci).trim())}</span></div>`
+              : '';
+            return `<td class="${q.pct < REKAPFAN_BATAS_RERATA ? 'lw' : ''}"><b>${esc(q.shortLabel)}</b> &bull; <b>${fmtPct(q.pct)}</b><div class="sm">${q.benar}/${q.peserta} benar &bull; ${esc(q.kategori)}</div>${materi}${soal}${kunci}</td>`;
+          };
+          const body = rows.map((r, i) => {
+            r.low.forEach(q => { q._fan = r.fan; });
+            return `<tr>
+              <td class="c">${i + 1}</td>
+              <td><b>${esc(r.fan)}</b><div class="sm">${esc(r.snap.modelKey)} &bull; ${r.peserta} santri</div></td>
+              <td class="c"><b>${fmtPct(r.snap.rerata)}</b></td>
+              ${cell(r.low[0])}${cell(r.low[1])}${cell(r.low[2])}
+            </tr>`;
+          }).join('');
+          sections.push(`
+            ${scopes.length > 1 ? `<h2>${esc(sc.label)}</h2>` : ''}
+            <table class="r3">
+              <colgroup><col style="width:4%"><col style="width:13%"><col style="width:7%"><col style="width:25.33%"><col style="width:25.33%"><col style="width:25.33%"></colgroup>
+              <thead><tr><th>No</th><th>Fan</th><th>Rerata</th><th>Terendah #1</th><th>Terendah #2</th><th>Terendah #3</th></tr></thead>
+              <tbody>${body}</tbody>
+            </table>`);
+        });
+      } finally {
+        renderRekapFan();
+      }
+      if (!sections.length) { showToast('Tidak ada nilai butir soal untuk cakupan ini.', 'warning'); return; }
+      const cakupan = scopes.length === 1 ? scopes[0].label : 'Seluruh Kelas (' + scopes.map(s2 => kelasName(s2.kelas)).join(', ') + ')';
+      const css = `<style>
+        .prf table.r3 th, .prf table.r3 td { font-size: 8.5pt; padding: 3px 4px; vertical-align: top; }
+        .prf table.r3 .sm { font-size: 7.5pt; color: #333; }
+        .prf table.r3 .mt { font-size: 7.5pt; font-style: italic; }
+        .prf table.r3 .sq { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', 'Plus Jakarta Sans', serif; font-size: 11.5pt; line-height: 1.35; white-space: pre-line; border-top: 1px dotted #888; margin-top: 2px; padding-top: 2px; }
+        .prf table.r3 .sq.sl { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 8pt; line-height: 1.3; }
+        .prf table.r3 .kj { border-top: 1px dotted #888; margin-top: 2px; padding-top: 2px; font-size: 8pt; line-height: 1.35; white-space: pre-line; }
+        .prf table.r3 .kj .kl { font-weight: 800; }
+        .prf table.r3 .kj .ka { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 11pt; }
+        .prf table.r3 tr { page-break-inside: avoid; }
+        .prf.r3w .sig { margin-top: 10px; }
+        .prf.r3w .sig .sp { height: 42px; }
+        .prf table.r3 td.lw { background: #fee2e2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      </style>`;
+      const html = REKAPFAN_PRINT_CSS + css + `
+        <div class="prf r3w">
+          <div class="hd">
+            <div class="sub">Pondok Pesantren Sidogiri &mdash; Madrasah Miftahul Ulum ${esc(CTX.tingkat)}</div>
+            <h1>REKAP 3 BUTIR SOAL TERENDAH SEMUA FAN ${esc(CTX.tahap.toUpperCase())}</h1>
+          </div>
+          <table class="meta"><tbody>
+            <tr><td style="width:24%">Tingkat / Tahap Ujian</td><td>: ${esc(CTX.tingkat)} &bull; ${esc(CTX.tahap)}</td></tr>
+            <tr><td>Cakupan</td><td>: <b>${esc(cakupan)}</b> &bull; ${totalFan} fan</td></tr>
+            <tr><td>Tanggal Cetak</td><td>: ${esc(formatHijri(new Date()))}</td></tr>
+          </tbody></table>
+          ${sections.join('')}
+        </div>`;
+      const fileLbl = ab !== 'all' ? 'Abjad ' + ab : (selK === 'all' ? 'Semua Kelas' : 'Kelas ' + kelasName(selK));
+      printRekapFanDoc(html, 'portrait', printFileName('Rekap 3 Soal Terendah', 'Semua Fan', fileLbl));
+    }
+    window.cetakRingkasan3TerendahSemuaFan = cetakRingkasan3TerendahSemuaFan;
+
     function pilihCetakRekapFan(n) {
       closeRekapFanPrintMenu();
+      if (n === 5) { cetakRingkasan3TerendahSemuaFan(); return; }
+      const scope = rekapFanPrintScope();
+      if (scope !== 'one') {
+        if (n === 4 && (scope === 'abjads' || (state.rekapFan.selectedAbjad || 'all') !== 'all')) { showToast('Daya serap tertinggi & terendah membutuhkan lebih dari satu abjad per lembar.', 'warning'); return; }
+        cetakRekapFanMassal(n, scope);
+        return;
+      }
       if (n === 1) cetakFormRekapFanRombel();
       else if (n === 2) cetakFormRekapFanAnalisa();
       else if (n === 3) cetakFormRekapFanPerButir();
@@ -4763,7 +4976,7 @@
         ? `Kelas ${kelasName(abjadGrade || selectedK)} • Abjad ${selectedAbjad}`
         : selectedK === 'all' ? `Seluruh Kelas (${getKelasNumbers().map(k => kelasName(k)).join(', ')})` : `Kelas ${kelasName(selectedK)}`;
       const opt4 = document.getElementById('rekapfan-print-opt4');
-      if (opt4) opt4.classList.toggle('hidden', !multiAbjad);
+      if (opt4) opt4.classList.toggle('hidden', !multiAbjad || (typeof rekapFanPrintScope === 'function' && rekapFanPrintScope() === 'abjads'));
       
       const titleEl = document.getElementById('fan-comp-chart-title');
       if (titleEl) {
