@@ -1822,6 +1822,10 @@
                   <div class="text-xs font-bold text-slate-800 dark:text-white">5. Ringkasan 3 Soal Terendah &mdash; Semua Fan</div>
                   <div class="text-[10.5px] text-slate-500 dark:text-slate-400" id="rekapfan-opt5-desc">Satu kelas, seluruh fan + soal &amp; jawaban dalam satu tabel ringkas (A4 tegak)</div>
                 </button>
+                <button type="button" role="menuitem" id="rekapfan-print-opt6" onclick="pilihCetakRekapFan(6)" class="w-full text-left px-2.5 py-2 rounded-lg bg-emerald-50/70 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 cursor-pointer">
+                  <div class="text-xs font-bold text-slate-800 dark:text-white">6. Ringkasan 3 Soal Terendah &mdash; Tiap Abjad Sekaligus</div>
+                  <div class="text-[10.5px] text-slate-500 dark:text-slate-400" id="rekapfan-opt6-desc">Seperti nomor 5, tetapi untuk setiap abjad di kelas terpilih dalam satu kali cetak (tiap abjad di halaman baru)</div>
+                </button>
               </div>
             </div>
             <!-- Ukuran teks & ukuran tampilan -->
@@ -4567,6 +4571,8 @@
       const snap = rf.snapshot;
       const opt4 = document.getElementById('rekapfan-print-opt4');
       if (opt4) opt4.classList.toggle('hidden', scope === 'abjads' || ab !== 'all' || !(snap && snap.multiAbjad));
+      const d6 = document.getElementById('rekapfan-opt6-desc');
+      if (d6) { const nAb = rekapFanAbjadList(rf.selectedKelas || 'all').length; d6.textContent = `${nAb} abjad (${(rf.selectedKelas || 'all') === 'all' ? 'semua kelas' : 'Kelas ' + kelasName(rf.selectedKelas)}) \u2022 seperti nomor 5 per abjad, satu kali cetak, tiap abjad di halaman baru`; }
       const d5 = document.getElementById('rekapfan-opt5-desc');
       if (d5) d5.textContent = (ab !== 'all' ? 'Abjad ' + ab : (rf.selectedKelas || 'all') === 'all' ? 'Tiap kelas' : 'Kelas ' + kelasName(rf.selectedKelas)) + ' • seluruh fan + soal & jawaban, tabel ringkas (A4 tegak) • tidak terpengaruh cakupan';
     }
@@ -4732,9 +4738,39 @@
     }
     window.cetakRingkasan3TerendahSemuaFan = cetakRingkasan3TerendahSemuaFan;
 
+    // ---- FORM 6 (HEMAT KERTAS): Form 5 untuk SETIAP ABJAD dalam satu kali cetak ----
+    function cetakRingkasan3TerendahTiapAbjad() {
+      const rf = state.rekapFan;
+      const selK = rf.selectedKelas || 'all';
+      const list = rekapFanAbjadList(selK);
+      if (!list.length) { showToast('Tidak ada abjad pada kelas ini.', 'warning'); return; }
+      const saved = { kelas: rf.selectedKelas, abjad: rf.selectedAbjad, fan: rf.selectedFan };
+      const pages = [];
+      const origToast = window.showToast;
+      try {
+        window.showToast = function () {};   // abjad tanpa nilai cukup dilewati tanpa pemberitahuan
+        list.forEach(ab => {
+          rf.selectedKelas = saved.kelas; rf.selectedAbjad = ab;
+          RF_COLLECT = [];
+          try { cetakRingkasan3TerendahSemuaFan(); } finally { pages.push.apply(pages, RF_COLLECT); RF_COLLECT = null; }
+        });
+      } finally {
+        window.showToast = origToast;
+        rf.selectedKelas = saved.kelas; rf.selectedAbjad = saved.abjad; rf.selectedFan = saved.fan;
+        renderRekapFan();
+      }
+      if (!pages.length) { showToast('Tidak ada nilai butir soal untuk dicetak.', 'warning'); return; }
+      const brk = '<div style="break-before:page;page-break-before:always"></div>';
+      const fileLbl = 'Tiap Abjad ' + (selK === 'all' ? 'Semua Kelas' : 'Kelas ' + kelasName(selK));
+      showToast(`Menyiapkan ${pages.length} abjad untuk dicetak...`, 'info');
+      printRekapFanDoc(pages.map(p => p.html).join(brk), 'portrait', printFileName('Rekap 3 Soal Terendah', 'Semua Fan', fileLbl));
+    }
+    window.cetakRingkasan3TerendahTiapAbjad = cetakRingkasan3TerendahTiapAbjad;
+
     function pilihCetakRekapFan(n) {
       closeRekapFanPrintMenu();
       if (n === 5) { cetakRingkasan3TerendahSemuaFan(); return; }
+      if (n === 6) { cetakRingkasan3TerendahTiapAbjad(); return; }
       const scope = rekapFanPrintScope();
       if (scope !== 'one') {
         if (n === 4 && (scope === 'abjads' || (state.rekapFan.selectedAbjad || 'all') !== 'all')) { showToast('Daya serap tertinggi & terendah membutuhkan lebih dari satu abjad per lembar.', 'warning'); return; }
