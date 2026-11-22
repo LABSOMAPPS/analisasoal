@@ -4647,6 +4647,16 @@
             const valid = snap.qStats.filter(q => q.peserta > 0);
             if (!valid.length) return;
             const low = valid.slice().sort((a, b) => a.pct - b.pct).slice(0, 3);
+            // Abjad tertinggi selalu dibandingkan antar seluruh abjad paralel di kelas ini,
+            // walaupun yang dicetak hanya satu abjad
+            if (sc.abjad !== 'all') {
+              const kSnap = rekapFanSnapshotFor(fan, sc.kelas, 'all');
+              const hiBy = {};
+              ((kSnap && kSnap.qStats) || []).forEach(q => { hiBy[q.q_num] = { hi: q.hi, n: kSnap.rombelNames.length }; });
+              low.forEach(q => { const h = hiBy[q.q_num]; q._hi = h && h.n > 1 ? h.hi : null; });
+            } else {
+              low.forEach(q => { q._hi = snap.rombelNames.length > 1 ? q.hi : null; });
+            }
             rows.push({ fan, snap, low, peserta: Math.max.apply(null, valid.map(q => q.peserta)) });
           });
           if (!rows.length) return;
@@ -4662,22 +4672,24 @@
             const kunci = nar && nar.kunci && String(nar.kunci).trim()
               ? `<div class="kj"><span class="kl">Jawaban:</span> <span class="${isAr(nar.kunci) ? 'ka' : ''}" dir="auto">${esc(String(nar.kunci).trim())}</span></div>`
               : '';
-            return `<td class="${q.pct < REKAPFAN_BATAS_RERATA ? 'lw' : ''}"><b>${esc(q.shortLabel)}</b> &bull; <b>${fmtPct(q.pct)}</b><div class="sm">${q.benar}/${q.peserta} benar &bull; ${esc(q.kategori)}</div>${materi}${soal}${kunci}</td>`;
+            // abjad dengan daya serap tertinggi pada butir ini (hanya bila lebih dari satu abjad)
+            const hiTxt = (q._hi && q._hi.names && q._hi.names.length)
+              ? ` <span class="hi">| ${fmtPct(q._hi.pct)} : ${esc(q._hi.names.join(', '))}</span>` : '';
+            return `<td><span class="lo"><b>${esc(q.shortLabel)}</b> &bull; <b>${fmtPct(q.pct)}</b></span>${hiTxt}<div class="sm">${q.benar}/${q.peserta} benar &bull; ${esc(q.kategori)}</div>${materi}${soal}${kunci}<div class="ket"><b>Ket:</b></div></td>`;
           };
           const body = rows.map((r, i) => {
             r.low.forEach(q => { q._fan = r.fan; });
             return `<tr>
               <td class="c">${i + 1}</td>
               <td><b>${esc(r.fan)}</b><div class="sm">${esc(r.snap.modelKey)} &bull; ${r.peserta} santri</div></td>
-              <td class="c"><b>${fmtPct(r.snap.rerata)}</b></td>
               ${cell(r.low[0])}${cell(r.low[1])}${cell(r.low[2])}
             </tr>`;
           }).join('');
           sections.push(`
             ${scopes.length > 1 ? `<h2>${esc(sc.label)}</h2>` : ''}
             <table class="r3">
-              <colgroup><col style="width:4%"><col style="width:13%"><col style="width:7%"><col style="width:25.33%"><col style="width:25.33%"><col style="width:25.33%"></colgroup>
-              <thead><tr><th>No</th><th>Fan</th><th>Rerata</th><th>Terendah #1</th><th>Terendah #2</th><th>Terendah #3</th></tr></thead>
+              <colgroup><col style="width:4%"><col style="width:13%"><col style="width:27.67%"><col style="width:27.67%"><col style="width:27.67%"></colgroup>
+              <thead><tr><th>No</th><th>Fan</th><th>Terendah #1</th><th>Terendah #2</th><th>Terendah #3</th></tr></thead>
               <tbody>${body}</tbody>
             </table>`);
         });
@@ -4695,10 +4707,12 @@
         .prf table.r3 .kj { border-top: 1px dotted #888; margin-top: 2px; padding-top: 2px; font-size: 8pt; line-height: 1.35; white-space: pre-line; }
         .prf table.r3 .kj .kl { font-weight: 800; }
         .prf table.r3 .kj .ka { font-family: 'Traditional Arabic', 'Amiri', 'Noto Naskh Arabic', serif; font-size: 11pt; }
+        .prf table.r3 .hi { font-weight: 700; color: #047857; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .prf table.r3 .lo, .prf table.r3 .lo b { color: #dc2626; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .prf table.r3 .ket { border-top: 1px dotted #888; margin-top: 2px; padding-top: 2px; min-height: 30px; font-size: 8pt; }
         .prf table.r3 tr { page-break-inside: avoid; }
         .prf.r3w .sig { margin-top: 10px; }
         .prf.r3w .sig .sp { height: 42px; }
-        .prf table.r3 td.lw { background: #fee2e2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       </style>`;
       const html = REKAPFAN_PRINT_CSS + css + `
         <div class="prf r3w">
